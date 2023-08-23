@@ -1,0 +1,9 @@
+{
+    "compilerOptions":{
+        "baseUrl": ".",
+        "paths":{
+            "@compoments/*":["compoments/"],
+            "@lib/*":["lib/*"]
+        }
+    }
+}

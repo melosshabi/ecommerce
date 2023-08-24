@@ -2,12 +2,30 @@ import mongoose, {Schema} from 'mongoose'
 
 const userSchema = new Schema({
     userId:String,
-    username:String,
-    email:String,
-    password: String,
-    dateAccountCreated:Date
+    username:{
+        type:String,
+        required:true,
+        lowerCase:true
+    },
+    email:{
+        type:String,
+        required:true,
+        lowerCase:true
+    },
+    password:{
+        type:String,
+        required:true
+    },
+    dateAccountCreated:{
+        type:Date,
+        default: () => Date.now()
+    },
+    dateAccountUpdated:{
+        type:Date,
+        default: () => Date.now()
+    }
 })
 
-const User = mongoose.models.User || mongoose.model("User", userSchema)
+const userModel = mongoose.models.User || mongoose.model("User", userSchema)
 
-export default User
+export default userModel

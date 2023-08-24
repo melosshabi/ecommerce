@@ -1,10 +1,13 @@
 import Image from 'next/image'
 import styles from './page.module.css'
+import Link from 'next/link'
 
 export default function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.description}>
+      <Link href="/api/auth/signin">Sign In</Link>
+        <Link href="/api/auth/signout">Sign Out</Link>
         <p>
           Get started by editing&nbsp;
           <code className={styles.code}>app/page.tsx</code>

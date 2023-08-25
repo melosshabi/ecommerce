@@ -6,16 +6,24 @@ import { nanoid } from "nanoid"
 
 export async function POST(req:Request){
     const data = await req.json()
-
+    console.log(data)
     await connectToDb()
 
     // I used this variable to check if the sent username already exists
-
     const user = await userModel.findOne({username:data.username})
-    if(user){
+    // I used this variable to check if the sent email already exists
+    const userByEmail = await userModel.findOne({email:data.email})
+    // console.log(user._doc)
+    if(user && user._doc.username === data.username){
         return NextResponse.json({
             errorMessage:"This username is already taken",
             errorCode:"username-taken"
+        }, {status:400})
+    }
+    if(userByEmail && userByEmail._doc.email === data.email){
+        return NextResponse.json({
+            errorMessage:"This email is already taken",
+            errorCode:"email-taken"
         }, {status:400})
     }
 
@@ -39,7 +47,7 @@ export async function POST(req:Request){
         delete passwordLessUser.password
 
         return NextResponse.json({
-        message:"Account createdSucessfully",
+        message:"Account Created Sucessfully",
         messageCode:"account-created",
         user:passwordLessUser
     })

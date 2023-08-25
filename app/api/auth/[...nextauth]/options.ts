@@ -30,10 +30,14 @@ export const nextAuthOptions:NextAuthOptions = {
                         ...user._doc
                     }
                     delete passwordLessUser.password
+                    console.log("Signed in")
                     return passwordLessUser
                 }
                 return null
             }
         })
     ],
+    pages: {
+        signIn:'/auth/signin/page'
+    }
 }

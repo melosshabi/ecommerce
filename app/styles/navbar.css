@@ -1,0 +1,30 @@
+.navbar{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100dvw;
+    height: 10dvh;
+    box-shadow: 0 0 5px black;
+    display: flex;
+    justify-content: space-between;
+}
+.nav-btns{
+    align-self: center;
+}
+.auth-btns{
+    align-self: center;
+    padding:8px 15px;
+    border-radius: 20px;
+    border:1px solid var(--orange);
+    margin:0 15px -15px 15px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    background-color: var(--orange);
+    color:white;
+    text-decoration: none;
+    transition: all 250ms;
+}
+.auth-btns:hover{
+    background-color: var(--white);
+    color:black;
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from './components/Navbar'
 import './styles/app.css'
+import Provider from './components/Provider'
 
 export const metadata: Metadata = {
   title: 'Ecommerce',
@@ -17,10 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <Navbar/>
-        {children}
-      </body>
+      <Provider>
+        <body>
+          <Navbar/>
+          {children}
+        </body>
+      </Provider>
     </html>
   )
 }

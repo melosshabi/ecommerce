@@ -7,12 +7,9 @@
     box-shadow: 0 0 5px black;
     display: flex;
     justify-content: space-between;
-}
-.nav-btns{
-    align-self: center;
+    align-items: center;
 }
 .auth-btns{
-    align-self: center;
     padding:8px 15px;
     border-radius: 20px;
     border:1px solid var(--orange);
@@ -27,4 +24,55 @@
 .auth-btns:hover{
     background-color: var(--white);
     color:black;
+}
+.nav-menu-wrapper{
+    position: relative;
+}
+/* the button that toggles the nav menu */
+.nav-menu-btn{
+    margin-right: 40px;
+    background: none;
+    border:none;
+    cursor: pointer;
+    border-radius: 50%;
+    padding:5px;
+    display: flex;
+    transition: all 250ms;
+}
+.nav-menu-btn:hover{
+    background-color: var(--lighterGray);
+}
+.nav-menu{
+    height: 0;
+    width: 7dvw;
+    position: absolute;
+    left:-2dvw;
+    background-color: white;
+    box-shadow: 0 0 5px black;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 300ms;
+}
+.active-nav-menu{
+    height: 16.8dvh;
+}
+.nav-menu ul{
+    list-style: none;
+}
+/* The options inside the nav menu */
+.nav-menu-links{
+    display: block;
+    width: 100%;
+    font-size: 1em;
+    text-decoration: none;
+    text-align: center;
+    color:black;
+    cursor: pointer;
+    background:none;
+    border:none;
+    padding:10px 0;
+    transition: all 250ms;
+}
+.nav-menu-links:hover{
+    background-color: var(--lighterGray);
 }

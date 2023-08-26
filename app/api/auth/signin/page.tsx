@@ -3,7 +3,7 @@ import React, { FormEvent, useState } from 'react'
 import { signIn } from 'next-auth/react'
 import Loader from '@/app/components/Loader'
 import {useRouter} from 'next/navigation'
-import '../../../styles/signin.css'
+import '@/app/styles/signin.css'
 
 export default function SignIn() {
 
@@ -28,7 +28,6 @@ export default function SignIn() {
       document.querySelector('.sign-in-password-input')?.classList.remove('red-border')
       setError('')
     }
-
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>){
@@ -40,11 +39,12 @@ export default function SignIn() {
       password:formData.password,
       redirect:false,
     }).then(res => {
+      console.log(res)
       if(res?.error === 'username-not-found'){
         setError('Username not found')
         setAuthInProgress(false)
         document.querySelector('.sign-in-username-input')?.classList.add('red-border')
-      }else if(res?.error === 'incorrect-password'){
+      }else if(res?.error === "CredentialsSignin"){
         setError("Incorrect Password")
         setAuthInProgress(false)
         document.querySelector('.sign-in-password-input')?.classList.add('red-border')
@@ -52,7 +52,6 @@ export default function SignIn() {
         router.push('/')
       }
     })
-
   }
 
   return (

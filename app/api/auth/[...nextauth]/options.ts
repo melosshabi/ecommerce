@@ -38,20 +38,16 @@ export const nextAuthOptions:NextAuthOptions = {
                         ...user._doc
                     }
                     delete passwordLessUser.password
-                    console.log("Signed in")
+                    console.log("Signed in", passwordLessUser)
                     return passwordLessUser
                 }
 
-                return {
-                    errorMessage:"Incorrect Password",
-                    errorCode:'incorrect-password'
-                }
+                return null
             }
         })
     ],
     callbacks:{
-        // @ts-ignore
-        async signIn({ user, account, profile, email, credentials }) {
+        async signIn({ user, credentials }) {
             // @ts-ignore
            if(user.errorCode === 'username-not-found'){
             throw new Error("username-not-found")
@@ -59,7 +55,16 @@ export const nextAuthOptions:NextAuthOptions = {
            }else if(user.errorCode === 'incorrect-password'){
             throw new Error("incorrect-password")
            }
+           // @ts-ignore
+           user.name = credentials.username
            return true
+        },
+        async session({session, token}){
+            await connectToDb()
+            const user = await userModel.findOne({username:token.name})
+            // @ts-ignore
+            session.user.userId = user._doc.userId
+            return session
         }
     },
     pages: {

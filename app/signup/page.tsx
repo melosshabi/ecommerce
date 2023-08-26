@@ -6,11 +6,29 @@ import Loader from '@/app/components/Loader'
 
 export default function SignUp() {
 
-  const [username, setUsername] = useState<string>('')
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+  const [formData, setFormData] = useState<signUpData>({
+    username:'',
+    email:'',
+    password:''
+  })
   const [authInProgress, setAuthInProgress] = useState<boolean>(false)
-  const [error, setError] = useState<signUpError>()
+  const [error, setError] = useState<signUpError | undefined>(undefined)
+
+  function handleChange(elementName:string, newValue:string){
+
+    const inputs = document.querySelectorAll('.sign-up-inputs')
+    inputs.forEach(input => {
+      if(input.classList.contains('red-border')){
+        input.classList.remove('red-border')
+        setError(undefined)
+      }
+    })
+
+    setFormData(prev => ({
+      ...prev,
+      [elementName]:newValue
+    }))
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>){
     e.preventDefault()
@@ -21,18 +39,41 @@ export default function SignUp() {
       headers:{
         'Content-Type':'application/json'
       },
-      body:JSON.stringify({username, email, password})
+      body:JSON.stringify(formData)
     })
+
     const data = await res.json()
+
     if(data.errorCode === "username-taken"){
+      setAuthInProgress(false)
+      setError({
+        errorMessage:data.errorMessage as string,
+        errorCode:data.errorCode
+      })
+      document.querySelector('.username-input')?.classList.add('red-border')
+      return
+    }else if(data.errorCode === "email-taken"){
       setAuthInProgress(false)
       setError({
         errorMessage:data.errorMessage,
         errorCode:data.errorCode
       })
-      document.querySelector('.username-input')?.classList.add('red-border')
+      document.querySelector('.email-input')?.classList.add('red-border')
+      return
+    }else if(data.errorCode === 'incomplete-form'){
+      setError({
+        errorMessage:data.errorMessage,
+        errorCode:data.errorCode
+      })
       return
     }
+
+    await signIn('credentials', {
+      username:formData.username,
+      password:formData.password,
+      redirect:true,
+      callbackUrl:'/'
+    })
   }
 
   return (
@@ -44,21 +85,21 @@ export default function SignUp() {
             <div style={{display:'flex', flexDirection:'column', width:'50%', height:'fit-content'}}>
               <div className='inputs-wrappers'>
                 <label>Username</label>
-                <input required type="text" placeholder="Username" className="sign-up-inputs username-input" value={username} onChange={e => setUsername(e.target.value)}/>
+                <input name="username" required type="text" placeholder="Username" className="sign-up-inputs username-input" value={formData.username} onChange={e => handleChange(e.target.name, e.target.value)}/>
               </div>
 
               <div className='inputs-wrappers'>
                 <label>Email</label>
-                <input required type="email" placeholder="Username" className="sign-up-inputs username-input" value={email} onChange={e => setEmail(e.target.value)}/>
+                <input name="email" required type="email" placeholder="Email" className="sign-up-inputs email-input" value={formData.email} onChange={e => handleChange(e.target.name, e.target.value)}/>
               </div>
 
               <div className='inputs-wrappers'>
                 <label>Password</label>
-                <input required type="password" placeholder="Password" className='sign-up-inputs username-input' value={password} onChange={e => setPassword(e.target.value)}/>
+                <input name="password" required type="password" placeholder="Password" className='sign-up-inputs username-input' value={formData.password} onChange={e => handleChange(e.target.name, e.target.value)}/>
               </div>
               {error?.errorCode && <p className='error'>{error.errorMessage}</p>}
             </div>            
-          <button className='submit-sign-up-form-btn'>{!authInProgress ? 'Sign Up' : <Loader/>}</button>
+          <button className='submit-sign-up-form-btn' disabled={authInProgress}>{!authInProgress ? 'Sign Up' : <Loader/>}</button>
         </form>
       </div>
     </div>

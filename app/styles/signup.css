@@ -65,6 +65,13 @@
 .submit-sign-up-form-btn:hover{
     background-color: var(--darkerOrange);
 }
+.submit-sign-up-form-btn:disabled{
+    cursor: not-allowed;
+    opacity: .7;
+}
+.submit-sign-up-form-btn:disabled:hover{
+    background-color: var(--orange);
+}
 .error{
     text-align: center;
     font-size: .9em;

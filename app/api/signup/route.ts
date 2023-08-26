@@ -10,7 +10,7 @@ export async function POST(req:Request){
     await connectToDb()
 
     // I used this variable to check if the sent username already exists
-    const user = await userModel.findOne({username:data.username})
+    const user = await userModel.findOne({username:data.username, email:data.email})
     // I used this variable to check if the sent email already exists
     const userByEmail = await userModel.findOne({email:data.email})
     // console.log(user._doc)
@@ -22,7 +22,7 @@ export async function POST(req:Request){
     }
     if(userByEmail && userByEmail._doc.email === data.email){
         return NextResponse.json({
-            errorMessage:"This email is already taken",
+            errorMessage:"This email is already in use",
             errorCode:"email-taken"
         }, {status:400})
     }

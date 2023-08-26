@@ -23,6 +23,14 @@ export const nextAuthOptions:NextAuthOptions = {
             async authorize(credentials){
                 await connectToDb()
                 const user = await userModel.findOne({username: credentials?.username})
+
+                if(!user){
+                    return {
+                        errorMessage:'Username not found',
+                        errorCode:'username-not-found'
+                    }
+                }
+
                 const matched = await comparePasswords(credentials?.password as string, user.password)
 
                 if(matched){
@@ -33,10 +41,27 @@ export const nextAuthOptions:NextAuthOptions = {
                     console.log("Signed in")
                     return passwordLessUser
                 }
-                return null
+
+                return {
+                    errorMessage:"Incorrect Password",
+                    errorCode:'incorrect-password'
+                }
             }
         })
     ],
+    callbacks:{
+        // @ts-ignore
+        async signIn({ user, account, profile, email, credentials }) {
+            // @ts-ignore
+           if(user.errorCode === 'username-not-found'){
+            throw new Error("username-not-found")
+             // @ts-ignore
+           }else if(user.errorCode === 'incorrect-password'){
+            throw new Error("incorrect-password")
+           }
+           return true
+        }
+    },
     pages: {
         signIn:'/auth/signin/page'
     }

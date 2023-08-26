@@ -65,3 +65,11 @@
 .submit-sign-in-form-btn:hover{
     background-color: var(--darkerOrange);
 }
+.red-border{
+    border:1px solid red;
+}
+.error{
+    text-align: center;
+    font-size: .9em;
+    color:red;
+}

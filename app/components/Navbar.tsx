@@ -33,9 +33,9 @@ export default function Navbar() {
           </button>
           <div className="nav-menu">
             <ul>
-              <li><Link href="" className='nav-menu-links'>My Profile</Link></li>
-              <li><Link href="" className='nav-menu-links'>Cart</Link></li>
-              <li><Link href="" className='nav-menu-links'>Wishlist</Link></li>
+              <li><Link onClick={toggleNavMenu} href="/userProfile" className='nav-menu-links'>My Profile</Link></li>
+              <li><Link onClick={toggleNavMenu} href="" className='nav-menu-links'>Cart</Link></li>
+              <li><Link onClick={toggleNavMenu} href="" className='nav-menu-links'>Wishlist</Link></li>
               <li><button onClick={() => signOut()} className='nav-menu-links'>Sign out</button></li>
             </ul>
           </div>

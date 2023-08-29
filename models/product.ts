@@ -18,6 +18,10 @@ const productSchema = new Schema({
         type:Array,
         required:false,
     },
+    productImages:{
+        type:Array,
+        required:true
+    },
     quantity:{
         type:Number,
         required:true

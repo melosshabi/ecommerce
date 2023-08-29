@@ -5,16 +5,18 @@ import { NextResponse } from "next/server"
 
 export async function POST(req:Request){
     const data = await req.json()
+    console.log(data)
     await connectToDb()
     try{
         await productModel.create({
             posterDocId:new mongoose.Types.ObjectId(data._id),
-            productName:data.product.productName,
-            productPrice:parseFloat(data.product.productPrice),
+            productName:data.productName,
+            productPrice:parseFloat(data.productPrice),
             productReviews:[],
-            quantity:parseInt(data.product.productQuantity)
+            quantity:parseInt(data.productQuantity)
         })
     }catch(err:any){
+        console.log(err)
         if(err._message === 'Product validation failed'){
             return NextResponse.json({
                 errorMessage:"Please fill out the form",

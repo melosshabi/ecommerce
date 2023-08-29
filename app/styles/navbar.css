@@ -5,6 +5,7 @@
     width: 100dvw;
     height: 10dvh;
     box-shadow: 0 0 5px black;
+    background-color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;

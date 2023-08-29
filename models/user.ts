@@ -19,6 +19,15 @@ const userSchema = new Schema({
         type:String,
         required:true
     },
+    profilePictureUrl:{
+        type:String,
+        required:false,
+        default:() => ""
+    },
+    reviews:{
+        type:Array,
+        default: () => []
+    },
     dateAccountCreated:{
         type:Date,
         default: () => Date.now()

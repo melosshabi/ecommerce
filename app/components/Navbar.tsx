@@ -9,8 +9,7 @@ import { signOut, useSession } from 'next-auth/react'
 
 export default function Navbar() {
   const session = useSession()
-  console.log("Session", session)
-
+  console.log(session)
   function toggleNavMenu() {
     document.querySelector('.nav-menu')?.classList.toggle('active-nav-menu')
   }
@@ -29,13 +28,14 @@ export default function Navbar() {
         :
         <div className="nav-menu-wrapper">
           <button className='nav-menu-btn' onClick={toggleNavMenu}>
-            <Image src={userIcon} alt="User icon" width={50} height={50} style={{alignSelf:'center'}}/>
+            <Image src={session.data.user?.image ? session.data.user?.image : userIcon} alt="User icon" width={50} height={50} style={{alignSelf:'center'}}/>
           </button>
           <div className="nav-menu">
             <ul>
-              <li><Link onClick={toggleNavMenu} href="/userProfile" className='nav-menu-links'>My Profile</Link></li>
-              <li><Link onClick={toggleNavMenu} href="" className='nav-menu-links'>Cart</Link></li>
-              <li><Link onClick={toggleNavMenu} href="" className='nav-menu-links'>Wishlist</Link></li>
+              <li><Link onClick={toggleNavMenu} href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>
+              <li><Link onClick={toggleNavMenu} href="/userProfile/cart" className='nav-menu-links'>Cart</Link></li>
+              <li><Link onClick={toggleNavMenu} href="/userProfile/wishlist" className='nav-menu-links'>Wishlist</Link></li>
+              <li><Link onClick={toggleNavMenu} href="/postProduct" className='nav-menu-links'>Sell</Link></li>
               <li><button onClick={() => signOut()} className='nav-menu-links'>Sign out</button></li>
             </ul>
           </div>

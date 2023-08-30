@@ -26,6 +26,12 @@ const userSchema = new Schema({
     },
     reviews:{
         type:Array,
+        required:false,
+        default: () => []
+    },
+    products:{
+        type:Array,
+        required:false,
         default: () => []
     },
     dateAccountCreated:{

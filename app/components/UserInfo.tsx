@@ -7,6 +7,7 @@ export default function UserInfo({userId, username, email, profilePictureUrl}:Us
   const [newUsername, setNewUsername] = useState<string>(username)
   const [newEmail, setNewEmail] = useState<string>(email)
   const [pictureFile, setPictureFile] = useState<any>(undefined)
+  // The picture url selected by the user
   const [localPictureUrl, setLocalPictureUrl] = useState<string | undefined>(undefined)
   const [updateInProgress, setUpdateInProgress] = useState<boolean>(false)
 
@@ -49,10 +50,12 @@ export default function UserInfo({userId, username, email, profilePictureUrl}:Us
     setUpdateInProgress(true)
 
     const formData = new FormData()
-    formData.set('username', newUsername)
+    formData.set('newUsername', newUsername)
+    formData.set('newEmail', newEmail)
     formData.set('profilePicture', pictureFile)
+    formData.set('userId', userId)
     const req = await fetch('http://localhost:3000/api/updateUser', {
-      method:"PATCH",
+      method:"PATCH",  
       body:formData
     })
 
@@ -62,12 +65,12 @@ export default function UserInfo({userId, username, email, profilePictureUrl}:Us
       const alert = document.querySelector('.account-updated-alert')
       alert?.classList.add('active-updated-alert')
       setTimeout(() => alert?.classList.remove('active-updated-alert'), 5000)
+      window.location.reload()
     }
   }
 
   return (
     <div className='user-info-wrapper'>
-      {/* <h2>Account Information</h2> */}
 
       <div className="user-info-inputs-wrapper">
 
@@ -82,7 +85,7 @@ export default function UserInfo({userId, username, email, profilePictureUrl}:Us
         </div>
       </div>
       {
-        !localPictureUrl ? <Image className="profilePicture" src={profilePictureUrl ? profilePictureUrl : userIcon} alt="Profile picture of the signed in user"/>
+        !localPictureUrl ? <Image className="profilePicture" width={100} height={100} src={profilePictureUrl ? profilePictureUrl : userIcon} alt="Profile picture of the signed in user"/>
         : <Image width={100} height={100} className="profilePicture" src={localPictureUrl} alt="Preview of the newly selected picture"/>
       }
       <input onChange={e => handleFileChange(e)} id="file-input" type="file" style={{display:'none'}} accept="image/*"/>

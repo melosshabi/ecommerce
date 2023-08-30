@@ -27,27 +27,38 @@
     color:black;
 }
 .nav-menu-wrapper{
+    width: 3dvw;
+    margin-right: 3%;
     position: relative;
+    /* background-color: red; */
 }
 /* the button that toggles the nav menu */
 .nav-menu-btn{
+    max-width: 55px;
+    background-color: blue;
+    max-height: 50px;
     margin-right: 40px;
     background: none;
     border:none;
     cursor: pointer;
     border-radius: 50%;
-    padding:5px;
+    padding:15px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
     transition: all 250ms;
 }
 .nav-menu-btn:hover{
-    background-color: var(--lighterGray);
+    box-shadow: 0 0 10px black;
 }
 .nav-menu{
     height: 0;
     width: 7dvw;
     position: absolute;
-    left:-2dvw;
+    left:-65%;
+    /* bottom:-17dvh; */
+    top:6dvh;
     background-color: white;
     box-shadow: 0 0 5px black;
     border-radius: 8px;
@@ -55,7 +66,7 @@
     transition: all 300ms;
 }
 .active-nav-menu{
-    height: 16.8dvh;
+    height: 20.8dvh;
 }
 .nav-menu ul{
     list-style: none;

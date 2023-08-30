@@ -10,22 +10,35 @@ const productSchema = new Schema({
         type:String,
         required:true
     },
-    productPrice:{
-        type:Number,
+    brandName:{
+        type:String,
+        required:false
+    },
+    noBrand:{
+        type:Boolean,
         required:true
     },
-    productReviews:{
-        type:Array,
-        required:false,
+    manufacturer:{
+        type:String,
+        required:true
     },
-    productImages:{
-        type:Array,
+    productPrice:{
+        type:Number,
         required:true
     },
     quantity:{
         type:Number,
         required:true
-    }
+    },
+    pictures:{
+        type:[{type:String}],
+        required:true
+    },
+    productReviews:{
+        type:Array,
+        required:false,
+        default: () => []
+    }, 
 })
 
 const productModel = mongoose.models.Product || mongoose.model("Product", productSchema)

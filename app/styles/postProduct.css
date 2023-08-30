@@ -1,0 +1,121 @@
+.post-product-page{
+    height: 90dvh;
+    width: 100dvw;
+    margin-top: 10dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.product-form-wrapper{
+    width:80%;
+    height: 95%;
+    border:1px solid gray;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.product-form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.inputs-wrappers{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    margin:25px 0;
+}
+.stars{
+    font-size: .9em;
+    vertical-align: top;
+    color:var(--orange)
+}
+.inputs-wrappers input{
+    font-size: 1em;
+    border:none;
+    padding:7px 10px;
+    border-bottom: 1px solid gray;
+    transition: all 300ms;
+}
+.inputs-wrappers input:focus{
+    outline:none;
+    border-bottom: 1px solid var(--orange);
+}
+.brand-checkbox{
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+.brand-checkbox input{
+    margin:0 10px;
+    cursor: pointer;
+}
+.brand-input:disabled{
+    cursor: not-allowed;
+}
+.pictures-count{
+    font-size: .8em;
+    margin:0 3px;
+}
+.pictures-input{
+    display: none;
+}
+.label-of-file-input{
+    width: fit-content;
+    margin:5px 5px;
+    background-color: var(--orange);
+    color:white;
+    padding:5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 300ms;
+}
+.label-of-file-input:hover{
+    background-color: var(--darkerOrange);
+}
+.submit-product-btn{
+    background-color: var(--orange);
+    color:white;
+    padding:10px 25px;
+    border:none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-top: 25px;
+    transition: all 300ms;
+}
+.submit-product-btn:hover{
+    background-color: var(--darkerOrange);
+}
+.submit-product-btn:disabled{
+    cursor: not-allowed;
+    opacity: .8;
+}
+.submit-product-btn:disabled:hover{
+    background-color: var(--orange);
+}
+.error{
+    font-size: .9em;
+    color:red;
+}
+.product-created-alert{
+    position: absolute;
+    bottom:50px;
+    right: -15%;
+    border-radius: 8px;
+    box-shadow: 0 0 5px black;
+    padding:10px 5px;
+    display: flex;
+    align-items: center;
+    transition: all 300ms;
+}
+.active-alert{
+    right:2%;
+}
+.checkmark-icon{
+    width: 25px;
+    height: 25px;
+    margin-right: 5px;
+}

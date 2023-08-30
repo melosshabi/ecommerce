@@ -64,6 +64,10 @@ export const nextAuthOptions:NextAuthOptions = {
             const user = await userModel.findOne({username:token.name})
             // @ts-ignore
             session.user.userId = user._doc.userId
+            // @ts-ignore
+            session.user.image = user._doc.profilePictureUrl
+            // @ts-ignore
+            session.user.userDocId = user._doc._id
             return session
         }
     },

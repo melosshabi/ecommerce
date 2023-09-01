@@ -9,6 +9,7 @@ type signUpData = {
 }
 // The type used for rendering the products on the homepage
 type Products = {
+    _id:string,
     posterDocId:string,
     productName:string,
     brandName:string | undefined,

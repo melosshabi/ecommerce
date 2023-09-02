@@ -117,3 +117,49 @@
 .current-product-btns:hover{
     background-color: var(--darkerOrange);
 }
+.current-product-btns:disabled{
+    cursor: not-allowed;
+    opacity: .7;
+}
+.current-product-btns:disabled:hover{
+    background-color: var(--orange);
+}
+.fullscreen-image{
+    position: absolute;
+    width: 100dvw;
+    height: 90dvh;
+    top:10vh;
+    background-color: white;
+    display: none;
+}
+.active-fullscreen-image{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.active-fullscreen-image img{
+    background-color: red;
+}
+.switch-fullscreen-image-btns{
+    background: none;
+    border:none;
+    cursor: pointer;
+    padding:10px;
+    border-radius: 6px;
+    transition: all 300ms;
+}
+.switch-fullscreen-image-btns:hover{
+    background-color: var(--gray);
+}
+.switch-fullscreen-image-btns svg{
+    width: 50px;
+    height: 50px;
+}
+.prev-img-btn svg{
+    transform: rotate(180deg);
+}
+.close-fullscreen-image-btn{
+    position: absolute;
+    top:0;
+    right:10px;
+}

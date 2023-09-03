@@ -34,6 +34,16 @@ const userSchema = new Schema({
         required:false,
         default: () => []
     },
+    cart:{
+        type:Array,
+        required:false,
+        default:() => []
+    },
+    wishlist:{
+        type:Array,
+        required:false,
+        default: () => []
+    },
     dateAccountCreated:{
         type:Date,
         default: () => Date.now()

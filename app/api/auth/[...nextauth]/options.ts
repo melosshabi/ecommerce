@@ -55,19 +55,17 @@ export const nextAuthOptions:NextAuthOptions = {
            }else if(user.errorCode === 'incorrect-password'){
             throw new Error("incorrect-password")
            }
-           // @ts-ignore
-           user.name = credentials.username
+           user.name = credentials?.username as string
            return true
         },
         async session({session, token}){
             await connectToDb()
             const user = await userModel.findOne({username:token.name})
-            // @ts-ignore
             session.user.userId = user._doc.userId
-            // @ts-ignore
             session.user.image = user._doc.profilePictureUrl
-            // @ts-ignore
             session.user.userDocId = user._doc._id
+            session.user.cart = user._doc.cart
+            session.user.wishlist = user._doc.wishlist
             return session
         }
     },

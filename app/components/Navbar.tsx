@@ -3,9 +3,10 @@ import React from 'react'
 import Image from 'next/image'
 import logo from '../images/logo.png'
 import userIcon from '../images/user.png'
-import '../styles/navbar.css'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
+import navbarCart from '../images/navbar-cart.png'
+import '../styles/navbar.css'
 
 export default function Navbar() {
   const session = useSession()
@@ -27,6 +28,12 @@ export default function Navbar() {
         </div>
         :
         <div className="nav-menu-wrapper">
+          <div className="nav-cart-btn-wrapper">
+            {session.data?.user?.cart.length > 0 && <div className="cart-item-count">{session.data?.user?.cart.length}</div>}
+            <Link href="/userProfile/cart" className="nav-menu-btn nav-cart-btn">
+              <Image src={navbarCart} width={50} height={50} alt="Cart icon"/>
+            </Link>
+          </div>
           <button className='nav-menu-btn' onClick={toggleNavMenu}>
             <Image src={session.data.user?.image ? session.data.user?.image : userIcon} alt="User icon" width={50} height={50} style={{alignSelf:'center'}}/>
           </button>

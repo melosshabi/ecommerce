@@ -15,7 +15,6 @@ cloudinary.v2.config({
 export async function PATCH(req:Request, res:Request){
     const data = await req.formData()
     
-    console.log("Profile picture file",data.get('profilePicture')?.valueOf())
     if(data.get('profilePicture')?.valueOf() !== undefined){
         const newProfilePicture: File = data.get('profilePicture') as unknown as File
         const bytes = await newProfilePicture.arrayBuffer()
@@ -31,7 +30,7 @@ export async function PATCH(req:Request, res:Request){
             username:data.get('newUsername'),
             email:data.get('newEmail'),
             profilePictureUrl:cloudinaryRes.url
-        })
+        }, {new:true})
         await unlink(path)
     }else {
         await connectToDb()

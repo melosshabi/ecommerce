@@ -6,7 +6,10 @@ export async function PATCH(req:Request){
 
     try {
         await userModel.findOneAndUpdate({userId:data.userId}, {
-            $push:{wishlist:data.productDocId}
+            $push:{wishlist:{
+                productDocId:data.productDocId,
+                dateAdded: new Date()
+            }}
         }, {new:true})
 
         return NextResponse.json({
@@ -25,7 +28,7 @@ export async function DELETE(req:Request){
 
     try {
         await userModel.findOneAndUpdate({userId:data.userId}, {
-            $pull:{wishlist:data.productDocId}
+            $pull:{wishlist:{productDocId:data.productDocId}}
         }, {new:true})
 
         return NextResponse.json({

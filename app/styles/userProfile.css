@@ -32,14 +32,22 @@
     align-items: center;
     transition: all 300ms;
 }
-.profile-page-sidebar li:hover{
+.profile-page-sidebar a {
+    text-decoration: none;
+    color:black;
+    transition: all 300ms;
+}
+.profile-page-sidebar a:hover {
+    color:var(--orange)
+}
+.profile-page-sidebar li:hover, .active-li{
     color:var(--orange);
     background-color: var(--transparentOrange);
 }
 .sidebar-icons{
     transition: all 300ms;
 }
-.profile-page-sidebar li:hover .sidebar-icons{
+.profile-page-sidebar li:hover .sidebar-icons, .active-icon{
     fill:var(--orange);
 }
 .sidebar-icons{
@@ -143,4 +151,7 @@
     width: 25px;
     height: 25px;
     margin-right: 5px;
+}
+.cart-list{
+    background-color: red;
 }

@@ -8,7 +8,7 @@ type signUpData = {
     password:string
 }
 // The type used for rendering the products on the homepage
-type Products = {
+type Product = {
     _id:string,
     posterDocId:string,
     productName:string,
@@ -27,7 +27,7 @@ type UserInfo = {
     profilePictureUrl:string
 }
 type ProfilePageSidebar = {
-    currentPath:string
+    activePage:"account" | "cart" | "wishlist" | "products" | "orders"
 }
 // This type is used for the data that is sent to the server when creating a new product
 type ProductData = {
@@ -37,4 +37,12 @@ type ProductData = {
     manufacturer:string,
     price:number,
     quantity:number,
+}
+type CartListProps = {
+    productsArray: Array<CartListProduct>
+}
+type CartListProduct = {
+    productDocId:string,
+    quantity:number,
+    dateAdded:string
 }

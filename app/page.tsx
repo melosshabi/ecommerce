@@ -7,7 +7,7 @@ import heart from './images/heart.svg'
 import './styles/app.css'
 
 export default async function Home() {
-  const productsPromise: Promise<Products[]> = getProducts()
+  const productsPromise: Promise<Product[]> = getProducts()
   const products = await productsPromise
 
   return (

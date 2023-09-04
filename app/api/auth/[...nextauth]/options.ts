@@ -48,6 +48,7 @@ export const nextAuthOptions:NextAuthOptions = {
     ],
     callbacks:{
         async signIn({ user, credentials }) {
+
             // @ts-ignore
            if(user.errorCode === 'username-not-found'){
             throw new Error("username-not-found")

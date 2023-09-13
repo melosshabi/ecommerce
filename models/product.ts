@@ -38,7 +38,12 @@ const productSchema = new Schema({
         type:Array,
         required:false,
         default: () => []
-    }, 
+    },
+    datePosted:{
+        type:Date,
+        required:false,
+        default:() => Date.now()
+    }
 })
 
 const productModel = mongoose.models.Product || mongoose.model("Product", productSchema)

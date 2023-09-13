@@ -60,6 +60,7 @@
     color:var(--orange);
     fill:var(--orange);
 }
+/* Styling for the account information option */
 .user-info-wrapper{
     width: 75%;
     height: 60%;
@@ -152,6 +153,101 @@
     height: 25px;
     margin-right: 5px;
 }
+/* Styling for the cart option */
 .cart-list{
-    background-color: red;
+    width: 80%;
+    padding:10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px black;
+    overflow-y: scroll;
+}
+.cart-item{
+    height: 15%;
+    margin:20px 0;
+    padding:10px;
+    border-radius: 8px;
+    box-shadow: 0 0 3px black;
+    display: flex;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 200ms;
+}
+.cart-item:hover{
+    box-shadow: 0 0 10px black;
+}
+.cart-item-details{
+    text-decoration: none;
+    color:black;
+}
+.cart-item-details:hover{
+    text-decoration: underline;
+}
+.cart-item-image-wrapper{
+    width: 8%;
+    margin-right: 2%;
+}
+.cart-item-image{
+    height: 100%;
+    width: 100%;
+    border-radius: 8px;
+}
+.cart-item-details-wrapper {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+.cart-item-details-wrapper p{
+    margin:5px 0;
+}
+.date-added-to-cart{
+    position: absolute;
+    right:10px;
+    bottom:0px;
+}
+.quantity-wrapper{
+    display: flex;
+    align-items: center;
+    /* background-color: var(--orange); */
+}
+.quantity-input{
+    width: 20%;
+    padding:5px;
+    border-radius: 10px;
+    border:1px solid black;
+    text-align: center;
+    transition: all 100ms;
+}
+.quantity-input:focus{
+    outline:none;
+    box-shadow: 0 0 5px var(--orange);
+}
+/* For Firefox */
+.quantity-input[type=number]{
+    -moz-appearance: textfield;
+}
+/* For Other Browsers */
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button{
+    appearance: none;
+    -webkit-appearance: none;
+    margin:0;
+}
+.quantity-btns{
+    background: none;
+    border:none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin:0 15px;
+    padding:5px;
+    transition: 250ms;
+}
+.quantity-btns:hover{
+    background-color: var(--transparentBlack);
+}
+.quantity-icons{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
 }

@@ -15,7 +15,7 @@ export async function PATCH(req:Request){
             })
         }
         await userModel.findOneAndUpdate({userId:data.userId}, {
-            $push:{cart:{productDocId:data.productDocId, quantity:data.quantity, dateAdded:new Date()}}
+            $push:{cart:{productDocId:data.productDocId, desiredQuantity:data.desiredQuantity, dateAdded:new Date()}}
         }, {new:true})
         return NextResponse.json({
             message:"Added to cart",

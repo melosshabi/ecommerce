@@ -4,7 +4,6 @@ import React, { useEffect } from 'react'
 export default function ProfilePageSidebar({activePage} : ProfilePageSidebar) {
 
     useEffect(() => {
-        console.log(activePage)
         document.querySelector(`.${activePage}-li`)?.classList.add('active-li')
         document.querySelector(`.${activePage}-li svg`)?.classList.add('active-icon')
         return () => {

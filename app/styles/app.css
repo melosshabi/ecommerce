@@ -4,6 +4,7 @@
     --transparentOrange:rgba(237, 107, 14, .1);
     --darkerOrange:rgb(133, 61, 9);
     --black:rgb(40, 40, 40);
+    --transparentBlack:rgba(40, 40, 40, .2);
     --white:rgb(240, 240, 240);
     --gray:rgb(160, 160, 160);
     --lighterGray:rgba(170, 170, 170, .5);

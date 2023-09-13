@@ -11,7 +11,7 @@ export default function ProductDetails() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const productDocId = searchParams.get('_id')
-  const [product, setProduct] = useState<Products | undefined>(undefined)
+  const [product, setProduct] = useState<Product | undefined>(undefined)
   // This variable holds the url of the large image that is displayed on the right side of the image sidebar
   const [activeImage, setActiveImage] = useState<string>("")
   const [error, setError] = useState<string>("")
@@ -20,7 +20,7 @@ export default function ProductDetails() {
 
   useEffect(() => {
     async function fetchProduct(){
-      const res = await fetch(`http://localhost:3000/api/productDetails?_id=${productDocId}`)
+      const res = await fetch(`http://localhost:3000/api/productDetails?multiple=false&_id=${productDocId}`)
       const product = await res.json()
       if(!product){
         router.push('/')
@@ -101,7 +101,7 @@ export default function ProductDetails() {
         // @ts-ignore
         userId:session.data?.user?.userId,
         productDocId:product?._id,
-        quantity:userQuantity
+        desiredQuantity:userQuantity
       })
     })
     const parsedRes = await res.json()

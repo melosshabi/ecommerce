@@ -8,7 +8,7 @@ type signUpData = {
     password:string
 }
 // The type used for rendering the products on the homepage
-type Product = {
+interface Product {
     _id:string,
     posterDocId:string,
     productName:string,
@@ -43,6 +43,12 @@ type CartListProps = {
 }
 type CartListProduct = {
     productDocId:string,
-    quantity:number,
+    // quantity in this case refers to the quantity chosen by the user
+    desiredQuantity:number,
     dateAdded:string
+}
+// The type below is used to for the cart page
+interface CartProducts extends Product {
+    dateAddedToCart:Date
+    desiredQuantity:number
 }

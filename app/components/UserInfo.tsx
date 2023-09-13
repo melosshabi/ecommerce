@@ -11,7 +11,6 @@ export default function UserInfo({userId, username, email, profilePictureUrl}:Us
   const [localPictureUrl, setLocalPictureUrl] = useState<string | undefined>(undefined)
   const [updateInProgress, setUpdateInProgress] = useState<boolean>(false)
 
-  useEffect(() => console.log(pictureFile), [pictureFile])
   function openImagePicker(){
     // @ts-ignore
     document.querySelector('#file-input')?.click()

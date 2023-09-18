@@ -27,7 +27,7 @@ type UserInfo = {
     profilePictureUrl:string
 }
 type ProfilePageSidebar = {
-    activePage:"account" | "cart" | "wishlist" | "products" | "orders"
+    activePage:"account" | "cart" | "wishlist" | "userProducts" | "userOrders"
 }
 // This type is used for the data that is sent to the server when creating a new product
 type ProductData = {
@@ -48,7 +48,15 @@ type CartListProduct = {
     dateAdded:string
 }
 // The type below is used to for the cart page
-interface CartProducts extends Product {
+interface CartProduct extends Product {
     dateAddedToCart:Date
     desiredQuantity:number
+}
+type WishlistProps = {
+    productsArray: Array<WishlistProduct>
+    userId:string
+}
+interface WishlistProduct extends Product{
+    productDocId:string,
+    dateAdded:string,
 }

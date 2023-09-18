@@ -65,7 +65,7 @@ export async function POST(req:Request){
         })
 
         await userModel.findOneAndUpdate({userId:data.get('userId')}, {
-         $push: {products: productDoc}
+         $push: {products: productDoc._id}
         })
        }else{
        const productDoc = await productModel.create({
@@ -80,7 +80,7 @@ export async function POST(req:Request){
        })
 
        await userModel.findOneAndUpdate({userId:data.get('userId')}, {
-        $push: {products: productDoc}
+        $push: {products: productDoc._id}
        })
     }
 

@@ -153,15 +153,23 @@
     height: 25px;
     margin-right: 5px;
 }
-/* Styling for the cart option */
-.cart-list{
+/* Styling for the cart and wishlist options */
+.cart-list, .wishlist{
     width: 80%;
     padding:10px 20px;
     border-radius: 10px;
     box-shadow: 0 0 5px black;
     overflow-y: scroll;
 }
-.cart-item{
+.empty-wishlist{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.empty-wishlist p {
+    font-size: 2em;
+}
+.cart-item, .wishlist-item{
     height: 15%;
     margin:20px 0;
     padding:10px;
@@ -172,35 +180,35 @@
     text-decoration: none;
     transition: all 200ms;
 }
-.cart-item:hover{
+.cart-item:hover, .wishlist-item:hover{
     box-shadow: 0 0 10px black;
 }
-.cart-item-details{
+.cart-item-details, .wishlist-item-details{
     text-decoration: none;
     color:black;
 }
-.cart-item-details:hover{
+.cart-item-details:hover, .wishlist-item-details:hover{
     text-decoration: underline;
 }
-.cart-item-image-wrapper{
+.cart-item-image-wrapper, .wishlist-item-image-wrapper{
     width: 8%;
     margin-right: 2%;
 }
-.cart-item-image{
+.cart-item-image, .wishlist-item-image{
     height: 100%;
     width: 100%;
     border-radius: 8px;
 }
-.cart-item-details-wrapper {
+.cart-item-details-wrapper, .wishlist-item-details-wrapper{
     width: 90%;
     display: flex;
     justify-content: space-between;
     position: relative;
 }
-.cart-item-details-wrapper p{
+.cart-item-details-wrapper p, .wishlist-item-details-wrapper p{
     margin:5px 0;
 }
-.date-added-to-cart{
+.date-added-to-cart, .date-added-to-wishlist{
     position: absolute;
     right:10px;
     bottom:0px;
@@ -250,4 +258,30 @@
     height: 20px;
     display: inline-block;
     vertical-align: middle;
+}
+/* Styling for the buttons at the top right of the items in the cart/wishlist */
+.wishlist-btns, .cart-item-btn{
+    background: none;
+    border:none;
+    padding:10px;
+    border-radius: 8px;
+    margin:0 6px;
+    cursor: pointer;
+    transition: all 250ms;
+}
+.cart-item-btn{
+    position: absolute;
+    top:5px;
+    right:10px;
+}
+.wishlist-btns-icons, .cart-item-btn-icon{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    transition: all 250ms;
+}
+.wishlist-btns:hover, .wishlist-btns:hover .wishlist-btns-icons, .cart-item-btn:hover, .cart-item-btn:hover .cart-item-btn-icon{
+    background-color: var(--orange);
+    fill:white;
 }

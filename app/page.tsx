@@ -1,9 +1,7 @@
 import Image from 'next/image'
 import zFlip from './images/z-flip.jpg'
-import iphone from './images/iphone.jpg'
 import getProducts from '@/lib/getProducts'
 import Link from 'next/link'
-import heart from './images/heart.svg'
 import './styles/app.css'
 
 export default async function Home() {

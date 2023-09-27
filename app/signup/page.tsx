@@ -1,10 +1,18 @@
 "use client"
-import React, { FormEvent, useState } from 'react'
-import { signIn } from 'next-auth/react'
+import React, { FormEvent, useEffect, useState } from 'react'
+import { signIn, useSession } from 'next-auth/react'
 import '../styles/signup.css'
 import Loader from '@/app/components/Loader'
+import { useRouter } from 'next/navigation'
 
 export default function SignUp() {
+
+  const session = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if(session.status === 'authenticated') router.push('/')
+  },[session])
 
   const [formData, setFormData] = useState<signUpData>({
     username:'',

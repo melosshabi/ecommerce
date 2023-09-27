@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import Image from 'next/image'
 import userIcon from '../images/user.png'
 
-export default function UserInfo({userId, username, email, profilePictureUrl}:UserInfo) {
+export default function UserInfo({userDocId, username, email, profilePictureUrl}:UserInfo) {
 
   const [newUsername, setNewUsername] = useState<string>(username)
   const [newEmail, setNewEmail] = useState<string>(email)
@@ -52,7 +52,6 @@ export default function UserInfo({userId, username, email, profilePictureUrl}:Us
     formData.set('newUsername', newUsername)
     formData.set('newEmail', newEmail)
     formData.set('profilePicture', pictureFile)
-    formData.set('userId', userId)
     const req = await fetch('http://localhost:3000/api/updateUser', {
       method:"PATCH",  
       body:formData

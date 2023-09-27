@@ -1,10 +1,8 @@
 import connectToDb from "@/lib/mongodb"
 import productModel from "@/models/product"
-import mongoose from "mongoose"
 import { NextResponse } from "next/server"
 import cloudinary from 'cloudinary'
 import { join } from "path"
-import { ObjectId } from "mongodb"
 import { unlink, writeFile } from "fs/promises"
 import userModel from "@/models/user"
 
@@ -16,7 +14,6 @@ cloudinary.v2.config({
 
 export async function POST(req:Request){
     const data = await req.formData()
-
     const userDocId = data.get('userDocId')
     const productName = data.get('productName')
     const brandName = data.get('brandName')
@@ -40,13 +37,11 @@ export async function POST(req:Request){
     // Uploading pictures to cloudinary
     for(let i = 0; i < pictures.length; i++){
         if(pictures[i].valueOf() !== 'undefined'){
-            const path = join(__dirname, '/../../../../../productImages', pictures[i].name)
+            const path = join(__dirname, pictures[i].name)
             const bytes = await pictures[i].arrayBuffer()
             const buffer = Buffer.from(bytes)
             await writeFile(path, buffer)
             const cloudinaryRes = await cloudinary.v2.uploader.upload(path, {folder:'ecommerce/products', public_id: `Product${new Date()}`})
-            picturesUrls.push(cloudinaryRes.url)
-            console.log("Pictures URLs", picturesUrls)
             await unlink(path)
         }
     }
@@ -85,7 +80,6 @@ export async function POST(req:Request){
     }
 
     }catch(err:any){
-        console.log(err)
         if(err._message === 'Product validation failed'){
             return NextResponse.json({
                 errorMessage:"Please fill out the form",

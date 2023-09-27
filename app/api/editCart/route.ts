@@ -14,7 +14,7 @@ export async function PATCH(req:Request){
                 errorCode:"invalid-quantity"
             })
         }
-        await userModel.findOneAndUpdate({userId:data.userId}, {
+        await userModel.findOneAndUpdate({_id:new ObjectId(data.userDocId)}, {
             $push:{cart:{productDocId:data.productDocId, desiredQuantity:data.desiredQuantity, dateAdded:new Date()}}
         }, {new:true})
         return NextResponse.json({

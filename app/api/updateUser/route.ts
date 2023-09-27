@@ -5,6 +5,8 @@ import { NextResponse } from "next/server"
 import {join} from 'path'
 import cloudinary from 'cloudinary'
 import { unlink } from "fs/promises"
+import { getServerSession } from "next-auth"
+import { nextAuthOptions } from "../auth/[...nextauth]/options"
 
 cloudinary.v2.config({
     cloud_name:process.env.CLOUD_NAME,
@@ -14,7 +16,7 @@ cloudinary.v2.config({
 
 export async function PATCH(req:Request, res:Request){
     const data = await req.formData()
-    
+    const session = await getServerSession(nextAuthOptions)
     if(data.get('profilePicture')?.valueOf() !== undefined){
         const newProfilePicture: File = data.get('profilePicture') as unknown as File
         const bytes = await newProfilePicture.arrayBuffer()
@@ -23,7 +25,7 @@ export async function PATCH(req:Request, res:Request){
         const path = join(__dirname, '/../../../../../profilePictures', newProfilePicture.name)
         await writeFile(path, buffer)
 
-        const cloudinaryRes = await cloudinary.v2.uploader.upload(path, {folder:'ecommerce/profilePictures', public_id:`ProfilePictureOf${data.get('userId')}`, overwrite:true})
+        const cloudinaryRes = await cloudinary.v2.uploader.upload(path, {folder:'ecommerce/profilePictures', public_id:`ProfilePictureOf${session?.user.userDocId}`, overwrite:true})
 
         await connectToDb()
         await userModel.findOneAndUpdate({userId:data.get('userId')}, {

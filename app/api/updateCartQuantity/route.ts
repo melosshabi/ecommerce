@@ -13,10 +13,7 @@ export async function PATCH(req:Request){
     const data = await req.json()
     console.log("Data", data)
     const session = await getServerSession(nextAuthOptions)
-    // console.log("server Session:", session)
-    if(data.userId !== session?.user.userId){
-        return NextResponse.json({errorMessage:"Can't make requests on someone else's behalf"}, {status:400})
-    }
+    
     if(data.action === quantityActions.inc){
         const user = await userModel.findOne({userId:data.userId}).where({cart: { productDocId: data.productDocId}})
         console.log(user)

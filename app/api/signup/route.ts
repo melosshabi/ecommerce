@@ -2,18 +2,17 @@ import connectToDb from "@/lib/mongodb"
 import { hashPassword } from "@/lib/bcrypt"
 import userModel from "@/models/user"
 import { NextResponse } from "next/server"
-import { nanoid } from "nanoid"
 
 export async function POST(req:Request){
     const data = await req.json()
-    console.log(data)
+
     await connectToDb()
 
     // I used this variable to check if the sent username already exists
     const user = await userModel.findOne({username:data.username, email:data.email})
     // I used this variable to check if the sent email already exists
     const userByEmail = await userModel.findOne({email:data.email})
-    // console.log(user._doc)
+
     if(user && user._doc.username === data.username){
         return NextResponse.json({
             errorMessage:"This username is already taken",
@@ -28,11 +27,10 @@ export async function POST(req:Request){
     }
 
     const hashedPassword = await hashPassword(data.password)
-    const userId = nanoid()
 
     let newUser
     try{
-        newUser = await userModel.create({...data, password:hashedPassword, userId})
+        newUser = await userModel.create({...data, password:hashedPassword,})
     }catch(err:any){
         if(err._message === "User validation failed"){
             return NextResponse.json({

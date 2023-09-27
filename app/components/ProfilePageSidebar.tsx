@@ -1,7 +1,19 @@
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 
 export default function ProfilePageSidebar({activePage} : ProfilePageSidebar) {
+
+    const session = useSession()
+    const router = useRouter()
+
+    useEffect(() => {
+        if(session.status === 'unauthenticated'){
+            router.push('/api/auth/signin')
+        }
+    }, [])
+    
 
     useEffect(() => {
         document.querySelector(`.${activePage}-li`)?.classList.add('active-li')

@@ -15,7 +15,7 @@ export default function WishlistPage() {
   return (
     session.status === 'authenticated' &&
     <>
-      <Wishlist productsArray={session.data?.user.wishlist} userId={session.data.user.userId}/>
+      <Wishlist productsArray={session.data?.user.wishlist} userDocId={session.data.user.userDocId}/>
     </>
   )
 }

@@ -7,7 +7,7 @@ type signUpData = {
     email:string,
     password:string
 }
-// The type used for rendering the products on the homepage
+// The type used for rendering the products on the homepage (The data stored on the database)
 interface Product {
     _id:string,
     posterDocId:string,
@@ -21,7 +21,7 @@ interface Product {
     productReviews:Array,
 }
 type UserInfo = {
-    userId:string,
+    userDocId:string,
     username:string,
     email:string,
     profilePictureUrl:string
@@ -53,10 +53,18 @@ interface CartProduct extends Product {
     desiredQuantity:number
 }
 type WishlistProps = {
-    productsArray: Array<WishlistProduct>
-    userId:string
+    productsArray: Array<SessionWishlist>
+    userDocId:string
 }
-interface WishlistProduct extends Product{
+// This type is used for the productsArray prop on the Wishlist components which holds objects with 2 keys productDocId and dateAdded
+type SessionWishlist = {
     productDocId:string,
     dateAdded:string,
+}
+interface WishlistItem extends Product {
+    dateAdded:Date,
+}
+// This type is used to fetch and display the products posted by the signed in user the in UserProductsList component
+interface UserProduct extends Product{
+    datePosted:Date
 }

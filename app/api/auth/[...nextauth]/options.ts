@@ -62,7 +62,6 @@ export const nextAuthOptions:NextAuthOptions = {
         async session({session, token}){
             await connectToDb()
             const user = await userModel.findOne({username:token.name})
-            session.user.userId = user._doc.userId
             session.user.image = user._doc.profilePictureUrl
             session.user.userDocId = user._doc._id
             session.user.cart = user._doc.cart

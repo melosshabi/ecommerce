@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 // Next Auth options
 import {nextAuthOptions} from '../auth/[...nextauth]/options'
+import { ObjectId } from "mongodb"
 
 const quantityActions = {
     inc:'increment',
@@ -11,15 +12,31 @@ const quantityActions = {
 
 export async function PATCH(req:Request){
     const data = await req.json()
-    console.log("Data", data)
     const session = await getServerSession(nextAuthOptions)
     
     if(data.action === quantityActions.inc){
-        const user = await userModel.findOne({userId:data.userId}).where({cart: { productDocId: data.productDocId}})
-        console.log(user)
-        // const cartItem = await userQuery.findOne({cart:{ $elemMatch: {productDocId:data.productDocId}}})
+        const userCartList = await userModel.findOne({_id:new ObjectId(session?.user.userDocId)}, 'cart')
+        const currentCart = [...userCartList.cart]
+        currentCart.forEach(item => {
+            if(data.productDocId === item.productDocId.toString()){
+                item.desiredQuantity += 1
+            }
+        })
+        await userModel.updateOne({_id:new ObjectId(session?.user.userDocId)}, {cart:currentCart})
         
-        return NextResponse.json({msg:'hi'})
+        return NextResponse.json({msg:'Cart updated successfully', msgCode:"cart-updated"})
+
+    }else if(data.action === quantityActions.dec){
+        const userCartList = await userModel.findOne({_id:new ObjectId(session?.user.userDocId)}, 'cart')
+        const currentCart = [...userCartList.cart]
+        currentCart.forEach(item => {
+            if(data.productDocId === item.productDocId.toString()){
+                item.desiredQuantity -= 1
+            }
+        })
+        await userModel.updateOne({_id:new ObjectId(session?.user.userDocId)}, {cart:currentCart})
+        
+        return NextResponse.json({msg:'Cart updated successfully', msgCode:"cart-updated"})
     }
-    return NextResponse.json({errorMessage:"Invalid data"}, {status:200})
+    return NextResponse.json({errorMessage:"Bad Request"}, {status:400})
 }

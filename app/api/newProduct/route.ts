@@ -42,6 +42,7 @@ export async function POST(req:Request){
             const buffer = Buffer.from(bytes)
             await writeFile(path, buffer)
             const cloudinaryRes = await cloudinary.v2.uploader.upload(path, {folder:'ecommerce/products', public_id: `Product${new Date()}`})
+            picturesUrls.push(cloudinaryRes.url)
             await unlink(path)
         }
     }

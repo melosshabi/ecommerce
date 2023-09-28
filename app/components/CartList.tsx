@@ -39,7 +39,7 @@ export default function CartList({productsArray} : CartListProps) {
   
   const [quantityTimeout, setQuantityTimeout] = useState<NodeJS.Timeout | null>(null)
   // Function that updates the desired quantity 
-  async function updateQuantity(userDocId:string, productDocId:string, action:string, productStock:number){
+  async function updateQuantity(productDocId:string, action:string, productStock:number){
 
     if(quantityTimeout) {
       clearTimeout(quantityTimeout)
@@ -47,26 +47,22 @@ export default function CartList({productsArray} : CartListProps) {
     }
 
     const input = document.querySelector(`.input-${productDocId}`) as HTMLInputElement
-    // The variable below will hold the new quantity that the user wants, and it will be sent to the updateQuantity route handler
-    let newQuantityValue:number | undefined = undefined
+    
     if(action === quantityActions.inc){  
       const newValue = parseInt(input.value) + 1
       if(newValue > productStock) return
       input.value = newValue.toString()
-      newQuantityValue = newValue
     }else if(action === quantityActions.dec){
       const newValue = parseInt(input.value) - 1
       if(newValue < 1 ) return
       input.value = newValue.toString()
-      newQuantityValue = newValue
     }
     const timeout = setTimeout(async () => {
-      const res = await fetch('http://localhost:3000/api/updateCartQuantity', {
+      await fetch('http://localhost:3000/api/updateCartQuantity', {
         method:'PATCH',
-        body:JSON.stringify({userDocId, productDocId, action, newQuantityValue})
+        body:JSON.stringify({productDocId, action})
       })
-      console.log(await res.json())
-    }, 100)
+    }, 1000)
     setQuantityTimeout(timeout)
   }
 
@@ -88,8 +84,6 @@ export default function CartList({productsArray} : CartListProps) {
               <Image className="cart-item-image" src={item.pictures[0] as string} width={200} height={200} alt="Cart item image"/>
             </div>
 
-            
-
             <div className='cart-item-details-wrapper'>
               <a href={`/productDetails?_id=${item._id}`} className="cart-item-details">
                 <p>{item.productName}</p>
@@ -104,11 +98,11 @@ export default function CartList({productsArray} : CartListProps) {
                 </svg>
               </button>
 
-                <button className='quantity-btns' onClick={() => updateQuantity(session.data?.user?.userDocId as string, item._id, quantityActions.inc, item.quantity)}>
+                <button className='quantity-btns' onClick={() => updateQuantity(item._id, quantityActions.inc, item.quantity)}>
                   <Image className='quantity-icons' src={plus} width={50} height={50} alt="Plus icon"/>
                 </button>
                 <input type="number" className={`quantity-input input-${item._id}`} value={item.desiredQuantity} readOnly/>
-                <button className='quantity-btns' onClick={() => updateQuantity(session.data?.user.userDocId as string, item._id, quantityActions.dec, item.quantity)}>
+                <button className='quantity-btns' onClick={() => updateQuantity(item._id, quantityActions.dec, item.quantity)}>
                   <Image className='quantity-icons' src={minus} width={50} height={50} alt="Minus icon"/>
                 </button>
               </div>

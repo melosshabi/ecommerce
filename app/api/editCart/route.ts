@@ -15,7 +15,7 @@ export async function PATCH(req:Request){
             })
         }
         await userModel.findOneAndUpdate({_id:new ObjectId(data.userDocId)}, {
-            $push:{cart:{productDocId:data.productDocId, desiredQuantity:data.desiredQuantity, dateAdded:new Date()}}
+            $push:{cart:{productDocId:new ObjectId(data.productDocId), desiredQuantity:data.desiredQuantity, dateAdded:new Date()}}
         }, {new:true})
         return NextResponse.json({
             message:"Added to cart",
@@ -34,7 +34,7 @@ export async function DELETE(req:Request){
 
     try{
         await userModel.findOneAndUpdate({userId:data.userId}, {
-            $pull:{cart:{productDocId:data.productDocId}}
+            $pull:{cart:{productDocId:new ObjectId(data.productDocId)}}
         }, {new:true})
         return NextResponse.json({
             message:"Removed from cart",

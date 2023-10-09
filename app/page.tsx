@@ -1,19 +1,18 @@
 import Image from 'next/image'
-import zFlip from './images/z-flip.jpg'
 import getProducts from '@/lib/getProducts'
 import Link from 'next/link'
+import ImageSlider from './components/ImageSlider'
 import './styles/app.css'
 
 export default async function Home() {
   const productsPromise: Promise<Product[]> = getProducts()
   const products = await productsPromise
 
+
   return (
     <main className='home'>
-      <div className="image-slider">
-        <Image src={zFlip} className='header-images' alt="Home image"/>
-        {/* <Image src={iphone} className='header-images' alt="Home image"/> */}
-      </div>
+      
+      <ImageSlider/>
 
       <div className="products">
         {

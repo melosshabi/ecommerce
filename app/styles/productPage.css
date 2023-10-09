@@ -16,7 +16,6 @@
     padding:20px;
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
 }
 .images-sidebar{
     width: fit-content;
@@ -107,6 +106,9 @@
     display: flex;
     align-items: center;
     transition: all 300ms;
+}
+.order-now-btn{
+    text-decoration: none;
 }
 .current-product-icons{
     width: 20px;

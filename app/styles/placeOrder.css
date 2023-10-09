@@ -1,0 +1,35 @@
+.order-page{
+    width: 100dvw;
+    height: 90dvh;
+    margin-top:10dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.order-page h2{
+    margin-bottom: 2.5dvh;
+}
+.product-payment-form-wrapper{
+    width: 90dvw;
+    height: 75dvh;
+    box-shadow: 0 0 5px black;
+    border-radius: 15px;
+    padding:20px;
+    display: flex;
+    align-items: center;
+}
+.product-wrapper{
+    padding:30px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.product-image-wrapper{
+    margin-bottom: 40px;
+}
+.product-details-wrapper{
+    line-height: 2;
+}

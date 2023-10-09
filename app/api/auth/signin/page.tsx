@@ -43,7 +43,6 @@ export default function SignIn() {
       password:formData.password,
       redirect:false,
     }).then(res => {
-      console.log(res)
       if(res?.error === 'username-not-found'){
         setError('Username not found')
         setAuthInProgress(false)

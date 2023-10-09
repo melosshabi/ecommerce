@@ -1,0 +1,39 @@
+.image-slider{
+    width: 100dvw;
+    height: 50dvh;
+    margin-top: 10dvh;
+    margin-bottom: 2dvh;
+    position: relative;
+}
+.header-images{
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 5px black;
+    position: absolute;
+    top:0;
+    left:0;
+    opacity: 0;
+    transition: all 300ms;
+}
+.active-header-image{
+    opacity: 1;
+}
+.time-indicator{
+    height: 5px;
+    width: 0%;
+    background-color: var(--orange);
+    position: absolute;
+    bottom:0;
+    animation-name:indicator;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes indicator {
+    0%{
+        width: 0%;
+    }
+    100%{
+        width: 100%;
+    }
+}

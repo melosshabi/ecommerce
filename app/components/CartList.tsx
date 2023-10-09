@@ -47,20 +47,35 @@ export default function CartList({productsArray} : CartListProps) {
     }
 
     const input = document.querySelector(`.input-${productDocId}`) as HTMLInputElement
-    
+    let newQuantity: number | null = null
+
     if(action === quantityActions.inc){  
       const newValue = parseInt(input.value) + 1
-      if(newValue > productStock) return
-      input.value = newValue.toString()
+
+      if(newValue > productStock){
+        newQuantity = productStock
+        input.value = productStock.toString()
+      }else {
+        input.value = newValue.toString()
+        newQuantity = newValue
+      }
+      
     }else if(action === quantityActions.dec){
       const newValue = parseInt(input.value) - 1
-      if(newValue < 1 ) return
-      input.value = newValue.toString()
+      if(newValue < 1 ) {
+        newQuantity = 1
+        input.value = "1"
+        return
+      }else {
+        input.value = newValue.toString()
+        newQuantity = newValue
+      }
     }
+
     const timeout = setTimeout(async () => {
       await fetch('http://localhost:3000/api/updateCartQuantity', {
         method:'PATCH',
-        body:JSON.stringify({productDocId, action})
+        body:JSON.stringify({productDocId, newQuantity})
       })
     }, 1000)
     setQuantityTimeout(timeout)

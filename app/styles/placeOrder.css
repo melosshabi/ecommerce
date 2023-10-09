@@ -18,6 +18,7 @@
     padding:20px;
     display: flex;
     align-items: center;
+    justify-content: space-around;
 }
 .product-wrapper{
     padding:30px;
@@ -32,4 +33,110 @@
 }
 .product-details-wrapper{
     line-height: 2;
+}
+.payment-form{
+    width: 50%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.payment-form h3{
+    font-size: 1.5em;
+    text-align: center;
+    margin: 10px 0;
+}
+.payment-info{
+    width: 50%;
+}
+.card-number-input, .cvv-input{
+    width: 90%;
+    padding:10px;
+    border-radius: 5px;
+    border:1px solid var(--gray);
+    margin:10px 5px;
+    transition: all 150ms;
+}
+.cvv-input{
+    width: 7%;
+}
+/* The 2 rules below remove the arrow icons from inputs with the type of number */
+/* For Firefox */
+.cvv-input[type=number]{
+    -moz-appearance: textfield;
+}
+/* For Other Browsers */
+.cvv-input::-webkit-outer-spin-button,
+.cvv-input::-webkit-inner-spin-button{
+    appearance: none;
+    -webkit-appearance: none;
+    margin:0;
+}
+.other-card-info{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.select-inputs{
+    background: none;
+    border:1px solid var(--gray);
+    border-radius: 5px;
+    padding:10px;
+    cursor: pointer;
+    margin:0 5px;
+    transition: all 150ms;
+}
+.card-number-input:focus, .cvv-input:focus, .select-inputs:focus{
+    outline:none;
+    box-shadow: 0 0 5px var(--orange);
+}
+/* Billing */
+.billing-info{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.billing-info-left, .billing-info-right{
+    width: 45%;
+    height: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+.billing-info-left{
+    display: grid;
+    grid-template-columns: 45% 45%;
+    justify-content: space-between;
+}
+.billing-info input{
+    height: 50%;
+    border:1px solid var(--gray);
+    border-radius: 5px;
+    padding:5px 10px;
+    transition: all 150ms;
+}
+.billing-info input:focus{
+    outline:none;
+    box-shadow: 0 0 5px var(--orange);
+}
+.billing-info-right input{
+    height: 17%;
+    margin-bottom: 10px;
+}
+.submit-order-btn{
+    font-size: 1.5em;
+    background-color: var(--orange);
+    border:none;
+    border-radius: 8px;
+    padding:10px 20px;
+    color:white;
+    cursor: pointer;
+    transition: all 250ms;
+}
+.submit-order-btn:hover{
+    opacity: .8;
 }

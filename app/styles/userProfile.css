@@ -234,6 +234,7 @@
     outline:none;
     box-shadow: 0 0 5px var(--orange);
 }
+/* The 2 rules below remove the arrow icons from inputs with the type of number */
 /* For Firefox */
 .quantity-input[type=number]{
     -moz-appearance: textfield;

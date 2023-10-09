@@ -44,6 +44,11 @@ const userSchema = new Schema({
         required:false,
         default: () => []
     },
+    orders:{
+        type:Array,
+        required:false,
+        default:() => []
+    },
     dateAccountCreated:{
         type:Date,
         default: () => Date.now()

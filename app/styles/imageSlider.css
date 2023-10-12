@@ -21,13 +21,14 @@
 .time-indicator{
     height: 5px;
     width: 0%;
-    background-color: var(--orange);
+    background: linear-gradient(90deg, transparent, var(--orange));
     position: absolute;
     bottom:0;
     animation-name:indicator;
     animation-duration: 10s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+    animation-delay: 150ms;
 }
 @keyframes indicator {
     0%{

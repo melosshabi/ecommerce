@@ -45,7 +45,7 @@ export default function PlaceOrder() {
 
     async function placeOrder(e:FormEvent<HTMLFormElement>){
       e.preventDefault()
-      const res = await fetch('http://localhost:3000/api/placeOrder', {
+      const res = await fetch('http://localhost:3000/api/orders', {
         method:"POST",
         body:JSON.stringify({
           productDocId,
@@ -63,7 +63,11 @@ export default function PlaceOrder() {
           zipCode
         })
       })
-      console.log(await res.json())
+      const response = await res.json()
+      if(response.msgCode === 'order-placed'){
+        alert(response.msg)
+        router.push('/userProfile/userOrders')
+      }
     }
 
   return (
@@ -91,7 +95,7 @@ export default function PlaceOrder() {
           {/* Payment Information */}
           <div className="payment-info">
             <div className='card-number'>
-              <input className="card-number-input" type="text" placeholder="Card Number" required value={cardNumber} onChange={e => setCardNumber(e.target.value)}/>
+              <input className="card-number-input" type="number" placeholder="Card Number" required min={1111111111111111} max={9999999999999999} value={cardNumber} onChange={e => setCardNumber(e.target.value)}/>
             </div>
 
             <div className='other-card-info'>

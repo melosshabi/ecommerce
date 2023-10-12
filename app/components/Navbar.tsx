@@ -10,7 +10,7 @@ import '../styles/navbar.css'
 
 export default function Navbar() {
   const session = useSession()
-  console.log(session)
+  console.log("Session:", session)
   function toggleNavMenu() {
     document.querySelector('.nav-menu')?.classList.toggle('active-nav-menu')
   }

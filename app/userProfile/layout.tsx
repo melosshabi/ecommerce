@@ -2,8 +2,8 @@
 import React, { useEffect } from 'react'
 import ProfilePageSidebar from '../components/ProfilePageSidebar'
 import { usePathname, useRouter } from 'next/navigation'
-import '../styles/userProfile.css'
 import { useSession } from 'next-auth/react'
+import '../styles/userProfile.css'
 
 export default function UserProfileLayout({children}: {children: React.ReactNode}) {
   const path = usePathname()

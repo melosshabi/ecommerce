@@ -19,7 +19,7 @@ export default function ImageSlider(){
                 if(counter === headerImages.length) counter = 0
                 headerImages[counter].classList.add('active-header-image')
             }
-        }, 9850)
+        }, 9900)
         
         return () => clearInterval(interval)
     }, [])

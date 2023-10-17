@@ -10,11 +10,12 @@ import addToCart from '@/lib/addToCart'
 import checkmark from '../images/order-page-checkmark.png'
 import '../styles/productPage.css'
 
-export default function ProductDetails() {
 
-  const router = useRouter()
+export default function ProductDetails() {
+  
   const searchParams = useSearchParams()
-  const productDocId = searchParams.get('_id')
+  const productDocId = searchParams.get("_id")
+  const router = useRouter()
   const [product, setProduct] = useState<Product | undefined>(undefined)
   // This variable holds the url of the large image that is displayed on the right side of the image sidebar
   const [activeImage, setActiveImage] = useState<string>("")

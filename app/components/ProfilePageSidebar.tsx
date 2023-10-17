@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 
-export default function ProfilePageSidebar({activePage} : ProfilePageSidebar) {
+export default function ProfilePageSidebar({activePage, hideSidebar} : ProfilePageSidebar) {
 
     const session = useSession()
     const router = useRouter()
@@ -14,7 +14,6 @@ export default function ProfilePageSidebar({activePage} : ProfilePageSidebar) {
         }
     }, [])
     
-
     useEffect(() => {
         document.querySelector(`.${activePage}-li`)?.classList.add('active-li')
         document.querySelector(`.${activePage}-li svg`)?.classList.add('active-icon')
@@ -24,7 +23,7 @@ export default function ProfilePageSidebar({activePage} : ProfilePageSidebar) {
         }
     }, [activePage])
   return (
-    <div className="profile-page-sidebar">
+    <div className={`profile-page-sidebar ${hideSidebar ? 'hidden-profile-sidebar' : ""}`}>
                 <ul>
                 <Link href="/userProfile/account">
                     <li className="account-li">

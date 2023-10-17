@@ -27,7 +27,8 @@ type UserInfo = {
     profilePictureUrl:string
 }
 type ProfilePageSidebar = {
-    activePage:"account" | "cart" | "wishlist" | "userProducts" | "userOrders"
+    activePage:"account" | "cart" | "wishlist" | "userProducts" | "userOrders",
+    hideSidebar:boolean
 }
 // This type is used for the data that is sent to the server when creating a new product
 type ProductData = {
@@ -85,4 +86,9 @@ type orderData = {
     zipCode:string,
     orderId?:string,
     orderPrice?:number
+}
+// Order Details type
+type OrderDetails = {
+    order:orderData,
+    product:Product
 }

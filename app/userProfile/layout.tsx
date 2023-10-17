@@ -10,9 +10,8 @@ export default function UserProfileLayout({children}: {children: React.ReactNode
   const splittedPath = path.split('/')
   const session = useSession()
   const router = useRouter()
-
   useEffect(() => {
-    if(session.status === 'unauthenticated') router.push('/signin')
+    if(session.status === 'unauthenticated') router.push('/api/auth/signin')
   }, [])
   return (
     <div className='profile-page'>
@@ -20,7 +19,9 @@ export default function UserProfileLayout({children}: {children: React.ReactNode
           <ProfilePageSidebar activePage={splittedPath[2] === 'account' ? 'account' : 
             splittedPath[2] === 'cart' ? 'cart' : 
             splittedPath[2] === 'wishlist' ? 'wishlist' : 
-            splittedPath[2] === 'userProducts' ? 'userProducts' : 'userOrders'}/>
+            splittedPath[2] === 'userProducts' ? 'userProducts' : 'userOrders'}
+            hideSidebar={splittedPath[3] === 'orderDetails'}
+            />
             {
               children
             }

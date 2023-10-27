@@ -16,7 +16,6 @@ export default function UserProductsList() {
       try{
         const res = await fetch('http://localhost:3000/api/getUserProducts', {signal:controller.signal})
         const data = await res.json()
-        console.log(data)
         setUserProducts(data.products)
       }catch(err:any){
         if(err.name === 'AbortError') console.log("fetch request aborted")

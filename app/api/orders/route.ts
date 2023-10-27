@@ -72,7 +72,11 @@ export async function GET(req:Request){
 
     // The code below fetches the order data and the product data and returns it to display on the orderDetails page
     if(singleOrder){ 
-        const order = await orderModel.findOne({orderId:orderId})
+        const resObj = await orderModel.findOne({orderId:orderId})
+        const order = {...resObj._doc}
+        const tempArr = order.cardNumber.split("")
+        tempArr.splice(0, 13)
+        order.cardNumber = `***********${tempArr.join("")}`
         const product = await productModel.findOne({_id:new ObjectId(productDocID as string)})
 
         return NextResponse.json({order, product})

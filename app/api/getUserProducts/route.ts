@@ -7,7 +7,6 @@ import { ObjectId } from "mongodb"
 
 export async function GET() {
     const session = await getServerSession(nextAuthOptions)
-    console.log(session)
     await connectToDb()
     const products = await productModel.find({posterDocId:new ObjectId(session?.user.userDocId)})
     return NextResponse.json({products})

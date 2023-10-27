@@ -14,7 +14,6 @@ export default function UserOrders() {
     async function fetchOrders(){
         const req = await fetch('http://localhost:3000/api/orders', {signal:controller.signal})
         const response = await req.json()
-        console.log(response)
         setOrdersList(prev => [...prev, ...response.userOrders])
         setProducstData(prev => [...prev, ...response.products])
     }

@@ -11,6 +11,7 @@ export default function CartList({productsArray} : CartListProps) {
   // The array that will hold the products data fetched from the database
   const [cartItems, setCartItems] = useState<Array<CartProduct>>([])
   const session = useSession()
+
   useEffect(() =>{
 
     const controller = new AbortController()
@@ -24,10 +25,11 @@ export default function CartList({productsArray} : CartListProps) {
         if(err.name === "AbortError") console.log("fetch request aborted")
       }
     }
+      
+    productsArray.map(async (product) => {
+      await fetchProduct(product.productDocId, product.dateAdded, product.desiredQuantity)
+    })
 
-    for(let i = 0; i < productsArray.length; i++){
-      fetchProduct(productsArray[i].productDocId, productsArray[i].dateAdded, productsArray[i].desiredQuantity)
-    }
     return () => controller.abort()
   }, [])
 

@@ -22,9 +22,9 @@ export default function Wishlist({productsArray, userDocId}:WishlistProps) {
           }
         }
     
-        for(let i = 0; i < productsArray.length; i++){
-          fetchProduct(productsArray[i].productDocId, productsArray[i].dateAdded)
-        }
+        productsArray.map(async (product) => {
+          fetchProduct(product.productDocId, product.dateAdded)
+        })
         return () => controller.abort()
       }, [])
     

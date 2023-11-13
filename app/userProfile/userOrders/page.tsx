@@ -24,7 +24,7 @@ export default function UserOrders() {
   return (
     <div className={`orders-list ${ !ordersList.length ? "empty-orders-list" : ""}`}>
       {
-        !ordersList.length && <h2>You haven't placed any orders yet</h2>
+        !ordersList.length && <h2>You have not placed any orders yet</h2>
       }
       {ordersList?.map((order, index) => {
         return (

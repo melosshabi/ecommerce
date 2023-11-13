@@ -65,3 +65,12 @@ body{
     width: 200px;
     height: 200px;
 }
+/* Media Queries */
+@media screen and (max-width:1283px) and (max-height:590px){
+    .products{
+        margin-bottom: 50px;
+    }
+    .product{
+        width: 90%;
+    }
+}

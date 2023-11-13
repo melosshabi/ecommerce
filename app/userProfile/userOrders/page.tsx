@@ -22,7 +22,10 @@ export default function UserOrders() {
     return () => controller.abort()
   },[])
   return (
-    <div className='orders-list'>
+    <div className={`orders-list ${ !ordersList.length ? "empty-orders-list" : ""}`}>
+      {
+        !ordersList.length && <h2>You haven't placed any orders yet</h2>
+      }
       {ordersList?.map((order, index) => {
         return (
           <Link href={`/userProfile/userOrders/orderDetails?orderId=${order.orderId}&productDocId=${order.productDocId}`} className='order-summary' key={index}>

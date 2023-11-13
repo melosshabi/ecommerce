@@ -10,6 +10,7 @@ export default function UserProfileLayout({children}: {children: React.ReactNode
   const splittedPath = path.split('/')
   const session = useSession()
   const router = useRouter()
+  
   useEffect(() => {
     if(session.status === 'unauthenticated') router.push('/api/auth/signin')
   }, [])

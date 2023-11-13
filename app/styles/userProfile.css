@@ -171,6 +171,11 @@
 .empty-wishlist p {
     font-size: 2em;
 }
+.empty-orders-list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /* These classes style the divs rendered on each page in the users' profiles */
 .cart-item, .wishlist-item, .user-product,  .order-summary{
     height: 15%;

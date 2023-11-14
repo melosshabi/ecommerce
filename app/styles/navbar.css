@@ -151,3 +151,44 @@
     top:-5px;
    }
 }
+/* iPad Pro 11 inch */
+@media screen and (max-width:834px) and (max-height:1194px){
+    .active-nav-menu{
+        height: 16.5dvh;
+    }
+}
+/* iPad */
+@media screen and (max-width:810px) and (max-height:1080px){
+    .active-nav-menu{
+        height: 18.5dvh;
+    }
+}
+/* iPad Mini */
+@media screen and (max-width:768px) and (max-height:1024px){
+    .nav-menu{
+        top:7dvh;
+    }
+    .active-nav-menu{
+        height: 19.5dvh;
+    }
+}
+/* iPhone 14 Pro Max */
+@media screen and (max-width:430px) and (max-height:932px){
+    .nav-menu-btn{
+        width: 50px;
+        height: 50px;
+    }
+    .nav-menu{
+        width: 23dvw;
+        left:40%;
+    }
+    .active-nav-menu{
+        height: 21.5dvh;
+    }
+}
+/* iPhone 12/13 mini */
+@media screen and (max-width:376px) and (max-height:813px){
+    .active-nav-menu{
+        height: 24.5dvh;
+    }
+}

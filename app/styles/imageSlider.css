@@ -50,3 +50,11 @@
         height: 25dvh;
     }
 }
+/* iPhone 14 Pro Max */
+@media screen and (max-width:430px) and (max-height:932px){
+
+    .image-slider{
+        height: 20dvh;
+        width: 130dvw;
+    }
+}

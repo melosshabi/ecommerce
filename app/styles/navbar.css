@@ -192,3 +192,9 @@
         height: 24.5dvh;
     }
 }
+/* S21FE */
+@media screen and (max-width:360px) and (max-height:800px){
+    .nav-menu{
+        left:45%;
+    }
+}

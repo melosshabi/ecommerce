@@ -7,6 +7,24 @@
     justify-content: center;
     align-items: center;
 }
+.spinner-wrapper{
+    width: 100dvw;
+    height: 100dvh;
+    position: absolute;
+    z-index: 2;
+    background-color: rgba(0,0,0, .9);
+    top:0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.active-spinner{
+    display: flex;
+}
+.spinner{
+    width: 15dvw;
+    height: 15dvh;
+}
 .product-details{
     background-color: white;
     box-shadow: 0 0 5px black;
@@ -181,4 +199,44 @@
     width: 25px;
     height: 25px;
     margin:0 5px;
+}
+/* Media queries */
+@media screen and (max-width:1283px) and (max-height:590px){
+    .product-details{
+        height: 75dvh;
+        width: 95dvw;
+        margin-top: 5.5dvh;
+    }
+    .product-info{
+        height: 90%;
+        /* min-width: 60%; */
+        margin-left: 1%;
+        /* background-color: red; */
+    }
+}
+/* iPad Pro 12.9 inch Landscape */
+@media screen and (max-width:1366px) and (max-height:1024px){
+    .product-details{
+        width: 95dvw;
+    }
+}
+/* iPad Pro 12.9 inch */
+@media screen and (max-width:1024px) and (max-height:1366px){
+    .product-details{
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    .product-info{
+        height: 40%;
+        width: 70%;
+    }
+    .product-images-wrapper{
+        width: 80%;
+    }
+}
+/* iPad Pro 11 inch */
+@media screen and (max-width:834px) and (max-height:1194px){
+    .product-info{
+        width: 85%;
+    }
 }

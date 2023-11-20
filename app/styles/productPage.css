@@ -313,3 +313,32 @@
         flex-direction: column-reverse;
     }
 }
+/* iPhone XS Max */
+@media screen and (max-width:414px) and (max-height:896px){
+    .current-product-icons{
+        margin-bottom: 5px;
+    }
+}
+/* iPhone 12/13 Mini */
+@media screen and (max-width:376px) and (max-height:813px){
+    .product-details{
+        height: fit-content;
+    }
+    .product-images-wrapper{
+        width: 100%;
+        margin-top: 20dvh;
+    }
+    .large-image-wrapper{
+        margin-bottom: 10px;
+    }
+    .current-product-btns-wrapper{
+        flex-wrap: wrap;
+    }
+    .current-product-btns{
+        margin:15px;
+    }
+    .order-now-btn{
+        /* margin-top: 10px; */
+        width: 30%;
+    }
+}

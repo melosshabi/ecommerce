@@ -283,8 +283,7 @@
 @media screen and (max-width:430px) and (max-height:932px){
     .product-details{
         margin-top: 12dvh;
-        padding-top: 10px;
-        padding-bottom: 50px;
+        padding:10px 0 50px 0;
     }
     .product-images-wrapper{
         flex-direction: column-reverse;

@@ -10,7 +10,6 @@ import addToCart from '@/lib/addToCart'
 import checkmark from '../images/order-page-checkmark.png'
 import '../styles/productPage.css'
 
-
 export default function ProductDetails() {
   
   const searchParams = useSearchParams()

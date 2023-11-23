@@ -12,7 +12,7 @@
     height: 100dvh;
     position: absolute;
     z-index: 2;
-    background-color: rgba(0,0,0, .9);
+    background-color: rgba(0,0,0, .95);
     top:0;
     display: none;
     align-items: center;
@@ -338,7 +338,6 @@
         margin:15px;
     }
     .order-now-btn{
-        /* margin-top: 10px; */
         width: 30%;
     }
 }

@@ -72,7 +72,7 @@ export default function PlaceOrder() {
 
   return (
     <div className="order-page">
-      <h2>Order form for: {product?.productName}</h2>
+      <h2 className='form-h2'>Order form for: {product?.productName}</h2>
       <div className='product-payment-form-wrapper'>
         
         <div className="product-wrapper">

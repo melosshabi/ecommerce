@@ -10,16 +10,17 @@ export default function ImageSlider(){
 
     useEffect(() => {
         const headerImages = document.querySelectorAll('.header-images')
+        document.querySelector('.time-indicator')?.classList.toggle('active-time-indicator')
         let counter = 0
 
-        var interval = setInterval(() => {
+        let interval = setInterval(() => {
             if(counter < headerImages.length){
                 headerImages[counter].classList.remove('active-header-image')
                 counter++
                 if(counter === headerImages.length) counter = 0
                 headerImages[counter].classList.add('active-header-image')
             }
-        }, 9900)
+        }, 10000)
         
         return () => clearInterval(interval)
     }, [])

@@ -24,11 +24,12 @@
     background: linear-gradient(90deg, transparent, var(--orange));
     position: absolute;
     bottom:0;
+}
+.active-time-indicator{
     animation-name:indicator;
     animation-duration: 10s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
-    animation-delay: 150ms;
 }
 @keyframes indicator {
     0%{
@@ -52,7 +53,6 @@
 }
 /* iPhone 14 Pro Max */
 @media screen and (max-width:430px) and (max-height:932px){
-
     .image-slider{
         height: 20dvh;
         width: 130dvw;

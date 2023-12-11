@@ -209,9 +209,10 @@
     }
     .product-info{
         height: 90%;
-        /* min-width: 60%; */
         margin-left: 1%;
-        /* background-color: red; */
+    }
+    .current-product-btns{
+        font-size: 1.1em;
     }
 }
 /* iPad Pro 12.9 inch Landscape */

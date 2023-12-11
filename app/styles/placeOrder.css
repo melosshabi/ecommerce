@@ -140,3 +140,106 @@
 .submit-order-btn:hover{
     opacity: .8;
 }
+/* Media Queries */
+@media screen and (max-width:1283px) and (max-height:590px){
+    .form-h2{
+        display: none;
+    }
+    .product-payment-form-wrapper{
+        height: 75dvh;
+        margin-top: 5dvh;
+    }
+    .product-details-wrapper{
+        line-height: 1.5;
+    }
+    .payment-form{
+        height: 95%;
+        width: 60%;
+    }
+    .submit-order-btn{
+        font-size: 1.3em;
+    }
+}
+/* iPad Pro 12.9 inch Landscape*/
+@media screen and (max-width:1366px) and (max-height:1024px){
+    .product-payment-form-wrapper{
+        justify-content: space-between;
+    }
+    .product-wrapper{
+        width: 25%;
+    }
+    .payment-form{
+        width: 65%;
+    }
+    .billing-info-left{
+        width: 60%;
+    }
+    .billing-info-right{
+        width: 30%;
+    }
+}
+/* iPad Pro 12.9 inch */
+@media screen and (max-width:1024px) and (max-height:1366px){
+    .product-payment-form-wrapper{
+        flex-direction: column;
+    }
+    .product-wrapper{
+        width: fit-content;
+        flex-direction: row
+    }
+    .product-image-wrapper{
+        margin-right: 50px;
+    }
+    .payment-form{
+        width: 90%;
+    }
+    .submit-order-btn{
+        font-size: 1.5em;
+        padding:15px 40px;
+    }
+    .billing-info-left{
+        width: 60%;
+    }
+    .billing-info-right{
+        width: 30%;
+    }
+}
+/* iPad iPadOS Landscape*/
+@media screen and (max-width:1180px) and (max-height:820px){
+    .cvv-input{
+        width: 10%;
+    }
+}
+/* iPad Air */
+@media screen and (max-width:820px) and (max-height:1180px){
+    .cvv-input{
+        width: 10%;
+    }
+}
+/* iPad Mini */
+@media screen and (max-width:768px) and (max-height:1024px){
+    .product-wrapper{
+        height: 30%;
+        padding:5px;
+    }
+    .cvv-input{
+        width: 10%;
+    }
+}
+/* iPhone 14 Pro Max */
+@media screen and (max-width:430px) and (max-height:932px){
+    .form-h2{
+        display: none;
+    }
+    .product-payment-form-wrapper{
+        height: 90dvh;
+        border-radius: 0;
+    }
+    .product-wrapper{
+        width: 95dvw;
+    }
+    .product-image-wrapper img{
+        width: 150px;
+        height: 150px;
+    }
+}

@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import Image from 'next/image'
 import userIcon from '../images/user.png'
 
-export default function UserInfo({userDocId, username, email, profilePictureUrl}:UserInfo) {
+export default function UserInfo({username, email, profilePictureUrl}:UserInfo) {
 
   const [newUsername, setNewUsername] = useState<string>(username)
   const [newEmail, setNewEmail] = useState<string>(email)
@@ -29,7 +29,7 @@ export default function UserInfo({userDocId, username, email, profilePictureUrl}
     const parts = filename.split('.')
     return parts[parts.length - 1]
   }
-  // This function fires when an image is selected and extracts the url of that image that will then be used to show a preview of that image
+  // This function runs when an image is selected and extracts the url of that image that will then be used to show a preview of that image
   function getSelectedImageUrl(file:File){
     const extension = getExtension(file.name)
     const fileReader = new FileReader()

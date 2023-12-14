@@ -319,4 +319,35 @@
     color:black;
     text-decoration: underline;
 }
-
+/* Media Qeuries */
+@media screen and (max-width:1283px) and (max-height:590px){
+    /* Rules for the sidebar */
+    .profile-page-sidebar{
+        min-width: 20%;
+    }
+    /* Rules for the user information option */
+    .user-info-wrapper{
+        height: 80%;
+    }
+    .user-info-inputs-wrapper{
+        width: 60%;
+    }
+    /* Account updated notif */
+    .account-updated-alert{
+        right:-20%;
+    }
+    /* Rules for the cart, wishlist, user-products, and orders elements */
+    .cart-item, .wishlist-item, .order-summary{
+        height: 20%;
+    }
+    .user-product{
+        height: 23%;
+    }
+    .cart-item-image-wrapper, .wishlist-item-image-wrapper, .order-product-image-wrapper{
+        width: 10%;
+        height: 100%;
+    }
+    .user-product-image-wrapper{
+        width: 18%;
+    }
+}

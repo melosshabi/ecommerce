@@ -29,6 +29,10 @@
     justify-content: space-around;
     align-items: center;
 }
+/* Inputs container is the parent element of all the divs with the class of 'inputs-wrappers=' */
+.inputs-container{
+    width: 50%;
+}
 .inputs-wrappers{
     display: flex;
     flex-direction: column;
@@ -72,4 +76,81 @@
     text-align: center;
     font-size: .9em;
     color:red;
+}
+/* Media Queries */
+@media screen and (max-width:1283px) and (max-height:590px){
+    .form-wrapper{
+        height: 70dvh;
+        width: 60dvw;
+        margin-top: 5dvh;
+    }
+    .form-wrapper h2{
+        margin-top:10px;
+        margin-bottom: 25px;
+    }
+    .inputs-wrappers:last-of-type{
+        margin-bottom: 60px;
+    }
+}
+/* iPad Pro 12.9 inch Landscape */
+@media screen and (max-width:1366px) and (max-height:1024px){
+    .form-wrapper{
+        width: 80dvw;
+    }
+}
+/* iPad Pro 12.9 inch Portrait */
+@media screen and (max-width:1024px) and (max-height:1366px){
+    .form-wrapper{
+        width: 80dvw;
+        height: 50dvh;
+    }
+}
+/* iPad Pro 11 inch Landscape */
+@media screen and (max-width:1194px) and (max-height:834px){
+    .form-wrapper{
+        height: 80dvh;
+    }
+}
+/* iPad Pro 11 inch Portrait */
+@media screen and (max-width:834px) and (max-height:1194px){
+    .sign-up-form{
+        width: 90%;
+    }
+    .inputs-container{
+        width: 80%;
+    }
+}
+/* iPad Air Portrait*/
+@media screen and (max-width:820px) and (max-height:1180px){
+    .form-wrapper{
+        width: 90dvw;
+        height: 80dvh;
+    }
+}
+/* iPad Mini Portrait */
+@media screen and (max-width:768px) and (max-height:1024px){
+    .form-wrapper{
+        height: 65dvh;
+    }
+}
+/* iPhone 14 Pro Max */
+@media screen and (max-width:430px) and (max-height:932px){
+    .form-wrapper{
+        height: 90dvh;
+        width: 100dvw;
+        padding:0;
+        border-radius: 0;
+    }
+    .inputs-container{
+        width: 95%;
+    }
+    .submit-sign-in-form-btn{
+        width: 60%;
+    }
+}
+/* iPhone X/XS */
+@media screen and (max-width:376px) and (max-height:812px){
+    .submit-sign-in-form-btn{
+        font-size: 1.5em;
+    }
 }

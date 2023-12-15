@@ -3,20 +3,26 @@ import React, { useEffect, useState } from 'react'
 import removeFromWishlist from '@/lib/removeFromWishlist'
 import Image from 'next/image'
 import addToCart from '@/lib/addToCart'
+import Loader from './Loader'
 
 export default function Wishlist({productsArray, userDocId}:WishlistProps) {
 
     const [wishlistItems, setWishlistItems] = useState<Array<WishlistItem>>([])
+    const [reqPending, setReqPending] = useState<boolean>(true)
 
     useEffect(() =>{
 
+        if(productsArray.length === 0 ) setReqPending(false)
         const controller = new AbortController()
     
         async function fetchProduct(docId:string, dateAddedToWishlist:string){ 
           try{
+            console.log('balls')
             const res = await fetch(`http://localhost:3000/api/productDetails?_id=${docId}`, {signal:controller.signal})
             const data = await res.json()
             setWishlistItems(prev => [...prev, {...data, dateAdded: new Date(dateAddedToWishlist)}])
+            setReqPending(false)
+            console.log(reqPending)
           }catch(err:any){
             if(err.name === "AbortError") console.log("fetch request aborted")
           }
@@ -30,9 +36,9 @@ export default function Wishlist({productsArray, userDocId}:WishlistProps) {
     
   return (
     <div className={`wishlist ${wishlistItems.length === 0 ? 'empty-wishlist' : ''}`}>
-    
+    <Loader displayLoader={reqPending}/>
     {
-        wishlistItems.length === 0 && <p>Your wishlist is empty</p>
+        !reqPending && wishlistItems.length === 0 && <p>Your wishlist is empty</p>
     }
     {
         wishlistItems.map((item, index) =>  {

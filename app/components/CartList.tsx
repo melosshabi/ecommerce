@@ -5,14 +5,18 @@ import plus from '../images/plus.svg'
 import minus from '../images/minus.svg'
 import { useSession } from 'next-auth/react'
 import removeFromCart from '@/lib/removeFromCart'
+import Loader from './Loader'
 
 export default function CartList({productsArray} : CartListProps) {
 
   // The array that will hold the products data fetched from the database
   const [cartItems, setCartItems] = useState<Array<CartProduct>>([])
+  const [reqPending, setReqPending] = useState<boolean>(true)
   const session = useSession()
 
   useEffect(() =>{
+
+    if(!productsArray.length) setReqPending(false)
 
     const controller = new AbortController()
 
@@ -21,6 +25,7 @@ export default function CartList({productsArray} : CartListProps) {
         const res = await fetch(`http://localhost:3000/api/productDetails?_id=${docId}`, {signal:controller.signal})
         const data = await res.json()
         setCartItems(prev => [...prev, {...data, desiredQuantity, dateAddedToCart: new Date(dateAddedToCart)}])
+        setReqPending(false)
       }catch(err:any){
         if(err.name === "AbortError") console.log("fetch request aborted")
       }
@@ -84,7 +89,8 @@ export default function CartList({productsArray} : CartListProps) {
   }
 
   return (
-    <div className='cart-list'>
+    <div className={`cart-list ${cartItems.length === 0 ? 'empty-cart-list' : ''}`}>
+      <Loader displayLoader={reqPending}/>
       {
        cartItems.map((item, index) =>  {
 

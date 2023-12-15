@@ -2,11 +2,15 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import Loader from '@/app/components/Loader'
+import { useRouter } from 'next/navigation'
 
 export default function UserOrders() {
 
+  const router = useRouter()
   const [ordersList, setOrdersList] = useState<Array<orderData>>([])
   const [productsData, setProducstData] = useState<Array<Product>>([])
+  const [reqPending, setReqPending] = useState<boolean>(true)
 
   useEffect(() => {
     const controller = new AbortController()
@@ -14,8 +18,14 @@ export default function UserOrders() {
     async function fetchOrders(){
         const req = await fetch('http://localhost:3000/api/orders', {signal:controller.signal})
         const response = await req.json()
+        if(response.errCode === "unauthenticated"){
+          alert("You need to sign in")
+          router.push('/api/auth/signin')
+          return
+        }
         setOrdersList(prev => [...prev, ...response.userOrders])
         setProducstData(prev => [...prev, ...response.products])
+        setReqPending(false)
     }
     fetchOrders()
 
@@ -23,8 +33,9 @@ export default function UserOrders() {
   },[])
   return (
     <div className={`orders-list ${ !ordersList.length ? "empty-orders-list" : ""}`}>
+      <Loader displayLoader={reqPending}/>
       {
-        !ordersList.length && <h2>You have not placed any orders yet</h2>
+        !reqPending && !ordersList.length && <h2>You have not placed any orders yet</h2>
       }
       {ordersList?.map((order, index) => {
         return (

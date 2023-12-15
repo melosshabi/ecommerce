@@ -3,10 +3,12 @@ import parseMonth from '@/lib/parseMonth'
 import Image from 'next/image'
 import plus from '../images/plus.svg'
 import minus from '../images/minus.svg'
+import Loader from './Loader'
 
 export default function UserProductsList() {
 
   const [userProducts, setUserProducts] = useState<Array<UserProduct>>([])
+  const [reqPending, setReqPending] = useState<boolean>(true)
 
   useEffect(() => {
 
@@ -17,6 +19,7 @@ export default function UserProductsList() {
         const res = await fetch('http://localhost:3000/api/getUserProducts', {signal:controller.signal})
         const data = await res.json()
         setUserProducts(data.products)
+        setReqPending(false)
       }catch(err:any){
         if(err.name === 'AbortError') console.log("fetch request aborted")
       }
@@ -85,7 +88,8 @@ export default function UserProductsList() {
     setQuantityTimeout(timeout)
   }
   return (
-    <div className='user-products-list'>
+    <div className={`user-products-list ${reqPending ? 'empty-user-products-list' : ""}`}>
+      <Loader displayLoader={reqPending}/>
         {
           userProducts.map((product, index) => {
             const datePosted = new Date(product.datePosted)

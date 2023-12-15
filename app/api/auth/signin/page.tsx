@@ -1,8 +1,8 @@
 "use client"
 import React, { FormEvent, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
-import Loader from '@/app/components/Loader'
 import {useRouter} from 'next/navigation'
+import ButtonLoader from '@/app/components/ButtonLoader'
 import '@/app/styles/signin.css'
 
 export default function SignIn() {
@@ -63,7 +63,7 @@ export default function SignIn() {
       
         <h2>Welcome Back!</h2>
         <form className="sign-in-form" onSubmit={e => handleSubmit(e)}>
-            <div style={{display:'flex', flexDirection:'column', width:'50%', height:'fit-content'}}>
+            <div className="inputs-container" style={{display:'flex', flexDirection:'column', height:'fit-content'}}>
               <div className='inputs-wrappers'>
                 <label>Username</label>
                 <input required name="username" type="text" placeholder="Username" className="sign-in-inputs sign-in-username-input" value={formData.username} onChange={e => handleChange(e.target.name, e.target.value)}/>
@@ -75,7 +75,7 @@ export default function SignIn() {
               </div>
               {error && <p className="error">{error}</p>}
             </div>
-          <button className='submit-sign-in-form-btn'>{!authInProgress ? 'Sign In' : <Loader/>}</button>
+          <button className='submit-sign-in-form-btn'>{!authInProgress ? 'Sign In' : <ButtonLoader/>}</button>
         </form>
       </div>
     </div>

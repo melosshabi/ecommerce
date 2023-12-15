@@ -4,6 +4,7 @@ import { signIn, useSession } from 'next-auth/react'
 import '../styles/signup.css'
 import Loader from '@/app/components/Loader'
 import { useRouter } from 'next/navigation'
+import ButtonLoader from '../components/ButtonLoader'
 
 export default function SignUp() {
 
@@ -90,7 +91,8 @@ export default function SignUp() {
       
         <h2>Welcome!</h2>
         <form className="sign-up-form" onSubmit={e => handleSubmit(e)}>
-            <div style={{display:'flex', flexDirection:'column', width:'50%', height:'fit-content'}}>
+         {/* Inputs container is the parent element of all the divs with the class of 'inputs-wrappers='  */}
+            <div className="inputs-container" style={{display:'flex', flexDirection:'column', height:'fit-content'}}>
               <div className='inputs-wrappers'>
                 <label>Username</label>
                 <input name="username" required type="text" placeholder="Username" className="sign-up-inputs username-input" value={formData.username} onChange={e => handleChange(e.target.name, e.target.value)}/>
@@ -107,7 +109,7 @@ export default function SignUp() {
               </div>
               {error?.errorCode && <p className='error'>{error.errorMessage}</p>}
             </div>            
-          <button className='submit-sign-up-form-btn' disabled={authInProgress}>{!authInProgress ? 'Sign Up' : <Loader/>}</button>
+          <button className='submit-sign-up-form-btn' disabled={authInProgress}>{!authInProgress ? 'Sign Up' : <ButtonLoader/>}</button>
         </form>
       </div>
     </div>

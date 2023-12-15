@@ -82,7 +82,7 @@ export async function GET(req:Request){
         return NextResponse.json({order, product})
     }
 
-    // The code below fetches all orders and all products and then is used to display on the userOrders page
+    // The code below fetches all orders and all products that will be displayed on the userOrders page
     const products: Product[] = []
     const userOrders = await orderModel.find({clientDocId:new ObjectId(session?.user.userDocId)})
     for(let i = 0; i < userOrders.length; i++){
@@ -90,5 +90,4 @@ export async function GET(req:Request){
         products.push(productDetails)
     }
     return NextResponse.json({userOrders, products})
-
 }

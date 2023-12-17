@@ -44,6 +44,7 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
         break;
   }}
 
+  // TODO: Fix the issue where the user can't update their account information without selecting a new profile picture
   async function handleSubmit(){
 
     setUpdateInProgress(true)

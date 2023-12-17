@@ -357,10 +357,31 @@
         width: 18%;
     }
 }
+/* iPad Pro 12.9 inch Landscape */
+@media screen and (max-width:1366px) and (max-height:1024px){
+    .profile-page-sidebar-details-wrapper{
+        width: 90%;
+    }
+    .profile-page-sidebar{
+        min-width: 20%;
+    }
+    .cart-item-image-wrapper, .wishlist-item-image-wrapper, .user-product-image-wrapper, .order-product-image-wrapper{
+        width: 14%;
+    }
+}
+/* iPad Pro 11 inch Landscape */
+@media screen and (max-width:1194px) and (max-height:834px){
+    .cart-item{
+        height:18%
+    }
+    .user-product-image-wrapper{
+        width: 17%;
+    }
+}
 /* iPad Pro 12.9 inch Portrait */
 @media screen and (max-width:1024px) and (max-height:1366px){
     *{
-        outline:1px solid green;
+        /* outline:1px solid green; */
     }
     /* Sidebar */
     .profile-page-sidebar-details-wrapper{
@@ -395,5 +416,42 @@
     }
     .quantity-input{
         width: 30px;
+    }
+}
+/* iPad Pro 11 inch Portrait */
+@media screen and (max-width:834px) and (max-height:1194px){
+    /* Wrapper of the sidebar and the divs that each sidebar option displays */
+    .profile-page-sidebar-details-wrapper{
+        width: 99.5dvw;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 0;
+        margin-top: 5dvh;
+    }
+    /* Profile sidebar */
+    .profile-page-sidebar{
+        width: fit-content;
+        margin:3dvh 0;
+    }
+    .profile-page-sidebar ul{
+        display: flex;
+    }
+    /* Account information styling */
+    .user-info-wrapper{
+        width: 80%;
+    }
+    /* Cart styling */
+    .cart-item{
+        height: 25%;
+    }
+    .wishlist-item, .user-product, .order-summary{
+        height: fit-content;
+    }
+}
+/* iPad Mini Portrait */
+@media screen and (max-width:768px) and (max-height:1024px){
+    .user-info-wrapper, .cart-list, .wishlist, .user-products-list, .orders-list{
+        width: 90%;
     }
 }

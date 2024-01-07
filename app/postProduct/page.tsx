@@ -67,7 +67,7 @@ export default function PostProduct() {
         formData.set('picture2', pictures[1])
         formData.set('picture3', pictures[2])
 
-        const req = await fetch(`${process.env.REQ_URL}api/newProduct`, {
+        const req = await fetch(`api/newProduct`, {
             method:"POST",
             body:formData
         })

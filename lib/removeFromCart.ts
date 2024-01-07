@@ -1,5 +1,5 @@
 export default async function removeFromCart(userDocId:string, productDocId:string){
-    const res = await fetch(`${process.env.REQ_URL}api/editCart`,{
+    const res = await fetch(`api/editCart`,{
       method:"DELETE",
       body:JSON.stringify({
         userDocId,

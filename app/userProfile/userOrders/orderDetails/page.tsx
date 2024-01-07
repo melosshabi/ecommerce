@@ -13,7 +13,7 @@ export default function OrderDetails() {
 
     useEffect(() => {
         async function getOrderDetails(){
-            const res = await fetch(`${process.env.REQ_URL}api/orders?singleOrder=true&orderId=${orderId}&productDocId=${productDocId}`)
+            const res = await fetch(`api/orders?singleOrder=true&orderId=${orderId}&productDocId=${productDocId}`)
             const data = await res.json()
             setOrderDetails(data)
         }

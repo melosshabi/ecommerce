@@ -52,7 +52,7 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
     formData.set('newEmail', newEmail)
 
     if (pictureFile) formData.set('profilePicture', pictureFile)
-    const req = await fetch(`${process.env.REQ_URL}api/updateUser`, {
+    const req = await fetch(`api/updateUser`, {
       method:"PATCH",  
       body:formData
     })

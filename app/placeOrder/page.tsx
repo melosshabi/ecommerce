@@ -22,7 +22,7 @@ export default function PlaceOrder() {
 
     useEffect(() => {
         (async function fetchProductDetails(){
-            const res = await fetch(`api/productDetails?_id=${productDocId}`)
+            const res = await fetch(`https://ecommerce-beta-eight.vercel.app/api/productDetails?_id=${productDocId}`)
             const data = await res.json()
             if(!data){
                 router.push('/')

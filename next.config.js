@@ -9,9 +9,6 @@ const nextConfig = {
             }
         ]
     },
-    env:{
-        REQ_URL:process.env.REQ_URL
-    }
 }
 
 module.exports = nextConfig

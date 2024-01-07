@@ -16,7 +16,7 @@ export default function UserProductsList() {
 
     async function fetchUserProducts(){
       try{
-        const res = await fetch(`${process.env.REQ_URL}/api/getUserProducts`, {signal:controller.signal})
+        const res = await fetch(`https://ecommerce-beta-eight.vercel.app/api/getUserProducts`, {signal:controller.signal})
         const data = await res.json()
         setUserProducts(data.products)
         setReqPending(false)

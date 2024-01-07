@@ -16,7 +16,7 @@ export default function UserOrders() {
     const controller = new AbortController()
 
     async function fetchOrders(){
-        const req = await fetch(`api/orders`, {signal:controller.signal})
+        const req = await fetch(`https://ecommerce-beta-eight.vercel.app/api/orders`, {signal:controller.signal})
         const response = await req.json()
         if(response.errCode === "unauthenticated"){
           alert("You need to sign in")

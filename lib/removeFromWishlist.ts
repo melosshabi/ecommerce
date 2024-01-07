@@ -1,5 +1,5 @@
 export default async function removeFromWishlist(userDocId:string, productDocId:string){
-    const res = await fetch('http://localhost:3000/api/editWishlist',{
+    const res = await fetch(`${process.env.REQ_URL}/api/editWishlist`,{
       method:"DELETE",
       body:JSON.stringify({
         userDocId,

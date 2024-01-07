@@ -3,7 +3,7 @@ export default async function addToWishlist(userDocId:string | undefined, produc
       alert("You need to sign up for an account to place orders or add items to your wishlist")
       return
     }
-    const res = await fetch('http://localhost:3000/api/editWishlist',{
+    const res = await fetch(`${process.env.REQ_URL}/api/editWishlist`,{
       method:"PATCH",
       body:JSON.stringify({
         userDocId,

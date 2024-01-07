@@ -22,7 +22,7 @@ export default function CartList({productsArray} : CartListProps) {
 
     async function fetchProduct(docId:string, dateAddedToCart:string, desiredQuantity:number){ 
       try{
-        const res = await fetch(`${process.env.reqUrl}api/productDetails?_id=${docId}`, {signal:controller.signal})
+        const res = await fetch(`${process.env.REQ_URL}api/productDetails?_id=${docId}`, {signal:controller.signal})
         const data = await res.json()
         setCartItems(prev => [...prev, {...data, desiredQuantity, dateAddedToCart: new Date(dateAddedToCart)}])
         setReqPending(false)

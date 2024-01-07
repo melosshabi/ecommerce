@@ -16,7 +16,7 @@ export default function UserOrders() {
     const controller = new AbortController()
 
     async function fetchOrders(){
-        const req = await fetch('http://localhost:3000/api/orders', {signal:controller.signal})
+        const req = await fetch(`${process.env.reqUrl}api/orders`, {signal:controller.signal})
         const response = await req.json()
         if(response.errCode === "unauthenticated"){
           alert("You need to sign in")

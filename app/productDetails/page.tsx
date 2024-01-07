@@ -22,7 +22,7 @@ export default function ProductDetails() {
 
   useEffect(() => {
     async function fetchProduct(){
-      const res = await fetch(`https://ecommerce-beta-eight.vercel.app/api/productDetails?_id=${productDocId}`)
+      const res = await fetch(`${process.env.reqUrl}api/productDetails?_id=${productDocId}`)
       const productData = await res.json()
       if(!productData){
         router.push('/')

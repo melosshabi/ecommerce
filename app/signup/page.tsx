@@ -1,10 +1,9 @@
 "use client"
 import React, { FormEvent, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
-import '../styles/signup.css'
-import Loader from '@/app/components/Loader'
 import { useRouter } from 'next/navigation'
 import ButtonLoader from '../components/ButtonLoader'
+import '../styles/signup.css'
 
 export default function SignUp() {
 
@@ -43,7 +42,7 @@ export default function SignUp() {
     e.preventDefault()
     setAuthInProgress(true)
 
-    const res = await fetch(`${process.env.REQ_URL}api/signup`, {
+    const res = await fetch(`api/signup`, {
       method:'POST',
       headers:{
         'Content-Type':'application/json'

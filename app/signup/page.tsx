@@ -42,7 +42,7 @@ export default function SignUp() {
     e.preventDefault()
     setAuthInProgress(true)
 
-    const res = await fetch(`api/signup`, {
+    const res = await fetch(`${process.env.REQ_URL}/api/signup`, {
       method:'POST',
       headers:{
         'Content-Type':'application/json'

@@ -8,6 +8,9 @@ const nextConfig = {
                 port:'',
             }
         ]
+    },
+    env:{
+        REQ_URL:process.env.REQ_URL
     }
 }
 

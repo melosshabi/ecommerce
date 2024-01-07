@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
 
-export default function ProfilePageSidebar({activePage, hideSidebar} : ProfilePageSidebar) {
+export default function ProfilePageSidebar({activePage} : ProfilePageSidebar) {
 
     const session = useSession()
     const router = useRouter()
@@ -33,7 +33,7 @@ export default function ProfilePageSidebar({activePage, hideSidebar} : ProfilePa
     }
 
   return (
-    <div className={`profile-page-sidebar ${hideSidebar ? 'hidden-profile-sidebar' : ""}`}>
+    <div className={`profile-page-sidebar`}>
                 <div className="hamburger-btn" onClick={() => toggleMobileSidebar()}>
                     <div id="ham-btn-line1"></div>
                     <div id="ham-btn-line2"></div>

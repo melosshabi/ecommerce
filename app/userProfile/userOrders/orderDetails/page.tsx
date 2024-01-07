@@ -2,7 +2,6 @@
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import '../../../styles/orderDetails.css'
 
 export default function OrderDetails() {
@@ -16,7 +15,6 @@ export default function OrderDetails() {
         async function getOrderDetails(){
             const res = await fetch(`http://localhost:3000/api/orders?singleOrder=true&orderId=${orderId}&productDocId=${productDocId}`)
             const data = await res.json()
-            console.log(data)
             setOrderDetails(data)
         }
 
@@ -24,9 +22,9 @@ export default function OrderDetails() {
     }, [])
   return (
         <div className='order-details-wrapper'>
-            <div className="order-details-product">
-                <div className="order-details-product-image-wrapper">
-                    <Image className='order-details-product-image' width={500} height={500} src={orderDetails?.product.pictures[0] as string} alt="Picture of the product"/>
+            <div className="product-details">
+                <div className="product-details-image-wrapper">
+                    <Image className='product-details-image' width={500} height={500} src={orderDetails?.product.pictures[0] as string} alt="Picture of the product"/>
                 </div>
 
                 <div>

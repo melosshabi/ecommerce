@@ -7,7 +7,7 @@ import '../styles/userProfile.css'
 
 export default function UserProfileLayout({children}: {children: React.ReactNode}) {
   const path = usePathname()
-  const splittedPath = path.split('/')
+  const splitPath = path.split('/')
   const session = useSession()
   const router = useRouter()
   
@@ -17,11 +17,11 @@ export default function UserProfileLayout({children}: {children: React.ReactNode
   return (
     <div className='profile-page'>
         <div className="profile-page-sidebar-details-wrapper">
-          <ProfilePageSidebar activePage={splittedPath[2] === 'account' ? 'account' : 
-            splittedPath[2] === 'cart' ? 'cart' : 
-            splittedPath[2] === 'wishlist' ? 'wishlist' : 
-            splittedPath[2] === 'userProducts' ? 'userProducts' : 'userOrders'}
-            hideSidebar={splittedPath[3] === 'orderDetails'}
+          <ProfilePageSidebar activePage={splitPath[2] === 'account' ? 'account' : 
+            splitPath[2] === 'cart' ? 'cart' : 
+            splitPath[2] === 'wishlist' ? 'wishlist' : 
+            splitPath[2] === 'userProducts' ? 'userProducts' : 'userOrders'}
+            // hideSidebar={splitPath[3] === 'orderDetails'}
             />
             {
               children

@@ -28,7 +28,7 @@ type UserInfo = {
 }
 type ProfilePageSidebar = {
     activePage:"account" | "cart" | "wishlist" | "userProducts" | "userOrders",
-    hideSidebar:boolean
+    // hideSidebar:boolean
 }
 // This type is used for the data that is sent to the server when creating a new product
 type ProductData = {

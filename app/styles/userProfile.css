@@ -280,7 +280,7 @@
     vertical-align: middle;
 }
 /* Styling for the buttons at the top right of the items in the cart/wishlist */
-.wishlist-btns, .cart-item-btn, .user-product-btns{
+.wishlist-btns, .remove-from-cart-btn, .user-product-btns{
     background: none;
     border:none;
     padding:10px;
@@ -289,19 +289,19 @@
     cursor: pointer;
     transition: all 250ms;
 }
-.cart-item-btn{
+.remove-from-cart-btn{
     position: absolute;
     top:5px;
     right:10px;
 }
-.wishlist-btns-icons, .cart-item-btn-icon{
+.wishlist-btns-icons, .remove-from-cart-btn-icon{
     width: 20px;
     height: 20px;
     display: inline-block;
     vertical-align: middle;
     transition: all 250ms;
 }
-.wishlist-btns:hover, .wishlist-btns:hover .wishlist-btns-icons, .cart-item-btn:hover, .cart-item-btn:hover .cart-item-btn-icon{
+.wishlist-btns:hover, .wishlist-btns:hover .wishlist-btns-icons, .remove-from-cart-btn:hover, .remove-from-cart-btn:hover .remove-from-cart-btn-icon{
     background-color: var(--orange);
     fill:white;
 }
@@ -558,5 +558,35 @@
     }
     .active-mobile-sidebar{
         width: 60dvw;
+    }
+    /* Cart Items Styling */
+    .cart-item{
+        height: 30dvh;
+    }
+    .cart-item-details-wrapper{
+        display: block;
+    }
+    .cart-item-image-wrapper{
+        max-width: 40%;
+        max-height: 40%;
+    }
+    .quantity-wrapper{
+        height:50%;
+        margin-top:10%;
+        position: relative;
+        right:25%;
+    }
+    .remove-from-cart-btn{
+        right:0;
+    }
+    .quantity-btns, .quantity-input{
+        margin-top: 20%;
+    }
+    /* Wishlist */
+    .wishlist-item-options{
+        width: 20%;
+    }
+    .wishlist-item-image-wrapper{
+        height: 100px;
     }
 }

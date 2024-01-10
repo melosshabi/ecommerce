@@ -49,7 +49,7 @@ export default function SignUp() {
       },
       body:JSON.stringify(formData)
     })
-
+    
     const data = await res.json()
 
     if(data.errorCode === "username-taken"){
@@ -69,6 +69,7 @@ export default function SignUp() {
       document.querySelector('.email-input')?.classList.add('red-border')
       return
     }else if(data.errorCode === 'incomplete-form'){
+      setAuthInProgress(false)
       setError({
         errorMessage:data.errorMessage,
         errorCode:data.errorCode

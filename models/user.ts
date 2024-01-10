@@ -1,10 +1,6 @@
 import mongoose, {Schema} from 'mongoose'
 
 const userSchema = new Schema({
-    userId:{
-        type:String,
-        required:true
-    },
     username:{
         type:String,
         required:true,
@@ -51,10 +47,12 @@ const userSchema = new Schema({
     },
     dateAccountCreated:{
         type:Date,
+        required:false,
         default: () => Date.now()
     },
     dateAccountUpdated:{
         type:Date,
+        required:false,
         default: () => Date.now()
     }
 })

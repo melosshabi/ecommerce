@@ -29,7 +29,7 @@ export default function ProductDetails() {
       }
       setProduct(productData)
       setActiveImage(productData.pictures[0])
-      document.querySelector('.spinner-wrapper')?.classList.toggle("active-spinner")
+      document.querySelector('.spinner-wrapper')?.classList.remove("active-spinner")
     }
     fetchProduct()
   },[])

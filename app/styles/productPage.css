@@ -216,13 +216,13 @@
     }
 }
 /* iPad Pro 12.9 inch Landscape */
-@media screen and (max-width:1366px) and (max-height:1024px){
+@media screen and (max-width:1366px) and (min-height:1024px){
     .product-details{
         width: 95dvw;
     }
 }
 /* iPad Pro 11 inch Landscape */
-@media screen and (max-width:1194px) and (max-height:834px){
+@media screen and (max-width:1194px){
     .product-images-wrapper{
         width: 45%;
         overflow: hidden;
@@ -259,7 +259,7 @@
     }
 }
 /* iPad Mini Landscape */
-@media screen and (max-width:1024px) and (max-height:768px){
+@media screen and (max-width:1024px){
     .product-details{
         height: 100dvh;
         width: 100dvw;
@@ -339,5 +339,19 @@
     }
     .order-now-btn{
         width: 30%;
+    }
+}
+/* S21FE */
+@media screen and (max-width:365px) and (max-height:805px){
+    .product-page{
+        height: fit-content;
+        margin-top: -2dvh;
+    }
+    .product-details{
+        height: fit-content;
+        /* background-color: red; */
+    }
+    .product-images-wrapper{
+        margin-top: 0;
     }
 }

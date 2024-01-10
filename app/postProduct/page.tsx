@@ -82,7 +82,7 @@ export default function PostProduct() {
             setTimeout(() => router.push('/'), 4500)
         }
     }
-
+    // alert(`${screen.width}x ${screen.height}`)
   return (
     <div className='post-product-page'>
         <div className="product-form-wrapper">

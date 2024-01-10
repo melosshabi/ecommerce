@@ -18,6 +18,16 @@
 body{
     overflow-x: hidden;
 }
+::-webkit-scrollbar{
+    width: 6px;
+}
+::-webkit-scrollbar-thumb{
+    background-color: var(--orange);
+    border-radius: 10px;
+}
+::-webkit-scrollbar:hover{
+    width: 10px;
+}
 .home{
     min-height: 100dvh;
     display: flex;

@@ -119,3 +119,74 @@
     height: 25px;
     margin-right: 5px;
 }
+/* Media Queries */
+/* iPad Pro 12.9inch Landscape */
+@media screen and (max-width:1366px) and (max-height:1024px){
+    .product-created-alert{
+        right: -50%;
+    }
+}
+/* Laptops PCs etc */
+@media screen and (max-width:1280px) and (max-height:720px){
+    .post-product-page{
+        height: 85dvh;
+        border:2px solid orange;
+        margin-top: 15dvh;
+        padding:0;
+    }
+    .product-form{
+        height: 100%;
+        overflow: scroll;
+    }
+    .product-created-alert{
+        right: -30%;
+    }
+}
+/* iPad Pro 11 inch Landscape */
+@media screen and (max-width:1194px) and (max-height:834px){
+    .product-form-wrapper{
+        height: 90dvh;
+        margin-top: 8dvh;
+        padding:15px 0;
+    }
+    .product-form{
+        overflow: scroll;
+    }
+}
+/* iPad Pro 12.9inch Portrait*/
+@media screen and (max-width:1024px) and (max-height:1366px){
+    .product-created-alert{
+        right: -50%;
+    }
+}
+/* iPad Pro 11 inch Portrait */
+@media screen and (max-width:834px) and (max-height:1194px){
+    .product-form-wrapper{
+        width: 98%;
+    }
+    .inputs-wrappers{
+        width: 50%;
+    }
+}
+/* iPad Mini Landscape */
+@media screen and (max-width:1024px) and (max-height:768px){
+    .product-form{
+        height: 98%;
+    }
+}
+/* iPhone 14 Pro Max */
+@media screen and (max-width:430px) and (max-height:932px){
+    .inputs-wrappers{
+        width: 80%;
+    }
+    .product-created-alert{
+        display: none;
+    }
+}
+/* S21FE */
+@media screen and (max-width:360px) and (max-height:800px){
+    .product-form-wrapper{
+        height: 95dvh;
+        margin-top: 10dvh;
+    }
+}

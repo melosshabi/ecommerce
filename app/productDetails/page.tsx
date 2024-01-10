@@ -23,8 +23,9 @@ export default function ProductDetails() {
   useEffect(() => {
     async function fetchProduct(){
       const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productDetails?_id=${productDocId}`)
+      console.log("Res:", res)
       const productData = await res.json()
-      console.log(productData)
+      console.log("Product Data:", productData)
       if(!productData){
         router.push('/')
       }

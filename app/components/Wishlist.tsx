@@ -17,7 +17,7 @@ export default function Wishlist({productsArray, userDocId}:WishlistProps) {
     
         async function fetchProduct(docId:string, dateAddedToWishlist:string){ 
           try{
-            const res = await fetch(`https://ecommerce-beta-eight.vercel.app/api/productDetails?_id=${docId}`, {signal:controller.signal})
+            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productDetails?_id=${docId}`, {signal:controller.signal})
             const data = await res.json()
             setWishlistItems(prev => [...prev, {...data, dateAdded: new Date(dateAddedToWishlist)}])
             setReqPending(false)

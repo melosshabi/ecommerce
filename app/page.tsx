@@ -7,7 +7,6 @@ import './styles/app.css'
 export default async function Home() {
   const productsPromise: Promise<Product[]> = getProducts()
   const products = await productsPromise
-
   return (
     <main className='home'>
       

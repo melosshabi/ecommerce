@@ -3,7 +3,7 @@ export default async function addToCart(userDocId:string | undefined, productDoc
       alert("You need to sign up for an account to place orders or add items to your wishlist")
       return
     }
-    const res = await fetch(`https://ecommerce-beta-eight.vercel.app/api/editCart`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/editCart`, {
       method:"PATCH",
       body:JSON.stringify({
         userDocId,

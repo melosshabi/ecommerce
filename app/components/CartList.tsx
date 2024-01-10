@@ -22,7 +22,7 @@ export default function CartList({productsArray} : CartListProps) {
 
     async function fetchProduct(docId:string, dateAddedToCart:string, desiredQuantity:number){ 
       try{
-        const res = await fetch(`https://ecommerce-beta-eight.vercel.app/api/productDetails?_id=${docId}`, {signal:controller.signal})
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productDetails?_id=${docId}`, {signal:controller.signal})
         const data = await res.json()
         setCartItems(prev => [...prev, {...data, desiredQuantity, dateAddedToCart: new Date(dateAddedToCart)}])
         setReqPending(false)
@@ -80,7 +80,7 @@ export default function CartList({productsArray} : CartListProps) {
     }
 
     const timeout = setTimeout(async () => {
-      await fetch('http://localhost:3000/api/updateCartQuantity', {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}api/updateCartQuantity`, {
         method:'PATCH',
         body:JSON.stringify({productDocId, newQuantity})
       })

@@ -1,5 +1,5 @@
 export default async function removeFromWishlist(userDocId:string, productDocId:string){
-    const res = await fetch(`https://ecommerce-beta-eight.vercel.app/api/editWishlist`,{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/editWishlist`,{
       method:"DELETE",
       body:JSON.stringify({
         userDocId,

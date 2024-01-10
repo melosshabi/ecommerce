@@ -52,7 +52,7 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
     formData.set('newEmail', newEmail)
 
     if (pictureFile) formData.set('profilePicture', pictureFile)
-    const req = await fetch(`https://ecommerce-beta-eight.vercel.app/api/updateUser`, {
+    const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateUser`, {
       method:"PATCH",  
       body:formData
     })

@@ -22,6 +22,7 @@ export default function ProductDetails() {
 
   useEffect(() => {
     async function fetchProduct(){
+      console.log(`${process.env.NEXT_PUBLIC_URL}`)
       const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productDetails?_id=${productDocId}`)
       console.log("Res:", res)
       const productData = await res.json()

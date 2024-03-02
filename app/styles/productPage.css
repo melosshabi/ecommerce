@@ -1,16 +1,17 @@
 .product-page{
     width: 100dvw;
-    height: 90dvh;
+    padding-bottom: 50px;
     margin-top: 10dvh;
     background-color: var(--white);
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 .spinner-wrapper{
     width: 100dvw;
     height: 100dvh;
-    position: absolute;
+    position: fixed;
     z-index: 2;
     background-color: rgba(0,0,0, .95);
     top:0;
@@ -199,6 +200,92 @@
     width: 25px;
     height: 25px;
     margin:0 5px;
+}
+.reviews{
+    width: 35%;
+    margin-top: 10vh;
+}
+.post-review-form-wrapper{
+    width: 100%;
+    background-color: white;
+    box-shadow:0 0 5px black;
+    padding:40px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.post-review-form{
+    width: 100%;
+    position: relative;
+}
+.review-form-pfp{
+    display: inline-block;
+    vertical-align: top;
+}
+.review-form-pfp img{
+    width: 80px;
+    height: 80px;
+    margin-right: 50px;
+}
+.stars{
+    width: 45px;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+}
+/* Select previous siblings on hover */
+.stars:has(~ .stars:is(:hover, :focus-visible)){
+    fill:var(--lightOrange)
+}
+.stars:hover{
+    fill:var(--lightOrange);
+}
+.active-star{
+    fill:var(--lightOrange)
+}
+.post-review-form textarea{
+    width: 70%;
+    height: 15vh;
+    padding:10px;
+    border-radius: 10px;
+    border:none;
+    box-shadow:0 0 5px black;
+    position:relative;
+    display: block;
+    margin-left: 20%;
+}
+.letter-count{
+    position: absolute;
+    right:3dvw;
+    padding-top: 5px;
+    content:"";
+}
+.review-posted-message{
+    padding-top: 25px;
+}
+.submit-review-btn{
+    display: block;
+    cursor: pointer;
+    color:white;
+    background-color: var(--orange);
+    border:none;
+    border-radius: 6px;
+    padding:10px 15px;
+    font-size: 1.1em;
+    margin-left: 73%;
+    margin-top: 15%;
+    transition: all 250ms;
+}
+.submit-review-btn:hover{
+    background-color: var(--darkerOrange);
+}
+.submit-review-btn:disabled{
+    cursor: not-allowed;
+    opacity:.7;
+}
+.submit-review-btn:disabled:hover{
+    background-color: var(--orange);
 }
 /* Media queries */
 @media screen and (max-width:1283px) and (max-height:590px){

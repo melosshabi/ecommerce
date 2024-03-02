@@ -9,6 +9,7 @@ import removeFromCart from '@/lib/removeFromCart'
 import addToCart from '@/lib/addToCart'
 import checkmark from '../images/order-page-checkmark.png'
 import '../styles/productPage.css'
+import ProductReviews from '../components/ProductReviews'
 
 export default function ProductDetails() {
   
@@ -28,7 +29,6 @@ export default function ProductDetails() {
         router.push('/')
       }
       const productData = await res.json()
-      console.log("Product Data:", productData)
       if(!productData){
         router.push('/')
       }
@@ -190,6 +190,7 @@ export default function ProductDetails() {
           </div>
 
       </div>
+      <ProductReviews productId={productDocId as string}/>
     </div>
   )
 }

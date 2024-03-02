@@ -7,7 +7,7 @@ const productReviewSchema = new Schema({
         required:true,
     },
     productId:{
-        type:[ObjectId, "Invalid Id"],
+        type:ObjectId,
         required:true,
     },
     rating:{
@@ -18,9 +18,8 @@ const productReviewSchema = new Schema({
     },
     reviewText:{
         type:String,
-        minLength:[10, "review-too-short"],
         maxLength:[500, "review-too-long"],
-        required:true
+        required:false
     },
     datePosted:{
         type:Date,

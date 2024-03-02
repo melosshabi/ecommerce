@@ -5,12 +5,13 @@ import connectToDb from "@/lib/mongodb"
 import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 
-type review = {
-    posterDocId:string,
-    productId:string,
-    rating:string,
-    reviewText:string,
+export async function GET(){
+    await connectToDb()
+    const reviews = await productReviewModel.find({})
+
+    return NextResponse.json(reviews)
 }
+
 export async function POST(req:Request){
     const session = await getServerSession(nextAuthOptions)
 
@@ -46,7 +47,7 @@ export async function POST(req:Request){
                 return NextResponse.json({errorMessage:"Your review has to be a maximum length of 500 characters", errorCode:"invalid-review"}, {status:400})
             }
         }
-        return NextResponse.json({error:'error'})
+        return NextResponse.json({error:'an unkown error occured'}, {status:400})
     }
     return NextResponse.json({responseMessage:"Your review was posted successfully", responseCode:"review-posted"})
 }

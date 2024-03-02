@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 :root{
     --orange:rgb(237, 107, 14);
+    --lightOrange:rgb(236, 154, 95);
     --transparentOrange:rgba(237, 107, 14, .1);
     --darkerOrange:rgb(133, 61, 9);
     --black:rgb(40, 40, 40);

@@ -28,7 +28,8 @@ type UserInfo = {
 }
 type PublicUserInfo = {
     username:string,
-    profilePicture:string
+    profilePicture:string,
+    userDocId:string
 }
 type ProfilePageSidebar = {
     activePage:"account" | "cart" | "wishlist" | "userProducts" | "userOrders",

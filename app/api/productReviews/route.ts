@@ -5,9 +5,14 @@ import connectToDb from "@/lib/mongodb"
 import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 
-export async function GET(){
+export async function GET(req:Request){
+    const {searchParams} = new URL(req.url)
+    const productId = searchParams.get('productId')
+    if(!productId){
+        return NextResponse.json({errorMessage:"A product ID is required", errorCode:"missing-product-id"}, {status:400})
+    }
     await connectToDb()
-    const reviews = await productReviewModel.find({})
+    const reviews = await productReviewModel.find({productId:new ObjectId(productId)})
 
     return NextResponse.json(reviews)
 }

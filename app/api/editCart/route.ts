@@ -1,9 +1,15 @@
 import productModel from "@/models/product"
 import userModel from "@/models/user"
 import { ObjectId } from "mongodb"
+import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
+import { nextAuthOptions } from "../auth/[...nextauth]/options"
 
 export async function PATCH(req:Request){
+    const session = getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before editing your card", errCode:"unauthenticated"}, {status:400})
+    }
     const data = await req.json()
 
     try{
@@ -30,6 +36,10 @@ export async function PATCH(req:Request){
 }
 
 export async function DELETE(req:Request){
+    const session = getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before editing your card", errCode:"unauthenticated"}, {status:400})
+    }
     const data = await req.json()
 
     try{

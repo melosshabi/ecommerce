@@ -5,8 +5,11 @@ import { ObjectId } from "mongodb"
 import { NextResponse } from "next/server"
 
 export async function PATCH(req:Request) {
-    const data = await req.json()
     const session = await getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before making changes to your product", errCode:"unauthenticated"}, {status:400})
+    }
+    const data = await req.json()
 
     let product
     try{

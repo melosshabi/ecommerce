@@ -12,13 +12,16 @@ export default function OrderDetails() {
     const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null)
 
     useEffect(() => {
+        const controller = new AbortController()
         async function getOrderDetails(){
-            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders?singleOrder=true&orderId=${orderId}&productDocId=${productDocId}`)
+            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders?singleOrder=true&orderId=${orderId}&productDocId=${productDocId}`, {signal:controller.signal})
             const data = await res.json()
             setOrderDetails(data)
         }
 
         getOrderDetails()
+
+        return () => controller.abort()
     }, [])
   return (
         <div className='order-details-wrapper'>

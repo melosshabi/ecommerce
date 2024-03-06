@@ -7,9 +7,11 @@ import { ObjectId } from "mongodb"
 import productModel from "@/models/product"
 
 export async function PATCH(req:Request){
-    const data = await req.json()
     const session = await getServerSession(nextAuthOptions)
-
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before making changes to your cart", errCode:"unauthenticated"}, {status:400})
+    }
+    const data = await req.json()
     if(data.newQuantity < 1){
         return NextResponse.json({errMessage:"Bad Request"}, {status:400})
     }

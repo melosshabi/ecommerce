@@ -5,9 +5,13 @@ import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import { ObjectId } from "mongodb"
 
 export async function PATCH(req:Request){
-    const data = await req.json()
     
     const session = await getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before editing your wishlist", errCode:"unauthenticated"}, {status:400})
+    }
+
+    const data = await req.json()
 
     try {
         await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
@@ -29,9 +33,11 @@ export async function PATCH(req:Request){
     }
 }
 export async function DELETE(req:Request){
-    const data = await req.json()
-
     const session = await getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before editing your wishlist", errCode:"unauthenticated"}, {status:400})
+    }
+    const data = await req.json()
     try {
         await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
             $pull:{wishlist:{productDocId:data.productDocId}}

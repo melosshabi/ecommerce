@@ -5,7 +5,6 @@ import { NextResponse } from "next/server"
 
 export async function POST(req:Request){
     const data = await req.json()
-    console.log(data)
     await connectToDb()
 
     // I used this variable to check if the sent username already exists

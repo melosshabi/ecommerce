@@ -22,8 +22,9 @@ export default function ProductDetails() {
   const [error, setError] = useState<string>("")
 
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchProduct(){
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productDetails?_id=${productDocId}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productDetails?_id=${productDocId}`, {signal:controller.signal})
       if(res.status === 504){
         alert("There was a problem with the server. Code 504")
         router.push('/')
@@ -37,6 +38,7 @@ export default function ProductDetails() {
       document.querySelector('.spinner-wrapper')?.classList.remove("active-spinner")
     }
     fetchProduct()
+    return () => controller.abort()
   },[])
   
   function handleImageChange(index:number){

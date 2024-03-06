@@ -105,10 +105,12 @@ type review = {
     reviewText:string,
 }
 type frontEndReview = {
+    _id:string,
     posterDocId:string,
     posterName:string,
     posterProfilePicture:string,
     rating:string,
     reviewText:string,
     datePosted:string,
+    dateEdited:string,
 }

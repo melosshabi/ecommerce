@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react'
-import React, {ChangeEvent, FormEvent, TextareaHTMLAttributes, useEffect, useState} from 'react'
+import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react'
 import ButtonLoader from './ButtonLoader'
 import parseMonth from '@/lib/parseMonth'
 
@@ -21,7 +21,9 @@ export default function ProductReviews({productId}: {productId:string}) {
     const [showReviewForm, setShowReviewForm] = useState<boolean>(session.status === "authenticated" ? true : false)
     useEffect(() => {
         reviews?.forEach(async review => {
-            if(review.posterDocId === session?.data?.user?.userDocId) setShowReviewForm(false)
+            if(review.posterDocId === session?.data?.user?.userDocId) {
+                setShowReviewForm(false)
+            }
             const reviewerData = await fetchReviewer(review.posterDocId)
             setReviewPosters(prev => [...prev, {...reviewerData}])
         })
@@ -34,6 +36,7 @@ export default function ProductReviews({productId}: {productId:string}) {
 
     }
     const [btnDisabled, setBtnDisabled] = useState<boolean>(true)
+    const [starRating, setStarRating] = useState<number | null>(null)
     const [reviewText, setReviewText] = useState<string>("")
 
     function handleReviewChange(e:ChangeEvent<HTMLTextAreaElement>){
@@ -41,7 +44,6 @@ export default function ProductReviews({productId}: {productId:string}) {
         const letterCount = document.querySelector('.letter-count') as HTMLTextAreaElement
         letterCount.innerText = `${e.target.value.length}/500`
     }
-    const [starRating, setStarRating] = useState<number | null>(null)
     
     function handleStarClick(targetStar:string){
         setBtnDisabled(false)
@@ -99,7 +101,72 @@ export default function ProductReviews({productId}: {productId:string}) {
 
     const [userWantsToEditReview, setUserWantsToEditReview] = useState<boolean>(false)
     function handlePencilClick(){
+        const reviewStars = document.querySelectorAll('.review-stars')
+        reviewStars.forEach(star => {
+            star.classList.add('editable-review-stars')
+        })
+        document.querySelector('.own-review-text')?.classList.add('active-own-review-text')
         setUserWantsToEditReview(true)
+    }
+    
+    useEffect(() => {
+        const editReviewTextarea: HTMLTextAreaElement | null = document.querySelector('.own-review-text')
+        if(editReviewTextarea) editReviewTextarea.style.height = editReviewTextarea?.scrollHeight + 'px'
+    }, [reviewPosters])
+
+    function handleEditReviewStarClick(targetReviewStar:string){
+        const stars = document.querySelectorAll('.review-stars')
+        stars.forEach(star => star.classList.remove('active-star'))
+        switch(targetReviewStar){
+            case 'star1':
+                stars[0].classList.add('active-star')
+                setStarRating(1)
+                break
+            case 'star2':
+                stars[0].classList.add('active-star')
+                stars[1].classList.add('active-star')
+                setStarRating(2)
+                break
+            case 'star3':
+                stars[0].classList.add('active-star')
+                stars[1].classList.add('active-star')
+                stars[2].classList.add('active-star')
+                setStarRating(3)
+                break
+            case 'star4':
+                stars[0].classList.add('active-star')
+                stars[1].classList.add('active-star')
+                stars[2].classList.add('active-star')
+                stars[3].classList.add('active-star')
+                setStarRating(4)
+                break
+            case 'star5':
+                stars.forEach(star => star.classList.add('active-star'))
+                setStarRating(5)
+                break
+        }
+    }
+    const [saveOnProgress, setSaveOnProgress] = useState<boolean>(false)
+    async function updateReview(id:string){
+        setSaveOnProgress(true)
+        setUserWantsToEditReview(false)
+        const textarea = document.querySelector('.own-review-text') as HTMLTextAreaElement
+        textarea.classList.remove("active-own-review-text")
+        const reviewStars = document.querySelectorAll('.review-stars')
+        reviewStars.forEach(star => star.classList.remove("editable-review-stars"))
+        const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productReviews`, {
+            method:"PATCH",
+            body:JSON.stringify({
+                _id:id,
+                reviewText:textarea.value,
+                rating:starRating
+            })
+        })
+        const res = await req.json()
+        if(res.messageCode === 'review-edited'){
+            // window.location.reload()
+            setSaveOnProgress(false)
+        }
     }
   return (
     <div className="reviews">
@@ -149,9 +216,11 @@ export default function ProductReviews({productId}: {productId:string}) {
             return (
                 <div className="review" key={index}>
                     {reviewer.userDocId === session?.data?.user?.userDocId &&
-                        <svg onClick={() => handlePencilClick()} className='pencil' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                        </svg>
+                        <abbr title="Edit Review">
+                            <svg onClick={() => handlePencilClick()} className='pencil' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                            </svg>
+                        </abbr>
                     
                     }
                     <div className="reviewer">
@@ -160,24 +229,33 @@ export default function ProductReviews({productId}: {productId:string}) {
                             <p className='reviewer-username'>{reviewer.username}</p>
                         </div>
                     </div>
-                        <svg  className={`review-stars r-star1 ${parseInt(reviews[index].rating) >= 1 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <svg onClick={() => handleEditReviewStarClick('star1')} className={`review-stars r-star1 ${parseInt(reviews[index].rating) >= 1 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                         </svg>
-                        <svg className={`review-stars r-star2 ${parseInt(reviews[index].rating) >= 2 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <svg onClick={() => handleEditReviewStarClick('star2')} className={`review-stars r-star2 ${parseInt(reviews[index].rating) >= 2 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                         </svg>
-                        <svg className={`review-stars r-star3 ${parseInt(reviews[index].rating) >= 3 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <svg onClick={() => handleEditReviewStarClick('star3')} className={`review-stars r-star3 ${parseInt(reviews[index].rating) >= 3 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                         </svg>
-                        <svg className={`review-stars r-star4 ${parseInt(reviews[index].rating) >= 4 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <svg onClick={() => handleEditReviewStarClick('star4')} className={`review-stars r-star4 ${parseInt(reviews[index].rating) >= 4 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                         </svg>
-                        <svg className={`review-stars r-star5 ${parseInt(reviews[index].rating) === 5 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                        <svg onClick={() => handleEditReviewStarClick('star5')} className={`review-stars r-star5 ${parseInt(reviews[index].rating) === 5 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                         </svg>
                     {   reviewer.userDocId !== session?.data?.user?.userDocId ?
                         <p className="review-text">{reviews[index].reviewText}</p>:
-                        <textarea className="review-text" disabled={!userWantsToEditReview}>{reviews[index].reviewText}</textarea>
+                        <textarea className="review-text own-review-text" disabled={!userWantsToEditReview}>{reviews[index].reviewText}</textarea>
+                    }
+                    {
+                        reviews[index].datePosted !== reviews[index].dateEdited &&
+                        <span className='edited'>(Edited)</span>
+                    }
+                    {
+                        reviewer.userDocId === session?.data?.user?.userDocId && userWantsToEditReview ?
+                        <button disabled={saveOnProgress} onClick={() => updateReview(reviews[index]._id)} className="save-edited-review-btn">{!    saveOnProgress ? "Save" : "Saving"}</button>
+                        : ""
                     }
                     <p className="date-review-posted">{`${day}-${month}-${year} ${hours}:${minutes}`}</p>
                 </div>

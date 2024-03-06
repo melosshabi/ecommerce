@@ -2,9 +2,10 @@ import connectToDb from "@/lib/mongodb"
 import productModel from "@/models/product"
 import { NextResponse } from "next/server"
 import cloudinary from 'cloudinary'
-import { join } from "path"
 import { unlink, writeFile } from "fs/promises"
 import userModel from "@/models/user"
+import { getServerSession } from "next-auth"
+import { nextAuthOptions } from "../auth/[...nextauth]/options"
 
 cloudinary.v2.config({
     cloud_name:process.env.CLOUD_NAME,
@@ -13,6 +14,10 @@ cloudinary.v2.config({
 })
 
 export async function POST(req:Request){
+    const session = getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before posting a product", errCode:"unauthenticated"}, {status:400})
+    }
     const data = await req.formData()
     const userDocId = data.get('userDocId')
     const productName = data.get('productName')

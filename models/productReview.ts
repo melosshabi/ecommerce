@@ -25,6 +25,11 @@ const productReviewSchema = new Schema({
         type:Date,
         required:false,
         default:() => Date.now()
+    },
+    dateEdited:{
+        type:Date,
+        required:false,
+        default:() => Date.now()
     }
 })
 

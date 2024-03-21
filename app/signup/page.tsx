@@ -1,10 +1,9 @@
 "use client"
 import React, { FormEvent, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
-import '../styles/signup.css'
-import Loader from '@/app/components/Loader'
 import { useRouter } from 'next/navigation'
 import ButtonLoader from '../components/ButtonLoader'
+import '../styles/signup.css'
 
 export default function SignUp() {
 
@@ -43,14 +42,14 @@ export default function SignUp() {
     e.preventDefault()
     setAuthInProgress(true)
 
-    const res = await fetch('http://localhost:3000/api/signup', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/signup`, {
       method:'POST',
       headers:{
         'Content-Type':'application/json'
       },
       body:JSON.stringify(formData)
     })
-
+    
     const data = await res.json()
 
     if(data.errorCode === "username-taken"){
@@ -70,6 +69,7 @@ export default function SignUp() {
       document.querySelector('.email-input')?.classList.add('red-border')
       return
     }else if(data.errorCode === 'incomplete-form'){
+      setAuthInProgress(false)
       setError({
         errorMessage:data.errorMessage,
         errorCode:data.errorCode

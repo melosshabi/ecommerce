@@ -67,7 +67,7 @@ export default function PostProduct() {
         formData.set('picture2', pictures[1])
         formData.set('picture3', pictures[2])
 
-        const req = await fetch('http://localhost:3000/api/newProduct', {
+        const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/newProduct`, {
             method:"POST",
             body:formData
         })
@@ -82,7 +82,7 @@ export default function PostProduct() {
             setTimeout(() => router.push('/'), 4500)
         }
     }
-
+    // alert(`${screen.width}x ${screen.height}`)
   return (
     <div className='post-product-page'>
         <div className="product-form-wrapper">

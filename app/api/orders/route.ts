@@ -1,11 +1,10 @@
 import orderModel from "@/models/order"
 import { NextResponse } from "next/server"
-import nextAuth, {getServerSession} from 'next-auth'
+import {getServerSession} from 'next-auth'
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import productModel from "@/models/product"
 import { ObjectId } from "mongodb"
 import userModel from "@/models/user"
-import { useSearchParams } from "next/navigation"
 
 // The function below creates a new order document
 export async function POST(req:Request){

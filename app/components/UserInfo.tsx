@@ -18,7 +18,6 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>){
     if(e.target.files){
-      console.log("File", e.target.files[0])
       setPictureFile(e.target.files[0])
       getSelectedImageUrl(e.target.files[0])
     }
@@ -44,7 +43,6 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
         break;
   }}
 
-  // TODO: Fix the issue where the user can't update their account information without selecting a new profile picture
   async function handleSubmit(){
 
     setUpdateInProgress(true)
@@ -52,8 +50,9 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
     const formData = new FormData()
     formData.set('newUsername', newUsername)
     formData.set('newEmail', newEmail)
-    formData.set('profilePicture', pictureFile)
-    const req = await fetch('http://localhost:3000/api/updateUser', {
+
+    if (pictureFile) formData.set('profilePicture', pictureFile)
+    const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateUser`, {
       method:"PATCH",  
       body:formData
     })

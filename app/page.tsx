@@ -4,10 +4,11 @@ import Link from 'next/link'
 import ImageSlider from './components/ImageSlider'
 import './styles/app.css'
 
+export const revalidate = 60
+
 export default async function Home() {
   const productsPromise: Promise<Product[]> = getProducts()
   const products = await productsPromise
-
   return (
     <main className='home'>
       

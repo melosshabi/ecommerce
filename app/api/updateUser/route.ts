@@ -14,9 +14,12 @@ cloudinary.v2.config({
     api_secret:process.env.CLOUDINARY_API_SECRET
 })
 
-export async function PATCH(req:Request, res:Request){
-    const data = await req.formData()
+export async function PATCH(req:Request){
     const session = await getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before making changes to your profile", errCode:"unauthenticated"}, {status:400})
+    }
+    const data = await req.formData()
     if(data.get('profilePicture')?.valueOf() !== undefined){
         const newProfilePicture: File = data.get('profilePicture') as unknown as File
         const bytes = await newProfilePicture.arrayBuffer()

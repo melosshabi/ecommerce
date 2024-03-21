@@ -11,12 +11,11 @@ export default function UserProductsList() {
   const [reqPending, setReqPending] = useState<boolean>(true)
 
   useEffect(() => {
-
     const controller = new AbortController()
 
     async function fetchUserProducts(){
       try{
-        const res = await fetch('http://localhost:3000/api/getUserProducts', {signal:controller.signal})
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/getUserProducts`, {signal:controller.signal})
         const data = await res.json()
         setUserProducts(data.products)
         setReqPending(false)
@@ -35,7 +34,7 @@ export default function UserProductsList() {
     tempArr.splice(index, 1)
     setUserProducts([...tempArr])
 
-    await fetch("http://localhost:3000/api/unlistProduct", {
+    await fetch(`${process.env.NEXT_PUBLIC_URL}/api/unlistProduct`, {
       method:"DELETE",
       body:JSON.stringify({
         productToDeleteId:productDocId
@@ -80,7 +79,7 @@ export default function UserProductsList() {
     }
 
     const timeout = setTimeout(async () => {
-      await fetch('http://localhost:3000/api/updateProductQuantity', {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}}/api/updateProductQuantity`, {
         method:"PATCH",
         body:JSON.stringify({productDocId, newQuantity})
       })

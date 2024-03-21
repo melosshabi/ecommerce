@@ -9,6 +9,7 @@ import removeFromCart from '@/lib/removeFromCart'
 import addToCart from '@/lib/addToCart'
 import checkmark from '../images/order-page-checkmark.png'
 import '../styles/productPage.css'
+import ProductReviews from '../components/ProductReviews'
 
 export default function ProductDetails() {
   
@@ -21,17 +22,23 @@ export default function ProductDetails() {
   const [error, setError] = useState<string>("")
 
   useEffect(() => {
+    const controller = new AbortController();
     async function fetchProduct(){
-      const res = await fetch(`http://localhost:3000/api/productDetails?_id=${productDocId}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productDetails?_id=${productDocId}`, {signal:controller.signal})
+      if(res.status === 504){
+        alert("There was a problem with the server. Code 504")
+        router.push('/')
+      }
       const productData = await res.json()
       if(!productData){
         router.push('/')
       }
       setProduct(productData)
       setActiveImage(productData.pictures[0])
-      document.querySelector('.spinner-wrapper')?.classList.toggle("active-spinner")
+      document.querySelector('.spinner-wrapper')?.classList.remove("active-spinner")
     }
     fetchProduct()
+    return () => controller.abort()
   },[])
   
   function handleImageChange(index:number){
@@ -185,6 +192,7 @@ export default function ProductDetails() {
           </div>
 
       </div>
+      <ProductReviews productId={productDocId as string}/>
     </div>
   )
 }

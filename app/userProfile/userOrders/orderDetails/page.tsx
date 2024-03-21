@@ -12,20 +12,22 @@ export default function OrderDetails() {
     const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null)
 
     useEffect(() => {
+        const controller = new AbortController()
         async function getOrderDetails(){
-            const res = await fetch(`http://localhost:3000/api/orders?singleOrder=true&orderId=${orderId}&productDocId=${productDocId}`)
+            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders?singleOrder=true&orderId=${orderId}&productDocId=${productDocId}`, {signal:controller.signal})
             const data = await res.json()
-            console.log(data)
             setOrderDetails(data)
         }
 
         getOrderDetails()
+
+        return () => controller.abort()
     }, [])
   return (
         <div className='order-details-wrapper'>
-            <div className="order-details-product">
-                <div className="order-details-product-image-wrapper">
-                    <Image className='order-details-product-image' width={500} height={500} src={orderDetails?.product.pictures[0] as string} alt="Picture of the product"/>
+            <div className="product-details">
+                <div className="product-details-image-wrapper">
+                    <Image className='product-details-image' width={500} height={500} src={orderDetails?.product.pictures[0] as string} alt="Picture of the product"/>
                 </div>
 
                 <div>

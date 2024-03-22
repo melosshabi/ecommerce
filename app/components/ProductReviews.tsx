@@ -2,39 +2,32 @@ import { useSession } from 'next-auth/react'
 import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react'
 import ButtonLoader from './ButtonLoader'
 import parseMonth from '@/lib/parseMonth'
+import Image from 'next/image'
+import userIcon from '../images/user.png'
 
 export default function ProductReviews({productId}: {productId:string}) {
     const session = useSession()
-    const [reviews, setReviews] = useState<frontEndReview[]>([])
-    const [reviewPosters, setReviewPosters] = useState<PublicUserInfo[]>([])
+    const [reviews, setReviews] = useState<Review[]>([])
+    const [showReviewForm, setShowReviewForm] = useState<boolean>(session.status === "authenticated" ? true : false)
 
     useEffect(() => {
         const controller = new AbortController()
         async function fetchReviews(){
             const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/productReviews?productId=${productId}`, {signal:controller.signal})
             const data = await res.json()
-            setReviews(data)
+            setReviews([...data.reviews])
         }
         fetchReviews()
         return () => controller.abort()
-    }, []) 
-    const [showReviewForm, setShowReviewForm] = useState<boolean>(session.status === "authenticated" ? true : false)
+    }, [])
     useEffect(() => {
-        reviews?.forEach(async review => {
-            if(review.posterDocId === session?.data?.user?.userDocId) {
+        console.log(reviews)
+        reviews.forEach((review:Review) => {
+            if(review.posterDocId === session.data?.user.userDocId){
                 setShowReviewForm(false)
             }
-            const reviewerData = await fetchReviewer(review.posterDocId)
-            setReviewPosters(prev => [...prev, {...reviewerData}])
         })
     }, [reviews])
-
-    async function fetchReviewer(userId:string): Promise<PublicUserInfo>{
-            const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/publicUserData?_id=${userId}`)
-            const userData: PublicUserInfo = await res.json()
-            return userData
-
-    }
     const [btnDisabled, setBtnDisabled] = useState<boolean>(true)
     const [starRating, setStarRating] = useState<number | null>(null)
     const [reviewText, setReviewText] = useState<string>("")
@@ -112,7 +105,7 @@ export default function ProductReviews({productId}: {productId:string}) {
     useEffect(() => {
         const editReviewTextarea: HTMLTextAreaElement | null = document.querySelector('.own-review-text')
         if(editReviewTextarea) editReviewTextarea.style.height = editReviewTextarea?.scrollHeight + 'px'
-    }, [reviewPosters])
+    }, [reviews])
 
     function handleEditReviewStarClick(targetReviewStar:string){
         const stars = document.querySelectorAll('.review-stars')
@@ -164,7 +157,6 @@ export default function ProductReviews({productId}: {productId:string}) {
         })
         const res = await req.json()
         if(res.messageCode === 'review-edited'){
-            // window.location.reload()
             setSaveOnProgress(false)
         }
     }
@@ -193,17 +185,16 @@ export default function ProductReviews({productId}: {productId:string}) {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                 </svg>
 
-                <textarea maxLength={500} placeholder='Your review...' value={reviewText} onChange={e => handleReviewChange(e)}>
-                    
-                </textarea>
+                <textarea maxLength={500} placeholder='Your review...' value={reviewText} onChange={e => handleReviewChange(e)}/>
                 <p className="letter-count">0/500</p>
                 <p className='letter-count review-posted-message'>{reviewRes}</p>
                 <button disabled={btnDisabled} className='submit-review-btn'>{!reviewInProgress ? "Post Review"  : <ButtonLoader/>}</button>
             </form>
         </div>}
 
-        {reviewPosters.map((reviewer, index) => {
-            const date = new Date(reviews[index].datePosted)
+        {reviews.map((review, index) => {
+            // if(review.posterDocId === session.data?.user.userDocId) setShowReviewForm(false)
+            const date = new Date(review.datePosted)
             const year = date.getFullYear()
             const month = parseMonth(date.getMonth())
             const day = date.getDate()
@@ -215,7 +206,7 @@ export default function ProductReviews({productId}: {productId:string}) {
 
             return (
                 <div className="review" key={index}>
-                    {reviewer.userDocId === session?.data?.user?.userDocId &&
+                    {review.posterDocId === session?.data?.user?.userDocId &&
                         <abbr title="Edit Review">
                             <svg onClick={() => handlePencilClick()} className='pencil' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
@@ -225,8 +216,8 @@ export default function ProductReviews({productId}: {productId:string}) {
                     }
                     <div className="reviewer">
                         <div className="reviewer-pfp-wrapper">
-                            <img src={reviewer.profilePicture} alt={`${reviewer.username}'s profile picture`} className="reviewer-pfp" />
-                            <p className='reviewer-username'>{reviewer.username}</p>
+                            <Image src={review.posterProfilePicture || userIcon} width={50} height={50} alt={`${review.posterName}'s profile picture`} className="reviewer-pfp" />
+                            <p className='reviewer-username'>{review.posterName}</p>
                         </div>
                     </div>
                         <svg onClick={() => handleEditReviewStarClick('star1')} className={`review-stars r-star1 ${parseInt(reviews[index].rating) >= 1 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -244,7 +235,7 @@ export default function ProductReviews({productId}: {productId:string}) {
                         <svg onClick={() => handleEditReviewStarClick('star5')} className={`review-stars r-star5 ${parseInt(reviews[index].rating) === 5 ? "active-star" : ""}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
                         </svg>
-                    {   reviewer.userDocId !== session?.data?.user?.userDocId ?
+                    {   review.posterDocId !== session?.data?.user?.userDocId ?
                         <p className="review-text">{reviews[index].reviewText}</p>:
                         <textarea className="review-text own-review-text" disabled={!userWantsToEditReview}>{reviews[index].reviewText}</textarea>
                     }
@@ -253,7 +244,7 @@ export default function ProductReviews({productId}: {productId:string}) {
                         <span className='edited'>(Edited)</span>
                     }
                     {
-                        reviewer.userDocId === session?.data?.user?.userDocId && userWantsToEditReview ?
+                        review.posterDocId === session?.data?.user?.userDocId && userWantsToEditReview ?
                         <button disabled={saveOnProgress} onClick={() => updateReview(reviews[index]._id)} className="save-edited-review-btn">{!    saveOnProgress ? "Save" : "Saving"}</button>
                         : ""
                     }
@@ -262,5 +253,5 @@ export default function ProductReviews({productId}: {productId:string}) {
             )
         })}
     </div>
-  )
+)
 }

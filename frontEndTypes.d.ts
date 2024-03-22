@@ -26,11 +26,6 @@ type UserInfo = {
     email:string,
     profilePictureUrl:string
 }
-type PublicUserInfo = {
-    username:string,
-    profilePicture:string,
-    userDocId:string
-}
 type ProfilePageSidebar = {
     activePage:"account" | "cart" | "wishlist" | "userProducts" | "userOrders",
     // hideSidebar:boolean
@@ -96,21 +91,4 @@ type orderData = {
 type OrderDetails = {
     order:orderData,
     product:Product
-}
-// This type is used in the productReviews API route
-type review = {
-    posterDocId:string,
-    productId:string,
-    rating:string,
-    reviewText:string,
-}
-type frontEndReview = {
-    _id:string,
-    posterDocId:string,
-    posterName:string,
-    posterProfilePicture:string,
-    rating:string,
-    reviewText:string,
-    datePosted:string,
-    dateEdited:string,
 }

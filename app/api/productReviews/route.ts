@@ -4,17 +4,31 @@ import { ObjectId } from "mongodb"
 import connectToDb from "@/lib/mongodb"
 import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
+import userModel from "@/models/user"
 
 export async function GET(req:Request){
     const {searchParams} = new URL(req.url)
     const productId = searchParams.get('productId')
     if(!productId){
-        return NextResponse.json({errorMessage:"A product ID is required", errorCode:"missing-product-id"}, {status:400})
+        return NextResponse.json({errorMessage:"Invalid query", errorCode:"invalid-query"}, {status:400})
     }
     await connectToDb()
-    const reviews = await productReviewModel.find({productId:new ObjectId(productId)})
-
-    return NextResponse.json(reviews)
+    const reviews: Review[] = await productReviewModel.find({productId:new ObjectId(productId)})
+    const userPromises = reviews.map(async (review, index) => {
+        const dbUserData = await userModel.findOne({_id:new ObjectId(review.posterDocId)})
+        reviews[index] = {
+            _id:reviews[index]._id,
+            posterDocId:dbUserData._id, 
+            posterName:dbUserData.username, 
+            posterProfilePicture:dbUserData.profilePictureUrl,
+            rating:reviews[index].rating,
+            reviewText:reviews[index].reviewText,
+            datePosted:reviews[index].datePosted,
+            dateEdited:reviews[index].dateEdited
+        }
+    })
+    await Promise.all(userPromises)
+    return NextResponse.json({reviews})
 }
 
 export async function POST(req:Request){
@@ -23,8 +37,8 @@ export async function POST(req:Request){
     if(!session){
         return NextResponse.json({error:"You need to sign in before posting reviews", errorCode:"unauthenticated"}, {status:400})
     }
-    const data:review = await req.json()
-    if(!parseInt(data.rating)){
+    const data:postRequestReviewData = await req.json()
+    if(!parseInt(data.rating as string)){
         return NextResponse.json({errorMessage:"Rating should be a number", errorCode:"invalid-rating-data"}, {status:400})
     }
     
@@ -33,7 +47,7 @@ export async function POST(req:Request){
         await productReviewModel.create({
             posterDocId:new ObjectId(data.posterDocId),
             productId:new ObjectId(data.productId),
-            rating:parseInt(data.rating),
+            rating:parseInt(data.rating as string),
             reviewText:data.reviewText
         })
     }catch(dbRes:any){

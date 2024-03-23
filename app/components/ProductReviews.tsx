@@ -8,7 +8,7 @@ import userIcon from '../images/user.png'
 export default function ProductReviews({productId}: {productId:string}) {
     const session = useSession()
     const [reviews, setReviews] = useState<Review[]>([])
-    const [showReviewForm, setShowReviewForm] = useState<boolean>(session.status === "authenticated" ? true : false)
+    const [showReviewForm, setShowReviewForm] = useState<boolean>(true)
 
     useEffect(() => {
         const controller = new AbortController()
@@ -27,6 +27,9 @@ export default function ProductReviews({productId}: {productId:string}) {
             }
         })
     }, [reviews])
+    useEffect(() => {
+        if(session.status === 'unauthenticated') setShowReviewForm(false)
+    }, [session])
     const [btnDisabled, setBtnDisabled] = useState<boolean>(true)
     const [starRating, setStarRating] = useState<number | null>(null)
     const [reviewText, setReviewText] = useState<string>("")

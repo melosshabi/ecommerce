@@ -33,11 +33,12 @@ export async function GET(req:Request){
 
 export async function POST(req:Request){
     const session = await getServerSession(nextAuthOptions)
-
     if(!session){
         return NextResponse.json({error:"You need to sign in before posting reviews", errorCode:"unauthenticated"}, {status:400})
     }
     const data:postRequestReviewData = await req.json()
+    const review = await productReviewModel.findOne({posterDocId:new ObjectId(session?.user.userDocId)})
+    if(review) return NextResponse.json({errMsg:"You can only post 1 review", errCode:"reached-review-limit"})
     if(!parseInt(data.rating as string)){
         return NextResponse.json({errorMessage:"Rating should be a number", errorCode:"invalid-rating-data"}, {status:400})
     }

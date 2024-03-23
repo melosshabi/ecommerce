@@ -329,6 +329,9 @@
 .editable-review-stars{
     cursor: pointer;
 }
+.editable-review-stars:hover{
+    fill:var(--lightOrange)
+}
 .editable-review-stars:hover ~ .editable-review-stars{
     fill:none;
 }

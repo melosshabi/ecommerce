@@ -21,7 +21,6 @@ export default function ProductReviews({productId}: {productId:string}) {
         return () => controller.abort()
     }, [])
     useEffect(() => {
-        console.log(reviews)
         reviews.forEach((review:Review) => {
             if(review.posterDocId === session.data?.user.userDocId){
                 setShowReviewForm(false)
@@ -193,7 +192,6 @@ export default function ProductReviews({productId}: {productId:string}) {
         </div>}
 
         {reviews.map((review, index) => {
-            // if(review.posterDocId === session.data?.user.userDocId) setShowReviewForm(false)
             const date = new Date(review.datePosted)
             const year = date.getFullYear()
             const month = parseMonth(date.getMonth())

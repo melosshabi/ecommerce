@@ -8,8 +8,8 @@ import removeFromWishlist from '@/lib/removeFromWishlist'
 import removeFromCart from '@/lib/removeFromCart'
 import addToCart from '@/lib/addToCart'
 import checkmark from '../images/order-page-checkmark.png'
-import '../styles/productPage.css'
 import ProductReviews from '../components/ProductReviews'
+import '../styles/productPage.css'
 
 export default function ProductDetails() {
   

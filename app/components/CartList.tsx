@@ -80,7 +80,7 @@ export default function CartList({productsArray} : CartListProps) {
     }
 
     const timeout = setTimeout(async () => {
-      await fetch(`${process.env.NEXT_PUBLIC_URL}api/updateCartQuantity`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateCartQuantity`, {
         method:'PATCH',
         body:JSON.stringify({productDocId, newQuantity})
       })

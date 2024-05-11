@@ -17,7 +17,7 @@ interface Product {
     manufacturer:string,
     productPrice:number,
     quantity:number,
-    pictures:String[],
+    pictures:string[],
     productReviews:Array,
 }
 type UserInfo = {
@@ -91,4 +91,7 @@ type orderData = {
 type OrderDetails = {
     order:orderData,
     product:Product
+}
+type ProductLink = {
+    productId:string
 }

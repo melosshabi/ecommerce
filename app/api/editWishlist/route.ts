@@ -14,12 +14,23 @@ export async function PATCH(req:Request){
     const data = await req.json()
 
     try {
+        const user = await userModel.findOne({_id: new ObjectId(session?.user.userDocId)})
+        if(user.wishlist.some((product:any) => product.productDocId == data.productDocId)){
+            return NextResponse.json({
+                message:"Product already in wishlist",
+                messageCode:"product-already-in-wishlist"
+            }, {status:400})
+        }
         await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
             $push:{wishlist:{
                 productDocId:data.productDocId,
                 dateAdded: new Date()
             }}
         }, {new:true})
+        session.user.wishlist.push({
+            productDocId:data.productDocId,
+            dateAdded: new Date()
+        })
 
         return NextResponse.json({
             message:"Added to wishlist",

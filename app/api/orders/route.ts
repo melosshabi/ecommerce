@@ -43,6 +43,7 @@ export async function POST(req:Request){
         })
 
         await userModel.findOneAndUpdate({_id: new ObjectId(session.user.userDocId)}, {$push:{orders:order._id}})
+        await productModel.findOneAndUpdate({_id:new ObjectId(data.productDocId)}, {$inc: {quantity:-data.desiredQuantity}})
     }
     catch(err:any){
         if(err._message === 'Order validation failed'){

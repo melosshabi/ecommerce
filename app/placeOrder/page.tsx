@@ -45,7 +45,7 @@ export default function PlaceOrder() {
 
     async function placeOrder(e:FormEvent<HTMLFormElement>){
       e.preventDefault()
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}api/orders`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {
         method:"POST",
         body:JSON.stringify({
           productDocId,

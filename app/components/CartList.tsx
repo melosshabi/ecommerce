@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import parseMonth from '@/lib/parseMonth'
@@ -38,7 +39,6 @@ export default function CartList({productsArray} : CartListProps) {
     return () => controller.abort()
   }, [])
 
-
   const quantityActions = {
     inc:'increment',
     dec:'decrement'
@@ -58,7 +58,6 @@ export default function CartList({productsArray} : CartListProps) {
 
     if(action === quantityActions.inc){  
       const newValue = parseInt(input.value) + 1
-
       if(newValue > productStock){
         newQuantity = productStock
         input.value = productStock.toString()
@@ -80,7 +79,7 @@ export default function CartList({productsArray} : CartListProps) {
     }
 
     const timeout = setTimeout(async () => {
-      await fetch(`${process.env.NEXT_PUBLIC_URL}api/updateCartQuantity`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateCartQuantity`, {
         method:'PATCH',
         body:JSON.stringify({productDocId, newQuantity})
       })
@@ -124,7 +123,7 @@ export default function CartList({productsArray} : CartListProps) {
                 <button className='quantity-btns' onClick={() => updateQuantity(item._id, quantityActions.inc, item.quantity)}>
                   <Image className='quantity-icons' src={plus} width={50} height={50} alt="Plus icon"/>
                 </button>
-                <input type="number" className={`quantity-input input-${item._id}`} value={item.desiredQuantity} readOnly/>
+                <input type="number" className={`quantity-input input-${item._id}`} value={item.desiredQuantity}/>
                 <button className='quantity-btns' onClick={() => updateQuantity(item._id, quantityActions.dec, item.quantity)}>
                   <Image className='quantity-icons' src={minus} width={50} height={50} alt="Minus icon"/>
                 </button>

@@ -3,6 +3,8 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import ButtonLoader from '../components/ButtonLoader'
+import Image from 'next/image'
+import decorationImg from '../images/decoration.svg'
 import '../styles/signup.css'
 
 export default function SignUp() {
@@ -88,9 +90,12 @@ export default function SignUp() {
   return (
     <div className='sign-up-page'>    
       <div className="form-wrapper">
-      
-        <h2>Welcome!</h2>
+        <div className='sign-up-decoration-img-wrapper'>
+          <Image className="sign-up-decoration-img" src={decorationImg} width={1500} height={1500} alt="Decoration image"/>
+        </div>
+        <div className='sign-up-form-wrapper'>
         <form className="sign-up-form" onSubmit={e => handleSubmit(e)}>
+        <h2>Welcome!</h2>
          {/* Inputs container is the parent element of all the divs with the class of 'inputs-wrappers='  */}
             <div className="inputs-container" style={{display:'flex', flexDirection:'column', height:'fit-content'}}>
               <div className='inputs-wrappers'>
@@ -111,6 +116,7 @@ export default function SignUp() {
             </div>            
           <button className='submit-sign-up-form-btn' disabled={authInProgress}>{!authInProgress ? 'Sign Up' : <ButtonLoader/>}</button>
         </form>
+        </div>
       </div>
     </div>
   )

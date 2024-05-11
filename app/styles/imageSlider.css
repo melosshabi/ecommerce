@@ -40,6 +40,13 @@
     }
 }
 /* Media queries */
+/* iPad Pro 12inch Landscape */
+@media screen and (max-width:1366px){
+    .image-slider{
+        height: 40dvh;
+    }
+}
+/* Laptops */
 @media screen and (max-width:1283px) and (max-height:590px){
     .image-slider{
         margin-top: 15dvh;
@@ -49,6 +56,12 @@
 @media screen and (max-width:1024px) and (max-height:1366px){
     .image-slider{
         height: 25dvh;
+    }
+}
+/* iPad Mini Landscape */
+@media screen and (max-width:1024px) and (max-height:768px){
+    .image-slider{
+        height: 33dvh;
     }
 }
 /* iPhone 14 Pro Max */

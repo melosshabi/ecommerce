@@ -42,7 +42,6 @@
 .searchbar{
     width: 90%;
     border:none;
-    /* background-color: red; */
 }
 .search-wrapper:has(.searchbar:focus){
     border:1px solid var(--orange);
@@ -166,6 +165,20 @@
     justify-content: center;
     align-items: center;
 }
+/* iPad Pro 12inch Landscape */
+@media screen and (max-width:1366px){
+    .cart-item-count{
+        right:25px;
+        top:-10px;
+    }
+    .nav-menu{
+        left: 42%;
+    }
+    .active-nav-menu{
+        height: 19.2dvh;
+    }
+}
+/* Laptops */
 @media screen and (max-width:1283px) and (max-height:590px){
     .navbar{
         height: 15dvh;
@@ -178,10 +191,6 @@
     .active-nav-menu{
         height: 33.5dvh;
     }
-    .cart-item-count{
-        right:25px;
-        top:-10px;
-    }
 }
 /* iPad Pro 12.9 inch */
 @media screen and (max-width:1024px) and (max-height:1366px){
@@ -189,10 +198,6 @@
     width: 70px;
     height: 70px;
     padding:0;
-   }
-   .nav-menu-btn img{
-    min-width: 80%;
-    min-height: 80%;
    }
    .nav-menu{
     width: 50%;
@@ -202,8 +207,11 @@
     height: 15dvh;
    }
    .cart-item-count{
-    right: 25px;
-    top:-5px;
+    right: 35px;
+    top:5px;
+   }
+   .user-icon, .cart-icon{
+        width: 25px;
    }
 }
 /* iPad Pro 11 inch */

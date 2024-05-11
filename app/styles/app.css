@@ -79,12 +79,29 @@ body{
     height: 200px;
 }
 /* Media Queries */
+/* iPad Pro 12 Inch Landscape */
+@media screen and (max-width:1366px) and (max-height:1024px){
+    .products{
+        grid-template-columns: 25% 25% 25% 25%;
+    }
+}
+/* Laptops */
 @media screen and (max-width:1283px) and (max-height:590px){
     .products{
         margin-bottom: 50px;
     }
     .product{
         width: 95%;
+    }
+}
+/* iPad 11 inch Landscape */
+@media screen and (max-width:1195px) and (max-height:835px){
+    .nav-menu{
+        left: 40% !important;
+    }
+    .active-nav-menu{
+        width: 9dvw !important;
+        height: 23.5dvh !important;
     }
 }
 /* iPad Pro 12.9inch */
@@ -97,8 +114,21 @@ body{
         width: 80%;
     }
 }
+/* iPad Mini Landscape */
+@media screen and (max-width:1024px) and (max-height:768px){
+    .nav-menu{
+        top: 95% !important;
+        left: 50% !important;
+    }
+    .active-nav-menu{
+        height: 25.5dvh !important;
+    }
+}
 /* iPad Pro 11 inch */
 @media screen and (max-width:834px) and (max-height:1194px){
+    .products{
+        width: 95dvw;
+    }
     .product{
         width: 83%;
     }

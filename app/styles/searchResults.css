@@ -54,10 +54,6 @@
         grid-template-columns: 20% 20% 20% 20%;
     }
 }
-/* Laptops */
-@media screen and (max-width:1281px){
-
-}
 /* iPad Pro 12 Inch Portrait */
 @media screen and (max-width:1026px){
     .search-results{
@@ -79,6 +75,12 @@
         gap: 5%;
         justify-content: space-around;
     }
+    .searched-product-details h3{
+        font-size: 1em;
+    }
+    .searched-product-details h4, .searched-product-details p{
+        font-size: .9em;
+    }
 }
 /* iPhone XS Max */
 @media screen and (max-width:415px){
@@ -86,8 +88,4 @@
         grid-template-columns: 47% 47%;
         gap: 1%;
     }
-}
-/* iPhone X/XS */
-@media screen and (max-width:375px){
-    
 }

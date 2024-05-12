@@ -19,7 +19,18 @@ export default function Navbar() {
   const [serachInputVal, setInputSearchVal] = useState<string>("")
   function handleSearch(e?:React.KeyboardEvent<HTMLInputElement>){
     if(!serachInputVal) return
-    router.push(`/search?query=${serachInputVal}`)
+    // This if statement gets executed if the user presses the enter key on computers
+    if(e && e.key === "Enter"){
+      router.push(`/search?query=${serachInputVal}`) 
+    }
+    // This line gets executed on the submit event which happends on mobile devices
+    if(!e){
+      router.push(`/search?query=${serachInputVal}`)
+    }
+  }
+  function toggleSidebar(){
+    document.querySelector('.mobile-sidebar')?.classList.toggle('active-nav-mobile-sidebar')
+    document.querySelector('.black-div')?.classList.toggle('active-black-div')
   }
   return (
     <nav className='navbar'>
@@ -34,6 +45,7 @@ export default function Navbar() {
           value={serachInputVal}
           onChange={e => setInputSearchVal(e.target.value)}
           onSubmit={() => handleSearch()}
+          onKeyUp={e => handleSearch(e)}
           className='searchbar' 
           type="text" 
           placeholder='Search' 
@@ -82,6 +94,33 @@ export default function Navbar() {
           </div>
         </div>
         }
+        <button className="nav-hamburger-btn" onClick={() => toggleSidebar()}>
+          <div className="burger-lines burger-line1"></div>
+          <div className="burger-lines burger-line2"></div>
+          <div className="burger-lines burger-line3"></div>
+        </button>
+        <div className="mobile-sidebar" style={session.status === 'unauthenticated' ? {justifyContent:'space-between'} : {}}>
+          <button className="close-mobile-sidebar-btn" onClick={() => toggleSidebar()}>
+          <svg className='sidebar-x-icon' xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+          </button>
+          {session.status === 'authenticated' ?
+            <ul className="mobile-sidebar-links">
+              <li><Link href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>
+              <li><Link href="/userProfile/cart" className='nav-menu-links'>Cart</Link></li>
+              <li><Link href="/userProfile/wishlist" className='nav-menu-links'>Wishlist</Link></li>
+              <li><Link href="/postProduct" className='nav-menu-links'>Sell</Link></li>
+              <li><button onClick={() => signOut()} className='nav-menu-links'>Sign out</button></li>
+            </ul>
+            :
+            <ul className="mobile-sidebar-links mobile-sidebar-auth-btns-wrapper">
+              <li><Link href="/api/auth/signin" className='auth-btns sign-in-btn'>Sign In</Link></li>
+              <li><Link href="/signup" className='auth-btns sign-in-btn'>Sign Up</Link></li>
+            </ul>
+          }
+        </div>
+
+        {/* Black div is the black div that appears when the user clicks on the hamburger button */}
+        <div className="black-div"></div>
     </nav>
   )
 }

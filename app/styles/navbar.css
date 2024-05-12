@@ -11,6 +11,15 @@
     align-items: center;
     z-index: 2;
 }
+.nav-hamburger-btn{
+    display: none;
+}
+.mobile-sidebar{
+    display: none;
+}
+.black-div{
+    display: none;
+}
 .search-wrapper{
     width: 30%;
     display: flex;
@@ -251,6 +260,97 @@
     .active-nav-menu{
         height: 21.5dvh;
     }
+    .nav-btns, .nav-menu-wrapper{
+        display: none;
+    }
+    .nav-hamburger-btn{
+        width: 35px;
+        height: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+        background: none;
+        border:none;
+        cursor: pointer;
+        margin-right: 20px;
+        transition: all 250ms;
+    }
+    .burger-lines{
+        width: 100%;
+        height: 3px;
+        background-color: black;
+    }
+    .burger-line2{
+        width: 75%;
+    }
+    .burger-line3{
+        width: 50%;
+    }
+    .mobile-sidebar{
+        width: 60dvw;
+        height: 100dvh;
+        background-color: white;
+        box-shadow: 0 0 5px black;
+        position: absolute;
+        right:-60dvw;
+        top:0;
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        transition: all 250ms, right 250ms ease-in-out;
+    }
+    .active-nav-mobile-sidebar{
+        right:0;
+    }
+    .close-mobile-sidebar-btn{
+        background: none;
+        border:none;
+        padding:10px;
+        cursor: pointer;
+    }
+    .sidebar-x-icon{
+        width: 40px;
+        height: 40px;
+        transform: rotate(45deg);
+    }
+    .mobile-sidebar-links{
+        width: 100%;
+        list-style:none;
+        margin:auto;
+    }
+    .mobile-sidebar-links a{
+        margin:10px 0;
+    }
+    .mobile-sidebar-auth-btns-wrapper{
+        display: flex;
+        justify-content: space-around;
+        margin: 0 0 20px 0;
+    }
+    .black-div{
+        width: 100dvw;
+        height: 100dvh;
+        display:none;
+        background-color: rgba(0, 0, 0, .3);
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 3;
+    }
+    .active-black-div{
+        display: block;
+    }
+}
+/* iPhone XS Max */
+@media screen and (max-width:414px) and (max-height:896px){
+    .mobile-sidebar{
+        width: 70dvw;
+        right: -70dvw;
+    }
+    .active-nav-mobile-sidebar{
+        right:0;
+    }
 }
 /* S21FE Firefox Nightly mobile for some reason it thinks that the S21FE has a CSS resolution of 396x858 */
 @media screen and (max-width:396px) and (max-height:858px){
@@ -273,4 +373,12 @@
     .active-nav-menu{
         height: 30vh;
     }
+    .mobile-sidebar{
+        width: 75dvw;
+        right: -75dvw;
+    }
+    .active-nav-mobile-sidebar{
+        right:0;
+    }
 }
+

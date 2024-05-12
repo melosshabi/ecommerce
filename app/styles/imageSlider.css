@@ -47,8 +47,9 @@
     }
 }
 /* Laptops */
-@media screen and (max-width:1283px) and (max-height:590px){
+@media screen and (max-width:1283px) and (max-height:720px){
     .image-slider{
+        height: 50dvh;
         margin-top: 15dvh;
     }
 }

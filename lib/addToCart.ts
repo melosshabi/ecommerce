@@ -5,19 +5,14 @@ export default async function addToCart(userDocId:string | undefined, productDoc
       if(localCart){
       let productExists = false
       localCart.forEach((product:any) => {
-        if(product._id === productDocId){
+        if(product.productDocId === productDocId){
           product.desiredQuantity += 1
           productExists = true
           return
         }
       })
-      if(productExists){
-        const cartItems = [...localCart]
-        const stringifiedCartItems = JSON.stringify(cartItems)
-        localStorage.setItem('localCart', stringifiedCartItems)
-        return
-      }
-      const cartItems = [...localCart, {_id:productDocId, desiredQuantity, dateAdded: new Date()}]
+      if(productExists) return
+      const cartItems = [...localCart, {productDocId:productDocId, desiredQuantity, dateAdded: new Date()}]
       const stringifiedCartItems = JSON.stringify(cartItems)
       localStorage.setItem('localCart', stringifiedCartItems)
       return
@@ -26,12 +21,12 @@ export default async function addToCart(userDocId:string | undefined, productDoc
     if(!userDocId) {
       const localCart = JSON.parse(localStorage.getItem('localCart') as string)
       if(localCart){
-        const cartItems = [...localCart, {_id:productDocId, desiredQuantity, dateAdded: new Date()}]
+        const cartItems = [...localCart, {productDocId:productDocId, desiredQuantity, dateAdded: new Date()}]
         const stringifiedCartItems = JSON.stringify(cartItems)
         localStorage.setItem('localCart', stringifiedCartItems)
         window.location.reload()
       }
-      const cartItems = [{_id:productDocId, desiredQuantity}]
+      const cartItems = [{productDocId:productDocId, desiredQuantity}]
       const stringifiedCartItems = JSON.stringify(cartItems)
       localStorage.setItem('localCart', stringifiedCartItems)
       window.location.reload()

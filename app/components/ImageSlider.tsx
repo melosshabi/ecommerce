@@ -27,8 +27,12 @@ export default function ImageSlider(){
 
     return (
         <div className="image-slider">
-        <Image src={zFlip} className='header-images active-header-image' alt="Samsung Galaxy Z Flip 5"/>
-        <Image src={iphone} className='header-images' alt="iPhone"/>    
+        {/* <a href={`${process.env.NEXT_PUBLIC_URL}/productDetails?_id=64f0c571d5cb83a8b8cd3ae2`}> */}
+            <Image src={zFlip} className='header-images active-header-image' alt="Samsung Galaxy Z Flip 5"/>
+        {/* </a> */}
+        {/* <a href={`${process.env.NEXT_PUBLIC_URL}/productDetails?_id=`}> */}
+            <Image src={iphone} className='header-images' alt="iPhone"/>    
+        {/* </a> */}
         <Image src={appleWatch} className='header-images' alt="Apple Watch"/>    
         {/* The div below lets the user know how long until the next image is shown */}
         <div className="time-indicator"></div>

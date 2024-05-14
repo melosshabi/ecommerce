@@ -70,6 +70,8 @@ type WishlistObject = {
     productDocId:string,
     dateAdded:string
 }
+// This type is used for the cart arrays on local storage and on session.data.user.cart which hold objects with 2 keys productDocId and dateAdded
+interface CartObject extends WishlistObject {}
 // This type is used to fetch and display the products posted by the signed in user the in UserProductsList component
 interface UserProduct extends Product{
     datePosted:Date

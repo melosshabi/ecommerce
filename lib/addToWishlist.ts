@@ -20,7 +20,6 @@ export default async function addToWishlist(userDocId:string | undefined, produc
       const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
       if(localWishList){
         const wishlistItems = [...localWishList, {productDocId, dateAdded: new Date()}]
-        console.log("new wishlist:", wishlistItems)
         const stringifiedWishlistItems = JSON.stringify(wishlistItems)
         localStorage.setItem('localWishList', stringifiedWishlistItems)
         window.location.reload()

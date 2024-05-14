@@ -12,7 +12,6 @@ export async function PATCH(req:Request){
         return NextResponse.json({errMessage:"You need to sign in before editing your card", errCode:"unauthenticated"}, {status:400})
     }
     const data = await req.json()
-    console.log(data)
     try{
         const product = await productModel.findOne({_id: new ObjectId(data.productDocId)})
         if(data.quantity > product.quantity){
@@ -28,7 +27,7 @@ export async function PATCH(req:Request){
                 existingProductUpdated = true
                 let newQuantity = product.desiredQuantity + data.desiredQuantity
                 await userModel.findOneAndUpdate({_id:new ObjectId(data.userDocId)}, {
-                    $set:{cart:{productDocId:new ObjectId(data.productDocId), desiredQuantity:newQuantity, dateAdded:product.dateAdded}}
+                    $set:{cart:{productDocId:data.productDocId, desiredQuantity:newQuantity, dateAdded:product.dateAdded}}
                 }, {new:true})
             }
         })
@@ -60,7 +59,7 @@ export async function DELETE(req:Request){
 
     try{
         await userModel.findOneAndUpdate({userId:data.userId}, {
-            $pull:{cart:{productDocId:new ObjectId(data.productDocId)}}
+            $pull:{cart:{productDocId:data.productDocId}}
         }, {new:true})
         return NextResponse.json({
             message:"Removed from cart",

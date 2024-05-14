@@ -4,13 +4,13 @@ export default async function addToWishlist(userDocId:string | undefined, produc
     if(localWishlist){
     let productExists = false
     localWishlist.forEach((product:any) => {
-      if(product._id === productDocId){
+      if(product.productDocId === productDocId){
         productExists = true
         return
       }
     })
     if(productExists) return
-      const wishListItems = [...localWishlist, {_id:productDocId}]
+      const wishListItems = [...localWishlist, {productDocId, dateAdded:new Date()}]
       const stringifiedWishlistItems = JSON.stringify(wishListItems)
       localStorage.setItem('localWishList', stringifiedWishlistItems)
       return
@@ -19,12 +19,14 @@ export default async function addToWishlist(userDocId:string | undefined, produc
     if(!userDocId) {
       const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
       if(localWishList){
-        const cartItems = [...localWishList, {_id:productDocId, dateAdded: new Date()}]
-        const stringifiedCartItems = JSON.stringify(cartItems)
-        localStorage.setItem('localWishList', stringifiedCartItems)
+        const wishlistItems = [...localWishList, {productDocId, dateAdded: new Date()}]
+        console.log("new wishlist:", wishlistItems)
+        const stringifiedWishlistItems = JSON.stringify(wishlistItems)
+        localStorage.setItem('localWishList', stringifiedWishlistItems)
         window.location.reload()
+        return
       }
-      const wishlistItems = [{_id:productDocId}]
+      const wishlistItems = [{productDocId, dateAdded: new Date()}]
       const stringifiedWishlistItems = JSON.stringify(wishlistItems)
       localStorage.setItem('localWishList', stringifiedWishlistItems)
       window.location.reload()

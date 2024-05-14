@@ -523,9 +523,7 @@
         margin-top: 8dvh;
     }
     .cart-item{
-        /* min-height: 20%; */
-        /* height: fit-content; */
-        min-height: fit-content;
+        height: fit-content;
     }
     .cart-item-image-wrapper{
         height: 100%;
@@ -548,6 +546,11 @@
     }
     .user-product-options-btns{
         width: 100%;
+    }
+    /* Wishlist */
+    .wishlist-item-image-wrapper{
+        width: 50%;
+        height: 100%;
     }
 }
 /* iPhone X/XS */

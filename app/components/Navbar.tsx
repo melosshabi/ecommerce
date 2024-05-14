@@ -1,16 +1,30 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import logo from '../images/logo.png'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import navbarCart from '../images/navbar-cart.png'
+import updateUserWishlist from '@/lib/updateUserWishlist'
 import '../styles/navbar.css'
 
 export default function Navbar() {
   const session = useSession()
-  // console.log("Session:", session)
+
+  useEffect(() => {
+    const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
+    if(session.status === 'authenticated' && localWishList){
+      const mergedWishlists = [...session.data.user.wishlist, ...localWishList]
+      let filteredMergedWishlists = mergedWishlists.filter(function(this:Set<string>, {productDocId}) {
+        return !this.has(productDocId) && this.add(productDocId)
+      }, new Set<string>())
+      session.data.user.wishlist = filteredMergedWishlists
+      // The function below is used to update the wishlist on the database to include the wishlist stored on localStorage
+      if(filteredMergedWishlists) updateUserWishlist(session.data.user.userDocId, filteredMergedWishlists)
+    }
+    
+  },[session])
   function toggleNavMenu() {
     document.querySelector('.nav-menu')?.classList.toggle('active-nav-menu')
   }

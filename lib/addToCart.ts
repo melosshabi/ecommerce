@@ -11,7 +11,10 @@ export default async function addToCart(userDocId:string | undefined, productDoc
           return
         }
       })
-      if(productExists) return
+      if(productExists){
+        localStorage.setItem('localCart', JSON.stringify([...localCart]))
+        return
+      }
       const cartItems = [...localCart, {productDocId:productDocId, desiredQuantity, dateAdded: new Date()}]
       const stringifiedCartItems = JSON.stringify(cartItems)
       localStorage.setItem('localCart', stringifiedCartItems)
@@ -26,7 +29,7 @@ export default async function addToCart(userDocId:string | undefined, productDoc
         localStorage.setItem('localCart', stringifiedCartItems)
         window.location.reload()
       }
-      const cartItems = [{productDocId:productDocId, desiredQuantity}]
+      const cartItems = [{productDocId:productDocId, desiredQuantity, dateAdded: new Date()}]
       const stringifiedCartItems = JSON.stringify(cartItems)
       localStorage.setItem('localCart', stringifiedCartItems)
       window.location.reload()

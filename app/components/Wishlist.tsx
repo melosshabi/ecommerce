@@ -4,10 +4,8 @@ import removeFromWishlist from '@/lib/removeFromWishlist'
 import Image from 'next/image'
 import addToCart from '@/lib/addToCart'
 import Loader from './Loader'
-import { useSession } from 'next-auth/react'
 
 export default function Wishlist({productsArray, userDocId}:WishlistProps) {
-
     const [wishlistItems, setWishlistItems] = useState<Array<WishlistItem>>([])
     const [reqPending, setReqPending] = useState<boolean>(true)
 
@@ -33,7 +31,7 @@ export default function Wishlist({productsArray, userDocId}:WishlistProps) {
           fetchProduct(product.productDocId, product.dateAdded)
         })
         return () => controller.abort()
-      }, [])
+      }, [productsArray])
     
   return (
     <div className={`wishlist ${wishlistItems.length === 0 ? 'empty-wishlist' : ''}`}>

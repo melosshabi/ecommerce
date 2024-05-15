@@ -40,13 +40,7 @@ type ProductData = {
     quantity:number,
 }
 type CartListProps = {
-    productsArray: Array<CartListProduct>
-}
-type CartListProduct = {
-    productDocId:string,
-    // quantity in this case refers to the quantity chosen by the user
-    desiredQuantity:number,
-    dateAdded:string
+    productsArray: Array<CartObject>
 }
 // The type below is used to for the cart page
 interface CartProduct extends Product {
@@ -55,7 +49,7 @@ interface CartProduct extends Product {
 }
 type WishlistProps = {
     productsArray: Array<SessionWishlist>
-    userDocId:string
+    userDocId:string | undefined
 }
 // This type is used for the productsArray prop on the Wishlist components which holds objects with 2 keys productDocId and dateAdded
 type SessionWishlist = {
@@ -71,7 +65,9 @@ type WishlistObject = {
     dateAdded:string
 }
 // This type is used for the cart arrays on local storage and on session.data.user.cart which hold objects with 2 keys productDocId and dateAdded
-interface CartObject extends WishlistObject {}
+interface CartObject extends WishlistObject {
+    desiredQuantity:number
+}
 // This type is used to fetch and display the products posted by the signed in user the in UserProductsList component
 interface UserProduct extends Product{
     datePosted:Date

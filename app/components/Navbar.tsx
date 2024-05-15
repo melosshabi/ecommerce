@@ -41,7 +41,10 @@ export default function Navbar() {
     }
   },[session])
   function toggleNavMenu() {
-    document.querySelector('.nav-menu')?.classList.toggle('active-nav-menu')
+    const navMenu = document.querySelector('.nav-menu') as HTMLDivElement
+    if(session.status === 'authenticated') navMenu.classList.toggle('active-nav-menu')
+    else if(session.status === "unauthenticated") navMenu.classList.toggle('active-unauth-nav-menu')
+    
   }
 
   const router = useRouter()
@@ -61,6 +64,7 @@ export default function Navbar() {
     document.querySelector('.mobile-sidebar')?.classList.toggle('active-nav-mobile-sidebar')
     document.querySelector('.black-div')?.classList.toggle('active-black-div')
   }
+  const localCart = JSON.parse(localStorage.getItem('localCart') as string)
   return (
     <nav className='navbar'>
         <abbr title="Home">
@@ -86,16 +90,11 @@ export default function Navbar() {
           </button>
 
         </div>
-
-        {!session.data ? 
-        <div className="nav-btns">
-            <Link href="/api/auth/signin" className="auth-btns sign-in-btn">Sign In</Link>
-            <Link href="/signup" className="auth-btns sign-up-btn">Sign Up</Link>
-        </div>
-        :
+        
         <div className="nav-menu-wrapper">
           <div className="nav-cart-btn-wrapper">
-            {session.data?.user?.cart.length > 0 && <div className="cart-item-count">{session.data?.user?.cart.length}</div>}
+            {session.status === "authenticated" && session.data?.user?.cart.length > 0 && <div className="cart-item-count">{session.data?.user?.cart.length}</div>}
+            {session.status === "unauthenticated" && localCart?.length > 0 && <div className="cart-item-count">{localCart.length}</div>}
             <Link href="/userProfile/cart" className="nav-menu-btn nav-cart-btn">
               <Image className='nav-images cart-icon' src={navbarCart} width={50} height={50} alt="Cart icon"/>
               {/* <svg className='cart-icon' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"> */}
@@ -104,25 +103,25 @@ export default function Navbar() {
 
             </Link>
           </div>
-          <button className='nav-menu-btn profile-btn' onClick={toggleNavMenu}>
+          <button className='nav-menu-btn' onClick={toggleNavMenu}>
               {/* <Image src={session.data.user?.image ? session.data.user?.image : userIcon} alt="User icon" width={50} height={50} style={{alignSelf:'center'}}/> */}
               <svg className="user-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               </svg>
-
-
           </button>
-          <div className="nav-menu">
+          <div className={`nav-menu`}>
             <ul>
-              <li><Link onClick={toggleNavMenu} href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>
+              {session.status === "authenticated" && <li><Link onClick={toggleNavMenu} href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>}
               <li><Link onClick={toggleNavMenu} href="/userProfile/cart" className='nav-menu-links'>Cart</Link></li>
               <li><Link onClick={toggleNavMenu} href="/userProfile/wishlist" className='nav-menu-links'>Wishlist</Link></li>
-              <li><Link onClick={toggleNavMenu} href="/postProduct" className='nav-menu-links'>Sell</Link></li>
-              <li><button onClick={() => signOut()} className='nav-menu-links'>Sign out</button></li>
+              {session.status === "authenticated" && <li><Link onClick={toggleNavMenu} href="/postProduct" className='nav-menu-links'>Sell</Link></li>}
+              {session.status === "authenticated" && <li><button onClick={() => signOut()} className='nav-menu-links'>Sign out</button></li>}
+              {session.status === "unauthenticated" && <li><Link className='nav-menu-links' onClick={toggleNavMenu} href="/api/auth/signin">Sign in</Link></li>}
+              {session.status === "unauthenticated" && <li><Link className='nav-menu-links' onClick={toggleNavMenu} href="/signup">Sign up</Link></li>}
             </ul>
           </div>
         </div>
-        }
+
         <button className="nav-hamburger-btn" onClick={() => toggleSidebar()}>
           <div className="burger-lines burger-line1"></div>
           <div className="burger-lines burger-line2"></div>
@@ -132,20 +131,21 @@ export default function Navbar() {
           <button className="close-mobile-sidebar-btn" onClick={() => toggleSidebar()}>
           <svg className='sidebar-x-icon' xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
           </button>
-          {session.status === 'authenticated' ?
+          
             <ul className="mobile-sidebar-links">
-              <li><Link href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>
+              {session.status === 'authenticated' && <li><Link href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>}
               <li><Link href="/userProfile/cart" className='nav-menu-links'>Cart</Link></li>
               <li><Link href="/userProfile/wishlist" className='nav-menu-links'>Wishlist</Link></li>
-              <li><Link href="/postProduct" className='nav-menu-links'>Sell</Link></li>
-              <li><button onClick={() => signOut()} className='nav-menu-links'>Sign out</button></li>
+              {session.status === 'authenticated' && <li><Link href="/postProduct" className='nav-menu-links'>Sell</Link></li>}
+              {session.status === 'authenticated' && <li><button onClick={() => signOut()} className='nav-menu-links'>Sign out</button></li>}
             </ul>
-            :
-            <ul className="mobile-sidebar-links mobile-sidebar-auth-btns-wrapper">
-              <li><Link href="/api/auth/signin" className='auth-btns sign-in-btn'>Sign In</Link></li>
-              <li><Link href="/signup" className='auth-btns sign-in-btn'>Sign Up</Link></li>
-            </ul>
-          }
+            {
+              session.status === 'unauthenticated' &&
+              <ul className="mobile-sidebar-links mobile-sidebar-auth-btns-wrapper">
+                <li><Link href="/api/auth/signin" className='auth-btns sign-in-btn'>Sign In</Link></li>
+                <li><Link href="/signup" className='auth-btns sign-in-btn'>Sign Up</Link></li>
+              </ul>
+            }
         </div>
 
         {/* Black div is the black div that appears when the user clicks on the hamburger button */}

@@ -1,21 +1,21 @@
 "use client"
-import Wishlist from '@/app/components/Wishlist'
+import React, { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import Wishlist from '@/app/components/Wishlist'
 
 export default function WishlistPage() {
   const session = useSession()
-  const router = useRouter()
-  
+  const [wishlist, setWishlist] = useState<WishlistObject[]>([])
   useEffect(() => {
-    if(session.status === 'unauthenticated') router.push('/api/auth/signin')
+    if(session.status === 'unauthenticated'){
+      const localWishlist: WishlistObject[] | null = JSON.parse(localStorage.getItem('localWishList') as string)
+      if(localWishlist) setWishlist([...localWishlist])
+    }else if(session.status === 'authenticated'){
+      setWishlist([...session.data.user.wishlist])
+    }
   },[session])
 
   return (
-    session.status === 'authenticated' &&
-    <>
-      <Wishlist productsArray={session.data?.user.wishlist} userDocId={session.data.user.userDocId}/>
-    </>
+        <Wishlist productsArray={wishlist} userDocId={session.status === "authenticated" ? session.data.user.userDocId : undefined}/>
   )
 }

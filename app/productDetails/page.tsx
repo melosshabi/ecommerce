@@ -83,9 +83,9 @@ export default function ProductDetails() {
     setFullscreenImage('')
   }
 
-  const actions = {
-    prev:'prev',
-    next:'next'
+  enum actions {
+    prev = 'prev',
+    next = 'next'
   }
 
   function changeFullscreenImage(action:string){

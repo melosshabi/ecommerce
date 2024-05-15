@@ -37,11 +37,11 @@ export default function CartList({productsArray} : CartListProps) {
     })
 
     return () => controller.abort()
-  }, [])
+  }, [productsArray])
 
-  const quantityActions = {
-    inc:'increment',
-    dec:'decrement'
+  enum quantityActions {
+    inc = 'increment',
+    dec = 'decrement'
   }
   
   const [quantityTimeout, setQuantityTimeout] = useState<NodeJS.Timeout | null>(null)
@@ -88,10 +88,11 @@ export default function CartList({productsArray} : CartListProps) {
   }
 
   return (
-    <div className={`cart-list ${cartItems.length === 0 ? 'empty-cart-list' : ''}`}>
+    <div className={`cart-list ${cartItems.length === 0 ? 'empty-cart' : ''}`}>
       <Loader displayLoader={reqPending}/>
+      {cartItems.length === 0 && !reqPending && <p>Your cart is empty</p>}
       {
-       cartItems.map((item, index) =>  {
+        cartItems.map((item, index) =>  {
 
         const dateAddedToCart = new Date(item.dateAddedToCart)
         const year = dateAddedToCart.getFullYear()

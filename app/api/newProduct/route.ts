@@ -57,6 +57,7 @@ export async function POST(req:Request){
        if(noBrand === 'true'){
          const productDoc = await productModel.create({
              posterDocId: userDocId,
+            //  posterUsername:se,
              productName,
              noBrand,
              manufacturer,

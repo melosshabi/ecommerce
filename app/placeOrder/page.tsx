@@ -10,11 +10,6 @@ export default function PlaceOrder() {
     const session = useSession()
     const router = useRouter()
 
-    useEffect(() => {
-      if(session.status === 'unauthenticated'){
-        router.push('/')
-      }
-    }, [session])
     const searchParams = useSearchParams()
     const productDocId = searchParams.get('_id')
     const chosenQuantity = searchParams.get('desiredQuantity')

@@ -56,35 +56,53 @@ export default function CartList({productsArray} : CartListProps) {
     const input = document.querySelector(`.input-${productDocId}`) as HTMLInputElement
     let newQuantity: number | null = null
 
-    if(action === quantityActions.inc){  
-      const newValue = parseInt(input.value) + 1
-      if(newValue > productStock){
-        newQuantity = productStock
-        input.value = productStock.toString()
-      }else {
-        input.value = newValue.toString()
-        newQuantity = newValue
-      }
-      
-    }else if(action === quantityActions.dec){
-      const newValue = parseInt(input.value) - 1
-      if(newValue < 1 ) {
-        newQuantity = 1
-        input.value = "1"
-        return
-      }else {
-        input.value = newValue.toString()
-        newQuantity = newValue
-      }
-    }
+      if(action === quantityActions.inc){  
 
-    const timeout = setTimeout(async () => {
-      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateCartQuantity`, {
-        method:'PATCH',
-        body:JSON.stringify({productDocId, newQuantity})
-      })
-    }, 1000)
-    setQuantityTimeout(timeout)
+        const newValue = parseInt(input.value) + 1
+        if(newValue > productStock){
+          newQuantity = productStock
+          input.value = productStock.toString()
+        }else {
+          input.value = newValue.toString()
+          newQuantity = newValue
+        }
+
+      }else if(action === quantityActions.dec){
+        const newValue = parseInt(input.value) - 1
+        if(newValue < 1 ) {
+          newQuantity = 1
+          input.value = "1"
+          return
+        }else {
+          input.value = newValue.toString()
+          newQuantity = newValue
+        }
+    }
+    if(session.status === 'authenticated'){
+      const timeout = setTimeout(async () => {
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateCartQuantity`, {
+          method:'PATCH',
+          body:JSON.stringify({productDocId, newQuantity})
+        })
+      }, 1000)
+      setQuantityTimeout(timeout)
+    }else if(session.status === 'unauthenticated'){
+      const localCart: CartObject[] = JSON.parse(localStorage.getItem('localCart') as string)
+      if(action === quantityActions.inc){
+        localCart.forEach(product => {
+          if(product.productDocId === productDocId){
+            product.desiredQuantity += 1
+          }
+        })
+      }else if(action === quantityActions.dec){
+        localCart.forEach(product => {
+          if(product.productDocId === productDocId){
+            product.desiredQuantity -= 1
+          }
+        })
+      }
+      localStorage.setItem('localCart', JSON.stringify(localCart))
+    }
   }
 
   return (
@@ -102,8 +120,8 @@ export default function CartList({productsArray} : CartListProps) {
         const minutes = dateAddedToCart.getMinutes()
 
         return (
-            <div className="cart-item" key={index}>
-              <div className="cart-item-image-wrapper">
+          <div className="cart-item" key={index}>
+            <div className="cart-item-image-wrapper">
               <Image className="cart-item-image" src={item.pictures[0] as string} width={200} height={200} alt="Cart item image"/>
             </div>
 
@@ -115,7 +133,7 @@ export default function CartList({productsArray} : CartListProps) {
               </a>
             
               <div className="quantity-wrapper">
-              <button className="remove-from-cart-btn" onClick={() => removeFromCart(session.data?.user.userDocId as string, item._id)}>
+              <button className="remove-from-cart-btn" onClick={() => removeFromCart(session.data?.user.userDocId ? session.data?.user.userDocId : undefined, item._id)}>
                 <svg className="remove-from-cart-btn-icon" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
                   <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z"/>
                 </svg>
@@ -131,11 +149,13 @@ export default function CartList({productsArray} : CartListProps) {
               </div>
               <span className='date-added-to-cart'>{`${day} ${month} ${year} ${hours}:${minutes.toString().length === 1 ? `0${minutes}` : minutes}`}</span>
             </div>
-
-            </div>
+          </div>
           )}
         )
       }
+      {/* {cartItems.length > 0 && !reqPending &&  */}
+        {/* <a href={`/placeOrder?_id=${productDocId}&desiredQuantity=${userQuantity}`} className="place-order-btn">Place Order</a> */}
+      {/* } */}
     </div>
   )
 }

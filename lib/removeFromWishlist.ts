@@ -2,7 +2,7 @@ export default async function removeFromWishlist(userDocId:string | undefined, p
   if(!userDocId){
     const localWishlist = JSON.parse(localStorage.getItem('localWishlist') as string)
     if(localWishlist){
-      const filteredWishlistArr = localWishlist.filter((wishlistProduct : any) => wishlistProduct._id !== productDocId)
+      const filteredWishlistArr = localWishlist.filter((wishlistProduct : any) => wishlistProduct.productDocId !== productDocId)
       localStorage.setItem('localCart', JSON.stringify(filteredWishlistArr))
       window.location.reload()
     }

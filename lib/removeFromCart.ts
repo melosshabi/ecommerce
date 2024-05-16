@@ -2,8 +2,7 @@ export default async function removeFromCart(userDocId:string | undefined, produ
     if(!userDocId){
       const localCart = JSON.parse(localStorage.getItem('localCart') as string)
       if(localCart){
-        const filteredCartArr = localCart.filter((cartProduct : any) => cartProduct._id !== productDocId)
-        console.log(filteredCartArr)
+        const filteredCartArr = localCart.filter((cartProduct : any) => cartProduct.productDocId !== productDocId)
         localStorage.setItem('localCart', JSON.stringify(filteredCartArr))
         window.location.reload()
       }

@@ -3,7 +3,7 @@ import ImageSlider from './components/ImageSlider'
 import Product from './components/Product'
 import './styles/app.css'
 
-export const revalidate = 60
+export const revalidate = 10
 
 export default async function Home() {
   const productsPromise: Promise<Product[]> = getProducts()

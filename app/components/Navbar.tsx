@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import logo from '../images/logo.png'
 import Link from 'next/link'
@@ -15,7 +15,7 @@ enum listToUpdateEnum {
 }
 export default function Navbar() {
   const session = useSession()
-
+  // alert()
   useEffect(() => {
     const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
     const localCart = JSON.parse(localStorage.getItem('localCart') as string)
@@ -64,7 +64,7 @@ export default function Navbar() {
     document.querySelector('.mobile-sidebar')?.classList.toggle('active-nav-mobile-sidebar')
     document.querySelector('.black-div')?.classList.toggle('active-black-div')
   }
-  const localCart = JSON.parse(localStorage.getItem('localCart') as string)
+  const localCart: CartObject[] = JSON.parse(localStorage.getItem('localCart') as string)
   return (
     <nav className='navbar'>
         <abbr title="Home">
@@ -94,7 +94,7 @@ export default function Navbar() {
         <div className="nav-menu-wrapper">
           <div className="nav-cart-btn-wrapper">
             {session.status === "authenticated" && session.data?.user?.cart.length > 0 && <div className="cart-item-count">{session.data?.user?.cart.length}</div>}
-            {session.status === "unauthenticated" && localCart?.length > 0 && <div className="cart-item-count">{localCart.length}</div>}
+            {session.status === "unauthenticated" && (localCart && localCart.length) > 0 && <div className="cart-item-count">{localCart.length}</div>}
             <Link href="/userProfile/cart" className="nav-menu-btn nav-cart-btn">
               <Image className='nav-images cart-icon' src={navbarCart} width={50} height={50} alt="Cart icon"/>
               {/* <svg className='cart-icon' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"> */}

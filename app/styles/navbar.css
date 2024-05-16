@@ -80,7 +80,6 @@
     position: relative;
     display: flex;
 }
-
 /* the button that toggles the nav menu */
 .nav-menu-btn{
     width: 55px;
@@ -111,6 +110,10 @@
 }
 .active-nav-menu{
     height: 20.8dvh;
+}
+.active-unauth-nav-menu{
+    height: 14.5dvh;
+    left:28%;
 }
 .nav-menu ul{
     list-style: none;
@@ -166,8 +169,8 @@
     background-color: var(--orange);
     border-radius: 50px;
     position: absolute;
-    top:-10px;
-    right:15px;
+    top:-5px;
+    right:30px;
     z-index: 1;
     color:white;
     display: flex;

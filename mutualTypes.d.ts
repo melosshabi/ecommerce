@@ -13,3 +13,11 @@ type Review = {
     datePosted:string,
     dateEdited:string,
 }
+// // This type is used for placing and fetching already placed orders
+// type orderData = {
+//     productDocId:string,
+//     productName:string,
+//     desiredQuantity:string,
+//     orderId?:string,
+//     price:number
+// }

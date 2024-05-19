@@ -5,7 +5,7 @@ import { nextAuthOptions } from "../auth/[...nextauth]/options"
 
 export async function PATCH(req:Request){
     const serverSession = await getServerSession(nextAuthOptions)
-    if(!serverSession?.user) return NextResponse.json({errorMessage:"You need to sign in before updating your DB Cart"}, {status:400})
+    if(!serverSession) return NextResponse.json({errorMessage:"You need to sign in before updating your DB Cart"}, {status:400})
     const data = await req.json()
     try {
         await userModel.findOneAndUpdate({_id:data.userId}, {cart:data.newCartList})

@@ -1,56 +1,86 @@
 import orderModel from "@/models/order"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import {getServerSession} from 'next-auth'
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import productModel from "@/models/product"
 import { ObjectId } from "mongodb"
 import userModel from "@/models/user"
+import Stripe from 'stripe'
 
+const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!)
 // The function below creates a new order document
-export async function POST(req:Request){
-    const session = await getServerSession(nextAuthOptions)
-    if(!session){
-        return NextResponse.json({errMsg:"You need to be signed in to place orders", errCode:"unauthenticated"}, {status:400})
-    }
+export async function POST(req:NextRequest){
+    // const session = await getServerSession(nextAuthOptions)
+    // if(!session){
+        // return NextResponse.json({errMsg:"You need to be signed in to place orders", errCode:"unauthenticated"}, {status:400})
+    // }
 
-    const data: orderData = await req.json()
+    const data: CartProduct[] = await req.json()
+    console.log(data)
+    // return NextResponse.json({msg:'hi'})
     try{
-        const product = await productModel.findOne({_id:new ObjectId(data.productDocId)}).select('quantity productPrice')
-
-        if(data.desiredQuantity > product.quantity){
-            return NextResponse.json({errMsg:"Can't order more of a product than there is available", errCode:"over-available-quantity"})
-        }
-
-        const orderId = Math.round(Math.random() * 999999)
-
-        const order = await orderModel.create({
-            clientDocId:session?.user.userDocId,
-            productDocId:data.productDocId,
-            desiredQuantity:parseInt(data.desiredQuantity),
-            orderId,
-            orderPrice:product.productPrice * parseInt(data.desiredQuantity),
-            cardNumber:data.cardNumber,
-            expirityMonth:data.expirityMonth,
-            expirityYear:data.expirityYear,
-            cvv:data.cvv,
-            firstName:data.firstName,
-            lastName:data.lastName,
-            billingAddress:data.billingAddress,
-            billingAddress2:data.billingAddress2,
-            phoneNumber:data.phoneNumber,
-            city:data.city,
-            zipCode:data.zipCode
+        // @ts-ignore
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types:['card'],
+            line_items:data.map(order => {
+                return {
+                    price_data:{
+                        currency:'eur',
+                        product_data:{
+                            name:order.productName,
+                        },
+                        unit_amount:order.productPrice * 100,
+                    },
+                    quantity:order.desiredQuantity
+                }
+            }),
+            mode:'payment',
+            success_url:`${process.env.NEXT_PUBLIC_URL}/`,
+            cancel_url:`${process.env.NEXT_PUBLIC_URL}/userProfile/cart`,
         })
+        return NextResponse.json({url:session.url})
+    }catch(err){
+        console.log(err)
+        // @ts-ignore
+        return NextResponse.json({err:err.message}, {status:500})
+    }
+    // try{
+    //     const product = await productModel.findOne({_id:new ObjectId(data.productDocId)}).select('quantity productPrice')
 
-        await userModel.findOneAndUpdate({_id: new ObjectId(session.user.userDocId)}, {$push:{orders:order._id}})
-        await productModel.findOneAndUpdate({_id:new ObjectId(data.productDocId)}, {$inc: {quantity:-data.desiredQuantity}})
-    }
-    catch(err:any){
-        if(err._message === 'Order validation failed'){
-            return NextResponse.json({errMsg:"Incomplete form", errCode:'incomplete-form'}, {status:400})
-        }
-    }
-    return NextResponse.json({msg:'Order placed successfully', msgCode:"order-placed"})
+    //     if(data.desiredQuantity > product.quantity){
+    //         return NextResponse.json({errMsg:"Can't order more of a product than there is available", errCode:"over-available-quantity"})
+    //     }
+
+    //     const orderId = Math.round(Math.random() * 999999)
+
+    //     const order = await orderModel.create({
+    //         clientDocId:session?.user.userDocId,
+    //         productDocId:data.productDocId,
+    //         desiredQuantity:parseInt(data.desiredQuantity),
+    //         orderId,
+    //         orderPrice:product.productPrice * parseInt(data.desiredQuantity),
+    //         cardNumber:data.cardNumber,
+    //         expirityMonth:data.expirityMonth,
+    //         expirityYear:data.expirityYear,
+    //         cvv:data.cvv,
+    //         firstName:data.firstName,
+    //         lastName:data.lastName,
+    //         billingAddress:data.billingAddress,
+    //         billingAddress2:data.billingAddress2,
+    //         phoneNumber:data.phoneNumber,
+    //         city:data.city,
+    //         zipCode:data.zipCode
+    //     })
+
+    //     await userModel.findOneAndUpdate({_id: new ObjectId(session.user.userDocId)}, {$push:{orders:order._id}})
+    //     await productModel.findOneAndUpdate({_id:new ObjectId(data.productDocId)}, {$inc: {quantity:-data.desiredQuantity}})
+    // }
+    // catch(err:any){
+    //     if(err._message === 'Order validation failed'){
+    //         return NextResponse.json({errMsg:"Incomplete form", errCode:'incomplete-form'}, {status:400})
+    //     }
+    // }
+    // return NextResponse.json({msg:'Order placed successfully', msgCode:"order-placed"})
 }
 
 // The function below returns the currently placed orders to the user

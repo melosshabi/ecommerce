@@ -72,24 +72,6 @@ interface CartObject extends WishlistObject {
 interface UserProduct extends Product{
     datePosted:Date
 }
-// This type is used for placing and fetching already placed orders
-type orderData = {
-    productDocId:string,
-    desiredQuantity:string,
-    cardNumber:string,
-    expirityMonth:string,
-    expirityYear:string,
-    cvv:string,
-    firstName:string,
-    lastName:string,
-    billingAddress:string,
-    billingAddress2?:string,
-    phoneNumber:string,
-    city:string,
-    zipCode:string,
-    orderId?:string,
-    orderPrice?:number
-}
 // Order Details type
 type OrderDetails = {
     order:orderData,

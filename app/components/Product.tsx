@@ -8,8 +8,6 @@ interface HomePageProduct extends Product {
     index:number,
 }
 export default function Product({productData}: {productData:HomePageProduct}) {
-    // const product = productData._doc
-    console.log(productData)
   return (
     <div className="product" key={productData.index}>
             <Link href={`productDetails/?_id=${productData._id}`} style={{textDecoration:'none'}} className='product-link'>

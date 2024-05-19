@@ -335,10 +335,7 @@
     text-decoration: underline;
 }
 .place-order-btn{
-    /* position: fixed; */
-    
-    bottom: 0;
-    z-index: 1;
+    text-decoration: none;
     background-color: var(--orange);
     border:none;
     border-radius: 8px;

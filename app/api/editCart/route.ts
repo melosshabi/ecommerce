@@ -61,14 +61,15 @@ export async function DELETE(req:Request){
         await userModel.findOneAndUpdate({userId:data.userId}, {
             $pull:{cart:{productDocId:data.productDocId}}
         }, {new:true})
-        return NextResponse.json({
-            message:"Removed from cart",
-            messageCode:"removed-from-cart"
-        })
+        
     }catch(err){
         return NextResponse.json({
             errorMessage:"There was a problem",
             errorCode:'unkown-error'
         })
     }
+    return NextResponse.json({
+        message:"Removed from cart",
+        messageCode:"removed-from-cart"
+    })
 }

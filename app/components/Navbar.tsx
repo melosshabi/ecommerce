@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import logo from '../images/logo.png'
 import Link from 'next/link'
@@ -15,7 +15,7 @@ enum listToUpdateEnum {
 }
 export default function Navbar() {
   const session = useSession()
-  // alert()
+  console.log(session)
   useEffect(() => {
     const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
     const localCart = JSON.parse(localStorage.getItem('localCart') as string)

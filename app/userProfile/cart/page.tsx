@@ -12,7 +12,7 @@ export default function Cart() {
       const localCart: CartObject[] | null = JSON.parse(localStorage.getItem('localCart') as string)
       if(localCart) setCartList([...localCart])
     }else if(session.status === 'authenticated'){
-      setCartList([...session.data.user.wishlist])
+      setCartList([...session.data.user.cart])
     }
   },[session])
 

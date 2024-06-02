@@ -5,6 +5,7 @@ import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import productModel from "@/models/product"
 import { ObjectId } from "mongodb"
 import userModel from "@/models/user"
+import {Stripe, loadStripe} from '@stripe/stripe-js'
 
 // The function below creates a new order document
 export async function POST(req:Request){

@@ -44,43 +44,6 @@ export async function POST(req:NextRequest){
         // @ts-ignore
         return NextResponse.json({err:err.message}, {status:500})
     }
-    // try{
-    //     const product = await productModel.findOne({_id:new ObjectId(data.productDocId)}).select('quantity productPrice')
-
-    //     if(data.desiredQuantity > product.quantity){
-    //         return NextResponse.json({errMsg:"Can't order more of a product than there is available", errCode:"over-available-quantity"})
-    //     }
-
-    //     const orderId = Math.round(Math.random() * 999999)
-
-    //     const order = await orderModel.create({
-    //         clientDocId:session?.user.userDocId,
-    //         productDocId:data.productDocId,
-    //         desiredQuantity:parseInt(data.desiredQuantity),
-    //         orderId,
-    //         orderPrice:product.productPrice * parseInt(data.desiredQuantity),
-    //         cardNumber:data.cardNumber,
-    //         expirityMonth:data.expirityMonth,
-    //         expirityYear:data.expirityYear,
-    //         cvv:data.cvv,
-    //         firstName:data.firstName,
-    //         lastName:data.lastName,
-    //         billingAddress:data.billingAddress,
-    //         billingAddress2:data.billingAddress2,
-    //         phoneNumber:data.phoneNumber,
-    //         city:data.city,
-    //         zipCode:data.zipCode
-    //     })
-
-    //     await userModel.findOneAndUpdate({_id: new ObjectId(session.user.userDocId)}, {$push:{orders:order._id}})
-    //     await productModel.findOneAndUpdate({_id:new ObjectId(data.productDocId)}, {$inc: {quantity:-data.desiredQuantity}})
-    // }
-    // catch(err:any){
-    //     if(err._message === 'Order validation failed'){
-    //         return NextResponse.json({errMsg:"Incomplete form", errCode:'incomplete-form'}, {status:400})
-    //     }
-    // }
-    // return NextResponse.json({msg:'Order placed successfully', msgCode:"order-placed"})
 }
 
 // The function below returns the currently placed orders to the user

@@ -111,9 +111,11 @@
 .active-nav-menu{
     height: 20.8dvh;
 }
+.unauth-nav-menu{
+    left:32%
+}
 .active-unauth-nav-menu{
-    height: 14.5dvh;
-    left:28%;
+    height: 16.8dvh;
 }
 .nav-menu ul{
     list-style: none;

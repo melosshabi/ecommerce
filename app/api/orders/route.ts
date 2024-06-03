@@ -16,8 +16,7 @@ export async function POST(req:NextRequest){
     // }
 
     const data: CartProduct[] = await req.json()
-    console.log(data)
-    // return NextResponse.json({msg:'hi'})
+
     try{
         // @ts-ignore
         const session = await stripe.checkout.sessions.create({
@@ -35,10 +34,10 @@ export async function POST(req:NextRequest){
                 }
             }),
             mode:'payment',
-            success_url:`${process.env.NEXT_PUBLIC_URL}/`,
+            success_url:`${process.env.NEXT_PUBLIC_URL}/thank-you`,
             cancel_url:`${process.env.NEXT_PUBLIC_URL}/userProfile/cart`,
         })
-        return NextResponse.json({url:session.url})
+        return NextResponse.json({url:session.url, stripeSessionId:session.id})
     }catch(err){
         console.log(err)
         // @ts-ignore

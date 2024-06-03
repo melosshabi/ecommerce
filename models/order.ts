@@ -1,55 +1,30 @@
-
 import { ObjectId } from "mongodb"
 import mongoose, {Schema} from 'mongoose'
 
 const orderSchema = new Schema({
     clientDocId:{
-        type:ObjectId,
+        type:ObjectId || null,
+        required:false
+    },
+    productsOrdered:{
+        type:Array,
         required:true
     },
-    productDocId:{
-        type:ObjectId,
-        required:true
-    },
-    desiredQuantity:{
+    totalPrice:{
         type:Number,
-        required:true
-    },
-    orderId:{
-        type:String,
-        required:true
-    },
-    orderPrice:{
-        type:Number,
-        required:true
-    },
-    cardNumber:{
-        type:String,
-        required:true
-    },
-    expirityMonth:{
-        type:String,
-        required:true
-    },
-    expirityYear:{
-        type:String,
-        required:true
-    },
-    cvv:{
-        type:String,
         required:true
     },
     firstName:{
         type:String,
-        required:true
+        // required:true
     },
     lastName:{
         type:String,
-        required:true
+        // required:true
     },
     billingAddress:{
         type:String,
-        required:true
+        // required:true
     },
     billingAddress2:{
         type:String,
@@ -57,21 +32,17 @@ const orderSchema = new Schema({
     },
     phoneNumber:{
         type:String,
-        required:true
+        // required:true
     },
     city:{
         type:String,
-        required:true
+        // required:true
     },
     zipCode:{
         type:String,
-        required:true
+        // required:true
     },
-    timeOrderPlaced:{
-        type:Date,
-        required:false,
-        default:() => Date.now()
-    }
+    
 })
 
 const orderModel = mongoose.models.Order || mongoose.model("Order", orderSchema)

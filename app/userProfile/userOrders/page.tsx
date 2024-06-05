@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 export default function UserOrders() {
 
   const router = useRouter()
-  const [ordersList, setOrdersList] = useState<Array<orderData>>([])
+  const [ordersList, setOrdersList] = useState<Array<OrderData>>([])
   const [productsData, setProducstData] = useState<Array<Product>>([])
   const [reqPending, setReqPending] = useState<boolean>(true)
 

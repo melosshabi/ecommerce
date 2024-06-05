@@ -16,3 +16,6 @@ type BackendCartProduct = {
     desiredQuantity:number,
     dateAdded:Date
 }
+type FinishOrderData = {
+    stripeSessionId:string
+}

@@ -80,3 +80,6 @@ type OrderDetails = {
 type ProductLink = {
     productId:string
 }
+type OrderData = {
+    
+}

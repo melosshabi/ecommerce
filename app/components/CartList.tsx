@@ -110,11 +110,8 @@ export default function CartList({productsArray} : CartListProps) {
       method:"POST",
       body:JSON.stringify([...cartItems])
     })
-    const data = await res.json()
-    localStorage.setItem("stripeSession", JSON.stringify({
-      stripeSessionId:data.stripeSessionId,
-      stripeSessionDate: new Date()
-    }))
+    const data: {url:string, stripeSessionId:string} = await res.json()
+    localStorage.setItem('stripeSessionId', data.stripeSessionId)
     router.push(data.url)
   }
   return (

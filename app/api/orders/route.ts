@@ -4,53 +4,53 @@ import {getServerSession} from 'next-auth'
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import productModel from "@/models/product"
 import { ObjectId } from "mongodb"
-import userModel from "@/models/user"
 import Stripe from 'stripe'
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!)
 // The function below creates a new order document
 export async function POST(req:NextRequest){
-    // const session = await getServerSession(nextAuthOptions)
-    // if(!session){
-        // return NextResponse.json({errMsg:"You need to be signed in to place orders", errCode:"unauthenticated"}, {status:400})
-    // }
 
-    const data: CartProduct[] = await req.json()
-
+    // The products the user wants to order
+    const cartProducts: CartProduct[] = await req.json()
     try{
         // @ts-ignore
-        const session = await stripe.checkout.sessions.create({
+        const stripeSession = await stripe.checkout.sessions.create({
             payment_method_types:['card'],
-            line_items:data.map(order => {
+            line_items:cartProducts.map(product => {
                 return {
                     price_data:{
                         currency:'eur',
                         product_data:{
-                            name:order.productName,
+                            name:product.productName,
+                            metadata:{
+                                databaseProductId:product._id
+                            }
                         },
-                        unit_amount:order.productPrice * 100,
+                        unit_amount:product.productPrice * 100,
                     },
-                    quantity:order.desiredQuantity
+                    quantity:product.desiredQuantity
                 }
             }),
             mode:'payment',
             success_url:`${process.env.NEXT_PUBLIC_URL}/thank-you`,
             cancel_url:`${process.env.NEXT_PUBLIC_URL}/userProfile/cart`,
         })
-        return NextResponse.json({url:session.url, stripeSessionId:session.id})
+        
+        return NextResponse.json({url:stripeSession.url, stripeSessionId:stripeSession.id})
     }catch(err){
         console.log(err)
         // @ts-ignore
         return NextResponse.json({err:err.message}, {status:500})
     }
+    
 }
 
 // The function below returns the currently placed orders to the user
 export async function GET(req:Request){
     const session = await getServerSession(nextAuthOptions)
-    if(!session){
-        return NextResponse.json({errMsg:"You need to sign in to view your orders", errCode:"unauthenticated"}, {status:400})
-    }   
+    // if(!session){
+    //     return NextResponse.json({errMsg:"You need to sign in to view your orders", errCode:"unauthenticated"}, {status:400})
+    // }   
 
     // The params below are used for the orderDetails page
     const {searchParams} = new URL(req.url)
@@ -75,11 +75,20 @@ export async function GET(req:Request){
     }
 
     // The code below fetches all orders and all products that will be displayed on the userOrders page
-    const products: Product[] = []
-    const userOrders = await orderModel.find({clientDocId:new ObjectId(session?.user.userDocId)})
-    for(let i = 0; i < userOrders.length; i++){
-        const productDetails = await productModel.findOne({_id:userOrders[i].productDocId}, {productName:1, pictures:1})
-        products.push(productDetails)
+    if(session){
+        const userOrders = await orderModel.find({clientDocId:new ObjectId(session?.user.userDocId)})
+        // for(let i = 0; i < userOrders.length; i++){
+            // const productDetails = await productModel.findOne({_id:userOrders[i].productDocId}, {productName:1, pictures:1})
+            // products.push(productDetails)
+        // }
+        
+        const orderPromises = userOrders.map(async (order, index) => {
+            console.log(userOrders[index])
+            const productDetails = await productModel.findOne({_id:new ObjectId(userOrders[index].productDocId)})
+            return productDetails
+        })
+        const products = await Promise.all(orderPromises)
+        console.log("Fetched Products: ", products)
+        return NextResponse.json({userOrders, products})
     }
-    return NextResponse.json({userOrders, products})
 }

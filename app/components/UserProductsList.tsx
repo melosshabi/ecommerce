@@ -79,7 +79,7 @@ export default function UserProductsList() {
     }
 
     const timeout = setTimeout(async () => {
-      await fetch(`${process.env.NEXT_PUBLIC_URL}}/api/updateProductQuantity`, {
+      await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateProductQuantity`, {
         method:"PATCH",
         body:JSON.stringify({productDocId, newQuantity})
       })

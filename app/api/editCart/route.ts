@@ -51,17 +51,16 @@ export async function PATCH(req:Request){
 }
 
 export async function DELETE(req:Request){
-    const session = getServerSession(nextAuthOptions)
+    const session = await getServerSession(nextAuthOptions)
     if(!session){
         return NextResponse.json({errMessage:"You need to sign in before editing your cart", errCode:"unauthenticated"}, {status:400})
     }
     const data = await req.json()
 
     try{
-        await userModel.findOneAndUpdate({userId:data.userId}, {
-            $pull:{cart:{productDocId:data.productDocId}}
-        }, {new:true})
-        
+        await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId)}, {
+            $pull:{cart:{productDocId:new ObjectId(data.productDocId)}}
+        })
     }catch(err){
         return NextResponse.json({
             errorMessage:"There was a problem",

@@ -396,8 +396,26 @@
         width: 90%;
     }
 }
+/* 5:4 Monitors */
+@media screen and (max-width:1282px) and (max-height:1025px){
+    .current-product-btns{
+        font-size: 1em;
+    }
+    .reviews{
+        width: 100dvw;
+        display: flex;
+        justify-content: center;
+    }
+    .review{
+        width: 60%;
+    }
+    .post-review-form-wrapper{
+        width: 60dvw;
+        margin-left: 0;
+    }
+}
 /* Laptops  */
-@media screen and (max-width:1283px) and (max-height:721px){
+@media screen and (max-width:1281px) and (max-height:721px){
     .product-details{
         height: 75dvh;
         width: 95dvw;
@@ -415,7 +433,6 @@
     }
     .review{
         width: 50%;
-        margin-left: 25%;
     }
     .reviewer-pfp{
         width:60px;
@@ -468,6 +485,7 @@
     .product-details{
         flex-direction: column;
         justify-content: space-around;
+        padding:0;
     }
     .product-info{
         height: 40%;
@@ -478,17 +496,21 @@
     }
     .large-image-wrapper{
         height: fit-content;
-        /* margin-top: 10%; */
         display: flex;
         align-items: center;
     }
     /* Reviews */
     .reviews{
         width: 90%;
+        display: flex;
+        justify-content: center;
+    }
+    .post-review-form-wrapper{
+        width: 60dvw;
+        margin-left: 0;
     }
     .review{
         width: 80%;
-        margin-left: 6%;
     }
     .reviewer-pfp{
         width: 70px;
@@ -543,7 +565,6 @@
 /* iPhone 14 Pro Max */
 @media screen and (max-width:430px) and (max-height:932px){
     .product-details{
-        margin-top: 12dvh;
         padding:10px 0 50px 0;
     }
     .product-images-wrapper{
@@ -574,6 +595,10 @@
     }
     .reviews{
         width: 100%;
+    }
+    .post-review-form-wrapper{
+        width: 100dvw;
+        padding:10px 2px;
     }
     .review{
         width: 75%;
@@ -631,7 +656,6 @@
 @media screen and (max-width:365px) and (max-height:805px){
     .product-page{
         height: fit-content;
-        margin-top: -2dvh;
     }
     .product-details{
         height: fit-content;

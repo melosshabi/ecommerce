@@ -7,19 +7,6 @@ type signUpData = {
     email:string,
     password:string
 }
-// The type used for rendering the products on the homepage (The data stored on the database)
-interface Product {
-    _id:string,
-    posterDocId:string,
-    productName:string,
-    brandName:string | undefined,
-    noBrand:boolean,
-    manufacturer:string,
-    productPrice:number,
-    quantity:number,
-    pictures:string[],
-    productReviews:Array,
-}
 type UserInfo = {
     userDocId:string,
     username:string,
@@ -79,7 +66,4 @@ type OrderDetails = {
 }
 type ProductLink = {
     productId:string
-}
-type OrderData = {
-    
 }

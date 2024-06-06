@@ -142,7 +142,8 @@ export default function ProductReviews({productId}: {productId:string}) {
         }
     }
     const [saveOnProgress, setSaveOnProgress] = useState<boolean>(false)
-    async function updateReview(id:string){
+    async function updateReview(id:string, newRating:number){
+        if(!newRating) newRating = 1
         setSaveOnProgress(true)
         setUserWantsToEditReview(false)
         const textarea = document.querySelector('.own-review-text') as HTMLTextAreaElement
@@ -154,7 +155,7 @@ export default function ProductReviews({productId}: {productId:string}) {
             body:JSON.stringify({
                 _id:id,
                 reviewText:textarea.value,
-                rating:starRating
+                rating:newRating
             })
         })
         const res = await req.json()
@@ -204,7 +205,6 @@ export default function ProductReviews({productId}: {productId:string}) {
             if(minutes.toString().length === 1){
                 minutes = `0${minutes}`
             }
-
             return (
                 <div className="review" key={index}>
                     {review.posterDocId === session?.data?.user?.userDocId &&
@@ -246,7 +246,7 @@ export default function ProductReviews({productId}: {productId:string}) {
                     }
                     {
                         review.posterDocId === session?.data?.user?.userDocId && userWantsToEditReview ?
-                        <button disabled={saveOnProgress} onClick={() => updateReview(reviews[index]._id)} className="save-edited-review-btn">{!    saveOnProgress ? "Save" : "Saving"}</button>
+                        <button disabled={saveOnProgress} onClick={() => updateReview(review._id, parseInt(review.rating))} className="save-edited-review-btn">{!    saveOnProgress ? "Save" : "Saving"}</button>
                         : ""
                     }
                     <p className="date-review-posted">{`${day}-${month}-${year} ${hours}:${minutes}`}</p>

@@ -16,15 +16,16 @@ export default function UserOrders() {
     const controller = new AbortController()
 
     async function fetchOrders(){
-        const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {signal:controller.signal})
-        const response = await req.json()
-        if(response.errCode === "unauthenticated"){
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {signal:controller.signal})
+        const data = await res.json()
+        console.log(data)
+        if(data.errCode === "unauthenticated"){
           alert("You need to sign in")
           router.push('/api/auth/signin')
           return
         }
-        setOrdersList(prev => [...prev, ...response.userOrders])
-        setProducstData(prev => [...prev, ...response.products])
+        setOrdersList(prev => [...prev, ...data.userOrders])
+        setProducstData(prev => [...prev, ...data.products])
         setReqPending(false)
     }
     fetchOrders()
@@ -39,17 +40,19 @@ export default function UserOrders() {
       }
       {ordersList?.map((order, index) => {
         return (
-          <Link href={`/userProfile/userOrders/orderDetails?orderId=${order.orderId}&productDocId=${order.productDocId}`} className='order-summary' key={index}>
-            <div className="order-product-image-wrapper">
-              <Image className="order-product-image" src={productsData[index].pictures[0] as string} alt="Product Image" width={100} height={100}/>
-            </div>
-            <div className="order-details">
-              <p className='order-id-link' style={{fontWeight:"bold", marginBottom:5}}>Order ID: #{order.orderId}</p>
-              <p>{productsData[index].productName}</p>
-              <p>Quantity: {order.desiredQuantity}</p>
-              <p>Total Price: {order.orderPrice}€</p>
-            </div>
-          </Link>
+          // <Link href={`/userProfile/userOrders/orderDetails?orderId=${order._id}&productDocId=${order.productDocId}`} className='order-summary' key={index}>
+          <div className="order-summary" key={index}>
+              <div className="order-product-image-wrapper">
+                <Image className="order-product-image" src={productsData[index].pictures[0] as string} alt="Product Image" width={100} height={100}/>
+              </div>
+              <div className="order-details">
+                {/* <p className='order-id-link' style={{fontWeight:"bold", marginBottom:5}}>Order ID: #{order._id}</p> */}
+                <p>{productsData[index].productName}</p>
+                <p>Quantity: {order.desiredQuantity}</p>
+                <p>Total Price: {order.totalPrice}€</p>
+              </div>
+          </div>
+          // </Link>
         )
       })}
     </div>

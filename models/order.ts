@@ -6,14 +6,22 @@ const orderSchema = new Schema({
         type:ObjectId || null,
         required:false
     },
-    productsOrdered:{
-        type:Array,
+    productDocId:{
+        type:ObjectId,
+        required:true
+    },
+    desiredQuantity:{
+        type:Number,
+        required:true,
+    },
+    productPrice:{
+        type:Number,
         required:true
     },
     totalPrice:{
         type:Number,
         required:true
-    },
+    }
 })
 
 const orderModel = mongoose.models.Order || mongoose.model("Order", orderSchema)

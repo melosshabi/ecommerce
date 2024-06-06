@@ -15,20 +15,28 @@ export async function POST(req:NextRequest){
     const stripeSessionLineItems = await stripe.checkout.sessions.listLineItems(data.stripeSessionId, {
         expand: ['data.price.product']
     })
-    const productsOrdered: any[] = []
-    let totalPrice = 0
+    const newOrderEntriesPromises: Promise<any>[] = []
     stripeSessionLineItems.data.forEach(item => {
         // @ts-ignore
-        productsOrdered.push({productDocId:item.price?.product.metadata.databaseProductId, desiredQuantity:item.quantity})
-        totalPrice += (item.price?.unit_amount! / 100) * item.quantity!
+        // productsOrdered.push({productDocId:item.price?.product.metadata.databaseProductId, desiredQuantity:item.quantity})
+        // totalPrice += (item.price?.unit_amount! / 100) * item.quantity!
+        if(serverSession){
+            const newOrderPromise = orderModel.create({
+                clientDocId:serverSession.user.userDocId,
+                // @ts-ignore
+                productDocId:item.price?.product.metadata.databaseProductId,
+                desiredQuantity:item.quantity,
+                productPrice:item.price?.unit_amount! / 100,
+                totalPrice:(item?.price?.unit_amount! / 100) * item.quantity!
+            })
+            newOrderEntriesPromises.push(newOrderPromise)
+        }
     })
 
     if(serverSession){
-        const newOrderDoc = await orderModel.create({
-            clientDocId:serverSession.user.userDocId,
-            productsOrdered: [...productsOrdered],
-            totalPrice
-        })
-        await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {cart:[], $push:{orders:newOrderDoc._id}})
+        const newOrders = await Promise.all(newOrderEntriesPromises)
+        await Promise.all(newOrders.map(async order => {
+            await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {cart:[], $push:{orders:order._id}})
+        }))
     }
 }

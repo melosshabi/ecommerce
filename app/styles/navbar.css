@@ -100,7 +100,7 @@
     height: 0;
     width: 7dvw;
     position: absolute;
-    left:20%;
+    left:30%;
     top:6dvh;
     background-color: white;
     box-shadow: 0 0 5px black;
@@ -205,8 +205,15 @@
         height: 18vh;
     }
 }
+/* 5:4 Monitors */
+@media screen and (max-width:1282px) and (max-height:1025px){
+    .nav-menu{
+        width: 10dvw;
+        left:30%;
+    }
+}
 /* Laptops */
-@media screen and (max-width:1283px) and (max-height:721px){
+@media screen and (max-width:1281px) and (max-height:721px){
     .navbar{
         height: 15dvh;
     }

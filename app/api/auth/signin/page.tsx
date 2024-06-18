@@ -44,6 +44,7 @@ export default function SignIn() {
       username:formData.username,
       password:formData.password,
       redirect:false,
+      callbackUrl:'/'
     }).then(res => {
       if(res?.error === 'username-not-found'){
         setError('Username not found')
@@ -53,8 +54,6 @@ export default function SignIn() {
         setError("Incorrect Password")
         setAuthInProgress(false)
         document.querySelector('.sign-in-password-input')?.classList.add('red-border')
-      }else{
-        router.push('/')
       }
     })
   }

@@ -169,6 +169,11 @@
     box-shadow: 0 0 5px black;
     overflow-y: scroll;
 }
+.loading-orders-list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .empty-cart, .empty-user-products-list{
     display: flex;
     justify-content: center;

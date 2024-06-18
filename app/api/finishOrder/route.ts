@@ -17,12 +17,19 @@ export async function POST(req:NextRequest){
     })
     const newOrderEntriesPromises: Promise<any>[] = []
     stripeSessionLineItems.data.forEach(item => {
-        // @ts-ignore
-        // productsOrdered.push({productDocId:item.price?.product.metadata.databaseProductId, desiredQuantity:item.quantity})
-        // totalPrice += (item.price?.unit_amount! / 100) * item.quantity!
         if(serverSession){
             const newOrderPromise = orderModel.create({
                 clientDocId:serverSession.user.userDocId,
+                // @ts-ignore
+                productDocId:item.price?.product.metadata.databaseProductId,
+                desiredQuantity:item.quantity,
+                productPrice:item.price?.unit_amount! / 100,
+                totalPrice:(item?.price?.unit_amount! / 100) * item.quantity!
+            })
+            newOrderEntriesPromises.push(newOrderPromise)
+        }else{
+            const newOrderPromise = orderModel.create({
+                clientDocId:null,
                 // @ts-ignore
                 productDocId:item.price?.product.metadata.databaseProductId,
                 desiredQuantity:item.quantity,
@@ -38,5 +45,9 @@ export async function POST(req:NextRequest){
         await Promise.all(newOrders.map(async order => {
             await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {cart:[], $push:{orders:order._id}})
         }))
+    }else{
+        const orders = await Promise.all(newOrderEntriesPromises)
+        return NextResponse.json({msg:"Order placed", orders})
     }
+    return NextResponse.json({msg:"Order placed", code:'order-placed'})
 }

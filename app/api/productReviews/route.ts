@@ -36,7 +36,7 @@ export async function POST(req:Request){
     if(!session){
         return NextResponse.json({error:"You need to sign in before posting reviews", errorCode:"unauthenticated"}, {status:400})
     }
-    const data:postRequestReviewData = await req.json()
+    const data = await req.json()
     const review = await productReviewModel.findOne({posterDocId:new ObjectId(session?.user.userDocId)})
     if(review) return NextResponse.json({errMsg:"You can only post 1 review", errCode:"reached-review-limit"})
     if(!parseInt(data.rating as string)){

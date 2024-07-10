@@ -28,6 +28,7 @@ export default async function addToCart(userDocId:string | undefined, productDoc
         const stringifiedCartItems = JSON.stringify(cartItems)
         localStorage.setItem('localCart', stringifiedCartItems)
         window.location.reload()
+        return
       }
       const cartItems = [{productDocId:productDocId, desiredQuantity, dateAdded: new Date()}]
       const stringifiedCartItems = JSON.stringify(cartItems)

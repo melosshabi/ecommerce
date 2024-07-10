@@ -8,6 +8,7 @@ import { useSession } from 'next-auth/react'
 import removeFromCart from '@/lib/removeFromCart'
 import Loader from './Loader'
 import { useRouter } from 'next/navigation'
+import placeOrder from '@/lib/placeOrder'
 
 export default function CartList({productsArray} : CartListProps) {
 
@@ -105,15 +106,6 @@ export default function CartList({productsArray} : CartListProps) {
       localStorage.setItem('localCart', JSON.stringify(localCart))
     }
   }
-  async function placeOrder(){    
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {
-      method:"POST",
-      body:JSON.stringify([...cartItems])
-    })
-    const data: {url:string, stripeSessionId:string} = await res.json()
-    localStorage.setItem('stripeSessionId', data.stripeSessionId)
-    router.push(data.url)
-  }
   return (
     <div className={`cart-list ${cartItems.length === 0 ? 'empty-cart' : ''}`}>
       <Loader displayLoader={reqPending}/>
@@ -163,7 +155,10 @@ export default function CartList({productsArray} : CartListProps) {
         )
       }
       {cartItems.length > 0 && !reqPending && 
-        <button onClick={() => placeOrder()} className="place-order-btn">Place Order</button>
+        <button onClick={async () => {
+          const stripePaymentUrl = await placeOrder([...cartItems])
+          router.push(stripePaymentUrl)
+        }} className="place-order-btn">Place Order</button>
       }
     </div>
   )

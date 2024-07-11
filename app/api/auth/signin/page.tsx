@@ -3,6 +3,8 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import {useRouter} from 'next/navigation'
 import ButtonLoader from '@/app/components/ButtonLoader'
+import decorationImg from '../../../images/decoration.svg'
+import Image from 'next/image'
 import '@/app/styles/signin.css'
 
 export default function SignIn() {
@@ -42,6 +44,7 @@ export default function SignIn() {
       username:formData.username,
       password:formData.password,
       redirect:false,
+      callbackUrl:'/'
     }).then(res => {
       if(res?.error === 'username-not-found'){
         setError('Username not found')
@@ -51,8 +54,6 @@ export default function SignIn() {
         setError("Incorrect Password")
         setAuthInProgress(false)
         document.querySelector('.sign-in-password-input')?.classList.add('red-border')
-      }else{
-        router.push('/')
       }
     })
   }
@@ -60,23 +61,28 @@ export default function SignIn() {
   return (
     <div className='sign-in-page'>    
       <div className="form-wrapper">
-      
-        <h2>Welcome Back!</h2>
-        <form className="sign-in-form" onSubmit={e => handleSubmit(e)}>
-            <div className="inputs-container" style={{display:'flex', flexDirection:'column', height:'fit-content'}}>
-              <div className='inputs-wrappers'>
-                <label>Username</label>
-                <input required name="username" type="text" placeholder="Username" className="sign-in-inputs sign-in-username-input" value={formData.username} onChange={e => handleChange(e.target.name, e.target.value)}/>
-              </div>
+        <div className='decoration-img-wrapper'>
+          <Image className="decoration-img" src={decorationImg} width={1500} height={1500} alt="Decoration image"/>
+        </div>
+        <div>
+        
+          <form className="sign-in-form" onSubmit={e => handleSubmit(e)}>
+            <h2>Welcome Back!</h2>
+              <div className="inputs-container" style={{display:'flex', flexDirection:'column', height:'fit-content'}}>
+                <div className='inputs-wrappers'>
+                  <label>Username</label>
+                  <input required name="username" type="text" placeholder="Username" className="sign-in-inputs sign-in-username-input" value={formData.username} onChange={e => handleChange(e.target.name, e.target.value)}/>
+                </div>
 
-              <div className='inputs-wrappers'>
-                <label>Password</label>
-                <input required name="password" type="password" placeholder="Password" className='sign-in-inputs sign-in-password-input' value={formData.password} onChange={e => handleChange(e.target.name, e.target.value)}/>
+                <div className='inputs-wrappers'>
+                  <label>Password</label>
+                  <input required name="password" type="password" placeholder="Password" className='sign-in-inputs sign-in-password-input' value={formData.password} onChange={e => handleChange(e.target.name, e.target.value)}/>
+                </div>
+                {error && <p className="error">{error}</p>}
               </div>
-              {error && <p className="error">{error}</p>}
-            </div>
-          <button className='submit-sign-in-form-btn'>{!authInProgress ? 'Sign In' : <ButtonLoader/>}</button>
-        </form>
+            <button className='submit-sign-in-form-btn'>{!authInProgress ? 'Sign In' : <ButtonLoader/>}</button>
+          </form>
+        </div>
       </div>
     </div>
   )

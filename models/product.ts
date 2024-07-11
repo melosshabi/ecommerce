@@ -6,6 +6,10 @@ const productSchema = new Schema({
         type: ObjectId,
         required:true
     },
+    posterUsername:{
+        type:String,
+        required:true
+    },
     productName:{
         type:String,
         required:true

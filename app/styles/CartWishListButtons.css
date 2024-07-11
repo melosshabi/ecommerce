@@ -1,0 +1,28 @@
+.product-action-buttons{
+    background: none;
+    border:none;
+    cursor: pointer;
+    margin:15px 2px;
+    padding:7px 12px;
+    border-radius: 3px;
+    background-color: var(--lightGray);
+    transition: all 250ms ease-in-out;
+}
+.product-action-buttons:hover{
+    background-color: var(--lightOrange);
+}
+.product-action-images{
+    width: 35px;
+    height: 35px;
+    margin:0 5px;
+    transition: all 250ms ease-in-out;
+}
+.product-action-buttons:hover .product-action-images{
+    fill:white;
+}
+@media screen and (max-width:1280px){
+    .product-action-images{
+        width: 25px;
+        height: 25px;
+    }
+}

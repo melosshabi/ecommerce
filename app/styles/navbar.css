@@ -11,6 +11,53 @@
     align-items: center;
     z-index: 2;
 }
+.nav-hamburger-btn{
+    display: none;
+}
+.mobile-sidebar{
+    display: none;
+}
+.black-div{
+    display: none;
+}
+.search-wrapper{
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border:1px solid var(--gray);
+    padding:0 15px;
+    padding-right: 0;
+    border-radius: 20px;
+    margin-left: 10%;
+    transition: all 250ms;
+}
+.submit-search{
+    border:none;
+    background: none;
+    padding:5px 7px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 250ms;
+}
+.submit-search:hover{
+    background-color: var(--lighterGray);
+}
+.magnifying-glass{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.searchbar{
+    width: 90%;
+    border:none;
+}
+.search-wrapper:has(.searchbar:focus){
+    border:1px solid var(--orange);
+}
+.searchbar:focus{
+    outline:none;
+}
 .auth-btns{
     padding:8px 15px;
     border-radius: 20px;
@@ -49,14 +96,11 @@
     overflow: hidden;
     transition: all 250ms;
 }
-.nav-menu-btn:hover{
-    box-shadow: 0 0 10px black;
-}
 .nav-menu{
     height: 0;
     width: 7dvw;
     position: absolute;
-    left:20%;
+    left:30%;
     top:6dvh;
     background-color: white;
     box-shadow: 0 0 5px black;
@@ -67,6 +111,12 @@
 .active-nav-menu{
     height: 20.8dvh;
 }
+.unauth-nav-menu{
+    left:32%
+}
+.active-unauth-nav-menu{
+    height: 16.8dvh;
+}
 .nav-menu ul{
     list-style: none;
 }
@@ -75,6 +125,7 @@
     display: block;
     width: 100%;
     font-size: 1em;
+    font-weight: 400;
     text-decoration: none;
     text-align: center;
     color:black;
@@ -82,6 +133,7 @@
     background:none;
     border:none;
     padding:10px 0;
+    box-shadow:0 0 1px black;
     transition: all 250ms;
 }
 .nav-menu-links:hover{
@@ -96,34 +148,85 @@
     padding:0;
     margin-right: 35px;
     text-decoration: none;
+    transition: all 250ms;
 }
 .nav-cart-btn img{
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
+    transition: all 250ms ease-in-out;
 }
-.nav-cart-btn:hover{
-    box-shadow: none;
+.nav-cart-btn:hover img{
+    filter:drop-shadow(0 0 5px black);
+}
+.user-icon{
+    transform: scale(1.75);
+    stroke-width: 1;
+    transition: all 250ms ease-in-out;
+}
+.user-icon:hover{
+    filter:drop-shadow(0 0 2px black);
 }
 .cart-item-count{
+    width: 25px;
+    height: 25px;
     background-color: var(--orange);
-    padding:5px 10px;
     border-radius: 50px;
     position: absolute;
-    top:-10px;
-    right:15px;
+    top:-5px;
+    right:30px;
     z-index: 1;
     color:white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-@media screen and (max-width:1283px) and (max-height:590px){
+/* iPad Pro 12inch Landscape */
+@media screen and (max-width:1366px){
+    .cart-item-count{
+        right:25px;
+        top:-10px;
+    }
+    .nav-menu{
+        left: 42%;
+    }
+    .active-nav-menu{
+        height: 19.2dvh;
+    }
+    .active-unauth-nav-menu{
+        height: 15dvh;
+    }
+}
+/* 5:4 Monitors */
+@media screen and (max-width:1280px) and (max-height:1024px){
+    .active-nav-menu{
+        height: 22.5vh;
+    }
+    .active-unauth-nav-menu{
+        height: 18vh;
+    }
+}
+/* 5:4 Monitors */
+@media screen and (max-width:1282px) and (max-height:1025px){
+    .nav-menu{
+        width: 10dvw;
+        left:30%;
+    }
+}
+/* Laptops */
+@media screen and (max-width:1281px) and (max-height:721px){
     .navbar{
         height: 15dvh;
     }
     .nav-menu{
-        left: 37%;
+        width: 8dvw;
+        left: 40%;
         top: 10dvh;
     }
     .active-nav-menu{
-        height: 35.4dvh;
+        height: 33.5dvh;
+    }
+    .active-unauth-nav-menu{
+        height: 26.5dvh;
     }
 }
 /* iPad Pro 12.9 inch */
@@ -133,10 +236,6 @@
     height: 70px;
     padding:0;
    }
-   .nav-menu-btn img{
-    min-width: 80%;
-    min-height: 80%;
-   }
    .nav-menu{
     width: 50%;
     left: 50%;
@@ -144,9 +243,15 @@
    .active-nav-menu{
     height: 15dvh;
    }
+   .active-unauth-nav-menu{
+    height: 11.5dvh;
+   }
    .cart-item-count{
-    right: 25px;
-    top:-5px;
+    right: 35px;
+    top:5px;
+   }
+   .user-icon, .cart-icon{
+        width: 25px;
    }
 }
 /* iPad Pro 11 inch */
@@ -154,11 +259,17 @@
     .active-nav-menu{
         height: 16.5dvh;
     }
+    .active-unauth-nav-menu{
+        height: 13dvh;
+    }
 }
 /* iPad */
 @media screen and (max-width:810px) and (max-height:1080px){
     .active-nav-menu{
         height: 18.5dvh;
+    }
+    .active-unauth-nav-menu{
+        height: 14.5dvh;
     }
 }
 /* iPad Mini */
@@ -169,22 +280,109 @@
     .active-nav-menu{
         height: 19.5dvh;
     }
+    .active-unauth-nav-menu{
+        height: 15.3dvh;
+    }
 }
 /* iPhone 14 Pro Max */
 @media screen and (max-width:430px) and (max-height:932px){
     .nav{
         top:0;
     }
-    .nav-menu-btn{
-        width: 50px;
-        height: 50px;
+    .nav-btns, .nav-menu-wrapper{
+        display: none;
     }
-    .nav-menu{
-        width: 23dvw;
-        left:40%;
+    .search-wrapper{
+        width: 50%;
+        margin-left: -5%;
     }
-    .active-nav-menu{
-        height: 21.5dvh;
+    .nav-hamburger-btn{
+        width: 35px;
+        height: 25px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+        background: none;
+        border:none;
+        cursor: pointer;
+        margin-right: 20px;
+        transition: all 250ms;
+    }
+    .burger-lines{
+        width: 100%;
+        height: 3px;
+        background-color: black;
+    }
+    .burger-line2{
+        width: 75%;
+    }
+    .burger-line3{
+        width: 50%;
+    }
+    .mobile-sidebar{
+        width: 60dvw;
+        height: 100dvh;
+        background-color: white;
+        box-shadow: 0 0 5px black;
+        position: absolute;
+        right:-60dvw;
+        top:0;
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        transition: all 250ms, right 250ms ease-in-out;
+    }
+    .active-nav-mobile-sidebar{
+        right:0;
+    }
+    .close-mobile-sidebar-btn{
+        background: none;
+        border:none;
+        padding:10px;
+        cursor: pointer;
+    }
+    .sidebar-x-icon{
+        width: 40px;
+        height: 40px;
+        transform: rotate(45deg);
+    }
+    .mobile-sidebar-links{
+        width: 100%;
+        list-style:none;
+        margin:auto;
+    }
+    .mobile-sidebar-links a{
+        margin:10px 0;
+    }
+    .mobile-sidebar-auth-btns-wrapper{
+        display: flex;
+        justify-content: space-around;
+        margin: 0 0 20px 0;
+    }
+    .black-div{
+        width: 100dvw;
+        height: 100dvh;
+        display:none;
+        background-color: rgba(0, 0, 0, .3);
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 3;
+    }
+    .active-black-div{
+        display: block;
+    }
+}
+/* iPhone XS Max */
+@media screen and (max-width:414px) and (max-height:896px){
+    .mobile-sidebar{
+        width: 70dvw;
+        right: -70dvw;
+    }
+    .active-nav-mobile-sidebar{
+        right:0;
     }
 }
 /* S21FE Firefox Nightly mobile for some reason it thinks that the S21FE has a CSS resolution of 396x858 */
@@ -208,4 +406,12 @@
     .active-nav-menu{
         height: 30vh;
     }
+    .mobile-sidebar{
+        width: 75dvw;
+        right: -75dvw;
+    }
+    .active-nav-mobile-sidebar{
+        right:0;
+    }
 }
+

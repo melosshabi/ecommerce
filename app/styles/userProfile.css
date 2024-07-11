@@ -157,6 +157,11 @@
     margin-right: 5px;
 }
 /* Styling for the cart, wishlist, products and orders options */
+.cart-list{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .cart-list, .wishlist, .user-products-list, .orders-list{
     width: 80%;
     padding:10px 20px;
@@ -164,7 +169,12 @@
     box-shadow: 0 0 5px black;
     overflow-y: scroll;
 }
-.empty-cart-list, .empty-user-products-list{
+.loading-orders-list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.empty-cart, .empty-user-products-list{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -174,7 +184,7 @@
     justify-content: center;
     align-items: center;
 }
-.empty-wishlist p {
+.empty-wishlist p , .empty-cart p{
     font-size: 2em;
 }
 .empty-orders-list{
@@ -197,6 +207,10 @@
     color:black;
     text-decoration: none;
 }
+.cart-item{
+    width: 95%;
+    margin:10px 0;
+}
 .user-product{
     padding:20px 10px;
 }
@@ -210,8 +224,12 @@
 .cart-item-details:hover, .wishlist-item-details:hover{
     text-decoration: underline;
 }
-.cart-item-image-wrapper, .wishlist-item-image-wrapper, .user-product-image-wrapper, .order-product-image-wrapper{
+.cart-item-image-wrapper, .wishlist-item-image-wrapper, .order-product-image-wrapper{
     width: 8%;
+    margin-right: 2%;
+}
+.user-product-image-wrapper{
+    width: 11%;
     margin-right: 2%;
 }
 .cart-item-image, .wishlist-item-image, .user-product-image, .order-product-image{
@@ -325,8 +343,36 @@
     color:black;
     text-decoration: underline;
 }
+.place-order-btn{
+    text-decoration: none;
+    background-color: var(--orange);
+    border:none;
+    border-radius: 8px;
+    cursor: pointer;
+    color:white;
+    padding:8px 15px;
+    font-size: 1.15em;
+    font-weight: 500;
+    transition: all 250ms;
+}
+.place-order-btn:hover{
+    background-color:var(--darkerOrange);
+}
 /* Media Qeuries */
-@media screen and (max-width:1283px) and (max-height:590px){
+/* iPad Pro 12.9 inch Landscape */
+@media screen and (max-width:1366px) and (max-height:1024px){
+    .profile-page-sidebar-details-wrapper{
+        width: 90%;
+    }
+    .profile-page-sidebar{
+        min-width: 20%;
+    }
+    .cart-item-image-wrapper, .wishlist-item-image-wrapper, .user-product-image-wrapper, .order-product-image-wrapper{
+        width: 14%;
+    }
+}
+/* Laptops */
+@media screen and (max-width:1283px) and (max-height:720px){
     /* Rules for the sidebar */
     .profile-page-sidebar{
         min-width: 20%;
@@ -350,25 +396,18 @@
         height: 23%;
     }
     .cart-item-image-wrapper, .wishlist-item-image-wrapper, .order-product-image-wrapper{
-        width: 10%;
+        width: 12%;
         height: 100%;
     }
     .user-product-image-wrapper{
-        width: 18%;
+        width: 20%;
+    }
+    .place-order-btn{
+        left:56%;
+        bottom: 5%;
     }
 }
-/* iPad Pro 12.9 inch Landscape */
-@media screen and (max-width:1366px) and (max-height:1024px){
-    .profile-page-sidebar-details-wrapper{
-        width: 90%;
-    }
-    .profile-page-sidebar{
-        min-width: 20%;
-    }
-    .cart-item-image-wrapper, .wishlist-item-image-wrapper, .user-product-image-wrapper, .order-product-image-wrapper{
-        width: 14%;
-    }
-}
+
 /* iPad Pro 11 inch Landscape */
 @media screen and (max-width:1194px) and (max-height:834px){
     .cart-item{
@@ -409,7 +448,7 @@
     }
     .user-product-image-wrapper{
         width: 200px;
-        height: 150px;
+        height: 100px;
     }
     .quantity-input{
         width: 30px;
@@ -438,11 +477,7 @@
     .user-info-wrapper{
         width: 80%;
     }
-    /* Cart styling */
-    .cart-item{
-        height: 25%;
-    }
-    .wishlist-item, .user-product, .order-summary{
+    .cart-item,.wishlist-item, .user-product, .order-summary{
         height: fit-content;
     }
 }
@@ -461,7 +496,7 @@
         align-items: flex-start;
         flex-direction: column;
         position: absolute;
-        z-index:2;
+        z-index:1;
         left:0%;
         top: 10dvh;
         background-color: white;
@@ -523,9 +558,7 @@
         margin-top: 8dvh;
     }
     .cart-item{
-        /* min-height: 20%; */
-        /* height: fit-content; */
-        min-height: fit-content;
+        height: fit-content;
     }
     .cart-item-image-wrapper{
         height: 100%;
@@ -535,7 +568,7 @@
         align-items: center;
     }
     .user-product-image-wrapper{
-        width: 40%;
+        width: 30%;
     }
     .user-product-details{
         width: 95%;
@@ -548,6 +581,11 @@
     }
     .user-product-options-btns{
         width: 100%;
+    }
+    /* Wishlist */
+    .wishlist-item-image-wrapper{
+        width: 50%;
+        height: 100%;
     }
 }
 /* iPhone X/XS */

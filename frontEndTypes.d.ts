@@ -7,19 +7,6 @@ type signUpData = {
     email:string,
     password:string
 }
-// The type used for rendering the products on the homepage (The data stored on the database)
-interface Product {
-    _id:string,
-    posterDocId:string,
-    productName:string,
-    brandName:string | undefined,
-    noBrand:boolean,
-    manufacturer:string,
-    productPrice:number,
-    quantity:number,
-    pictures:String[],
-    productReviews:Array,
-}
 type UserInfo = {
     userDocId:string,
     username:string,
@@ -40,13 +27,7 @@ type ProductData = {
     quantity:number,
 }
 type CartListProps = {
-    productsArray: Array<CartListProduct>
-}
-type CartListProduct = {
-    productDocId:string,
-    // quantity in this case refers to the quantity chosen by the user
-    desiredQuantity:number,
-    dateAdded:string
+    productsArray: Array<CartObject>
 }
 // The type below is used to for the cart page
 interface CartProduct extends Product {
@@ -55,7 +36,7 @@ interface CartProduct extends Product {
 }
 type WishlistProps = {
     productsArray: Array<SessionWishlist>
-    userDocId:string
+    userDocId:string | undefined
 }
 // This type is used for the productsArray prop on the Wishlist components which holds objects with 2 keys productDocId and dateAdded
 type SessionWishlist = {
@@ -65,30 +46,24 @@ type SessionWishlist = {
 interface WishlistItem extends Product {
     dateAdded:Date,
 }
+// This type is used for the wishlist arrays on local storage and on session.data.user.wishlist which hold objects with 2 keys productDocId and dateAdded
+type WishlistObject = {
+    productDocId:string,
+    dateAdded:string
+}
+// This type is used for the cart arrays on local storage and on session.data.user.cart which hold objects with 2 keys productDocId and dateAdded
+interface CartObject extends WishlistObject {
+    desiredQuantity:number
+}
 // This type is used to fetch and display the products posted by the signed in user the in UserProductsList component
 interface UserProduct extends Product{
     datePosted:Date
-}
-// This type is used for placing and fetching already placed orders
-type orderData = {
-    productDocId:string,
-    desiredQuantity:string,
-    cardNumber:string,
-    expirityMonth:string,
-    expirityYear:string,
-    cvv:string,
-    firstName:string,
-    lastName:string,
-    billingAddress:string,
-    billingAddress2?:string,
-    phoneNumber:string,
-    city:string,
-    zipCode:string,
-    orderId?:string,
-    orderPrice?:number
 }
 // Order Details type
 type OrderDetails = {
     order:orderData,
     product:Product
+}
+type ProductLink = {
+    productId:string
 }

@@ -79,8 +79,8 @@ export default function PostProduct() {
         console.log(res)
         if(res.messageCode === 'product-created'){
             document.querySelector('.product-created-alert')?.classList.add('active-alert')
-            setTimeout(() => router.push('/'), 4500)
-        }
+            setTimeout(() => router.push('/'), 3000)
+        }setUploadInProgress(false)
     }
     // alert(`${screen.width}x ${screen.height}`)
   return (

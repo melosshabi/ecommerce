@@ -38,7 +38,6 @@ export const nextAuthOptions:NextAuthOptions = {
                         ...user._doc
                     }
                     delete passwordLessUser.password
-                    console.log("Signed in", passwordLessUser)
                     return passwordLessUser
                 }
 

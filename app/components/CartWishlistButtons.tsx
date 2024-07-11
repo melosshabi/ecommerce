@@ -11,7 +11,7 @@ export default function ProductLink({productId}:ProductLink) {
     <div>
         <button className='product-action-buttons cart-button' 
         onClick={async () => {
-          const res = await addToCart(session.data?.user.userDocId, productId, 1, false, true)
+          const res = await addToCart(session.data?.user.userDocId, productId, 1, true)
           if(res && session.status === 'authenticated') session.update()
         }}
         >

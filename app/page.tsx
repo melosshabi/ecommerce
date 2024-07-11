@@ -17,7 +17,7 @@ export default async function Home() {
         {
           products.map((product, index) => (
             // @ts-ignore
-            <Product productData={{...product._doc, index}}/>
+            <Product productData={{...product._doc, index}} key={index}/>
           ))
         }
       </div>

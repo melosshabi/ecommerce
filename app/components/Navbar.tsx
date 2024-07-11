@@ -17,6 +17,7 @@ export default function Navbar() {
   const session = useSession()
   console.log(session)
   useEffect(() => {
+    localStorage.removeItem('stripeSessionId')
     const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
     const localCart = JSON.parse(localStorage.getItem('localCart') as string)
     if(session.status === 'authenticated' && localWishList){
@@ -25,7 +26,7 @@ export default function Navbar() {
         return !this.has(productDocId) && this.add(productDocId)
       }, new Set<string>())
       session.data.user.wishlist = filteredMergedWishlists
-      localStorage.setItem('localWishList', JSON.stringify(filteredMergedWishlists))
+      localStorage.removeItem('localWishList')
       // The function below is used to update the wishlist on the database to include the wishlist stored on localStorage
       if(filteredMergedWishlists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedWishlists, listToUpdateEnum.wishlist)
     }
@@ -35,7 +36,7 @@ export default function Navbar() {
         return !this.has(productDocId) && this.add(productDocId)
       }, new Set<string>())
       session.data.user.cart = filteredMergedCartLists
-      localStorage.setItem('localCart', JSON.stringify(filteredMergedCartLists))
+      localStorage.removeItem('localCart')
       // The function below is used to update the cart list on the database to include the cart list stored on localStorage
       if(filteredMergedCartLists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedCartLists, listToUpdateEnum.cartList)
     }

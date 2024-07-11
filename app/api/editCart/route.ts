@@ -27,7 +27,7 @@ export async function PATCH(req:Request){
                 existingProductUpdated = true
                 let newQuantity = product.desiredQuantity + data.desiredQuantity
                 await userModel.findOneAndUpdate({_id:new ObjectId(data.userDocId)}, {
-                    $set:{cart:{productDocId:data.productDocId, desiredQuantity:newQuantity, dateAdded:product.dateAdded}}
+                    $set:{cart:{productDocId:new ObjectId(data.productDocId), desiredQuantity:newQuantity, dateAdded:product.dateAdded}}
                 }, {new:true})
             }
         })
@@ -60,6 +60,7 @@ export async function DELETE(req:Request){
     try{
         await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId)}, {
             $pull:{cart:{productDocId:new ObjectId(data.productDocId)}}
+            // $pull:{cart:{productDocId:data.productDocId}}
         })
     }catch(err){
         return NextResponse.json({

@@ -5,7 +5,7 @@ enum listToUpdateEnum {
 }
 export default async function updateCartListOrWishlist(userId:string, newList:WishlistObject[] | CartObject[], listToUpdate:listToUpdateEnum){
     if(listToUpdate === listToUpdateEnum.wishlist){
-        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateUserWishlist`, {
+        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/updateUserWishlist`, {
                 method:"PATCH",
                 body:JSON.stringify({userId, newWishlist:newList})       
         })

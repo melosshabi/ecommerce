@@ -1,5 +1,5 @@
 // clickedFromHomeScreen let's us know if the function is getting called from the button on the cards of the products on the homescreen
-export default async function addToCart(userDocId:string | undefined, productDocId:string, desiredQuantity:number, reload:boolean, clickedFromHomeScreen:boolean){
+export default async function addToCart(userDocId:string | undefined, productDocId:string, desiredQuantity:number, clickedFromHomeScreen:boolean){
     if(clickedFromHomeScreen && !userDocId){
       const localCart = JSON.parse(localStorage.getItem('localCart') as string)
       if(localCart){
@@ -44,10 +44,10 @@ export default async function addToCart(userDocId:string | undefined, productDoc
       })
     })
     const parsedRes = await res.json()
-    console.log(parsedRes)
-    if(parsedRes.messageCode === 'added-to-cart' && reload){
-      window.location.reload()
-    }else if(parsedRes.errorCode === "invalid-quantity"){
+    if(parsedRes.messageCode === 'added-to-cart' || parsedRes.messageCode === 'updated-cart'){
+      return true
+    }
+    else if(parsedRes.errorCode === "invalid-quantity"){
       alert(parsedRes.errorMessage)
     }
   }

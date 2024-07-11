@@ -29,7 +29,7 @@ export async function PATCH(req:Request){
         }, {new:true})
         session.user.wishlist.push({
             productDocId:data.productDocId,
-            dateAdded: new Date()
+            dateAdded: new Date().toISOString()
         })
 
         return NextResponse.json({

@@ -18,8 +18,8 @@ export default function ProductDetails() {
   const productDocId = searchParams.get("_id")
   const router = useRouter()
   const [product, setProduct] = useState<Product | undefined>(undefined)
-  const localStorageCart = JSON.parse(localStorage.getItem('localCart') as string)
-  const localStorageWishlist = JSON.parse(localStorage.getItem('localWishList') as string)
+  const localStorageCart = JSON.parse(window?.localStorage.getItem('localCart') as string)
+  const localStorageWishlist = JSON.parse(window?.localStorage.getItem('localWishList') as string)
   // This variable holds the url of the large image that is displayed on the right side of the image sidebar
   const [activeImage, setActiveImage] = useState<string>("")
   const [error, setError] = useState<string>("")

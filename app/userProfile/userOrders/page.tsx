@@ -32,7 +32,7 @@ export default function UserOrders() {
       }
       fetchOrders()
     }else{
-      const localOrders: OrderData[] = JSON.parse(localStorage.getItem("localOrders") as string)
+      const localOrders: OrderData[] = JSON.parse(window?.localStorage.getItem("localOrders") as string)
       if(localOrders){ 
         setOrdersList([...localOrders])
         const orderPromises = localOrders.map(async order => {

@@ -8,7 +8,7 @@ export default function WishlistPage() {
   const [wishlist, setWishlist] = useState<WishlistObject[]>([])
   useEffect(() => {
     if(session.status === 'unauthenticated'){
-      const localWishlist: WishlistObject[] | null = JSON.parse(localStorage.getItem('localWishList') as string)
+      const localWishlist: WishlistObject[] | null = JSON.parse(window?.localStorage.getItem('localWishList') as string)
       if(localWishlist) setWishlist([...localWishlist])
     }else if(session.status === 'authenticated'){
       setWishlist([...session.data.user.wishlist])

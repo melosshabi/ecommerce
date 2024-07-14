@@ -89,7 +89,7 @@ export default function CartList({productsArray} : CartListProps) {
       }, 1000)
       setQuantityTimeout(timeout)
     }else if(session.status === 'unauthenticated'){
-      const localCart: CartObject[] = JSON.parse(localStorage.getItem('localCart') as string)
+      const localCart: CartObject[] = JSON.parse(window?.localStorage.getItem('localCart') as string)
       if(action === quantityActions.inc){
         localCart.forEach(product => {
           if(product.productDocId === productDocId){
@@ -103,7 +103,7 @@ export default function CartList({productsArray} : CartListProps) {
           }
         })
       }
-      localStorage.setItem('localCart', JSON.stringify(localCart))
+      window?.localStorage.setItem('localCart', JSON.stringify(localCart))
     }
   }
   return (

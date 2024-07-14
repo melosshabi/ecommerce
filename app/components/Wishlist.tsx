@@ -9,7 +9,6 @@ import { useSession } from 'next-auth/react'
 export default function Wishlist({productsArray, userDocId}:WishlistProps) {
     const [wishlistItems, setWishlistItems] = useState<Array<WishlistItem>>([])
     const [reqPending, setReqPending] = useState<boolean>(true)
-    const session = useSession()
     useEffect(() =>{
         if(productsArray.length === 0 ) {
           setReqPending(false)

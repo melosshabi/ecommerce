@@ -17,7 +17,7 @@ export default async function Home() {
       <div className="products">
         {
           products.map((product, index) => (
-            <React.Fragment>
+            <React.Fragment key={index}>
               {/* @ts-ignore */}
               <Product productData={{...product._doc, index}}/>
             </React.Fragment>

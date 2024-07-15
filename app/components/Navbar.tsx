@@ -65,7 +65,8 @@ export default function Navbar() {
     document.querySelector('.mobile-sidebar')?.classList.toggle('active-nav-mobile-sidebar')
     document.querySelector('.black-div')?.classList.toggle('active-black-div')
   }
-  const localCart: CartObject[] = JSON.parse(window?.localStorage?.getItem('localCart') as string)
+  let localCart: CartObject[] = []
+  if (typeof window !== 'undefined') localCart = JSON.parse(localStorage.getItem('localCart') as string)
   return (
     <nav className='navbar'>
         <abbr title="Home">

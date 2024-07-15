@@ -21,16 +21,8 @@ const productReviewSchema = new Schema({
         maxLength:[500, "review-too-long"],
         required:false
     },
-    datePosted:{
-        type:Date,
-        required:false,
-        default:() => Date.now()
-    },
-    dateEdited:{
-        type:Date,
-        required:false,
-        default:() => Date.now()
-    }
+}, {
+    timestamps:true
 })
 
 const productReviewModel = mongoose.models.ProductReview || mongoose.model("ProductReview", productReviewSchema)

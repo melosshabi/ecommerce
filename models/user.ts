@@ -45,16 +45,9 @@ const userSchema = new Schema({
         required:false,
         default:() => []
     },
-    dateAccountCreated:{
-        type:Date,
-        required:false,
-        default: () => Date.now()
-    },
-    dateAccountUpdated:{
-        type:Date,
-        required:false,
-        default: () => Date.now()
-    }
+
+}, {
+    timestamps:true
 })
 
 const userModel = mongoose.models.User || mongoose.model("User", userSchema)

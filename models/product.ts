@@ -48,6 +48,8 @@ const productSchema = new Schema({
         required:false,
         default:() => Date.now()
     }
+}, {
+    timestamps:true
 })
 
 const productModel = mongoose.models.Product || mongoose.model("Product", productSchema)

@@ -21,8 +21,8 @@ export default function ProductDetails() {
   let localStorageCart = []
   let localStorageWishlist = []
   if (typeof window !== 'undefined'){
-    localStorageCart = JSON.parse(window?.localStorage.getItem('localCart') as string)
-    localStorageWishlist = JSON.parse(window?.localStorage.getItem('localWishList') as string)
+    localStorageCart = JSON.parse(localStorage.getItem('localCart') as string)
+    localStorageWishlist = JSON.parse(localStorage.getItem('localWishList') as string)
   }
   // This variable holds the url of the large image that is displayed on the right side of the image sidebar
   const [activeImage, setActiveImage] = useState<string>("")

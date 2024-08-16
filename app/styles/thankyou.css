@@ -1,0 +1,39 @@
+.thank-you-wrapper{
+    height: 90dvh;
+    margin-top: 10dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.thank-you-wrapper h1{
+    font-size: 3em;
+    margin:2% 0;
+}
+.home-link{
+    margin:1% 0;
+    color:var(--orange);
+    transition: all 150ms linear;
+}
+.home-link:hover{
+    color:var(--darkerOrange)
+}
+/* iPhone 14 Pro Max */
+@media screen and (max-width:430px) and (max-height:932px){
+    .thank-you-wrapper h1{
+        text-align: center;
+    }
+}
+/* iPhone 12/13 Mini */
+@media screen and (max-width:375px) and (max-height:812px){
+    .thank-you-wrapper h1{
+        font-size: 2em;
+    }
+}
+/* S21FE */
+@media screen and (max-width:360px) and (max-height:800px){
+    .thank-you-wrapper p{
+        text-align: center;
+        margin:5px 0;
+    }
+}

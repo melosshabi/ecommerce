@@ -3,12 +3,12 @@ import { ObjectId } from "mongodb"
 import { NextResponse } from "next/server"
 
 export async function GET(req:Request){
-    const {searchParams} = new URL(req.url)
-
-        if(!searchParams.get('_id')) {
+        const {searchParams} = new URL(req.url)
+        const _id = searchParams.get('_id')
+        if(!_id) {
             return NextResponse.json({errorMessage:"An ID is required", errorCode:'no-id'}, {status:400})
         }
-        const product = await productModel.findOne({_id:new ObjectId(searchParams.get('_id') as string)})
+        const product = await productModel.findOne({_id})
         if(product){    
             return NextResponse.json(product)
         }

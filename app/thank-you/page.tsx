@@ -1,12 +1,15 @@
 "use client"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import '../styles/thankyou.css'
 
 export default function ThankYouPage(){
     const router = useRouter()
     const session = useSession()
+    const [seconds, setSeconds] = useState(5)
     useEffect(() => {
+        // if(!localStorage.getItem('stripeSessionId')) router.push('/')
         localStorage.removeItem('localCart')
         // The finish order API route clears the cart on the database and creates a new document in the orders collection
         async function finishOrder(){
@@ -33,16 +36,22 @@ export default function ThankYouPage(){
                 }else{
                     localOrders = [...localOrders, ...data.orders]
                     localStorage.setItem("localOrders", JSON.stringify(localOrders))
-                    console.log(localOrders)
                 }
             }
         }
         finishOrder()
-        setTimeout(() => router.push('/'), 5000)
-    }, [])
+        const secondsInterval = setInterval(() => setSeconds(prev => prev -= 1), 1000)
+        setTimeout(() => {
+            clearInterval(secondsInterval)
+            router.push('/')
+        }, 5000)
+        }, [])
     return (
-        <div>
-            <p>Thank you for your order</p>  
+        <div className="thank-you-wrapper">
+            <h1>Thank you for your order!</h1>
+            <p>Your order has been placed and is being processed.</p> 
+            <p>Returning to home page in: {seconds}</p>
+            <a className="home-link" href="/">Back to Homepage</a>
         </div>
     )
 }

@@ -4,7 +4,7 @@ import Image from 'next/image'
 import logo from '../images/logo.png'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import navbarCart from '../images/navbar-cart.png'
 import updateCartListOrWishlist from '@/lib/updateUserCartOrWishlist'
 import '../styles/navbar.css'
@@ -16,8 +16,9 @@ enum listToUpdateEnum {
 export default function Navbar() {
   const session = useSession()
   console.log(session)
+  const path = usePathname()
   useEffect(() => {
-    localStorage.removeItem('stripeSessionId')
+    if(path !== "/thank-you") localStorage.removeItem('stripeSessionId')
     const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
     const localCart = JSON.parse(localStorage.getItem('localCart') as string)
     if(session.status === 'authenticated' && localWishList){

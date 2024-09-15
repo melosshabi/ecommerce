@@ -9,8 +9,8 @@ import removeFromCart from '@/lib/removeFromCart'
 import addToCart from '@/lib/addToCart'
 import checkmark from '../images/order-page-checkmark.png'
 import ProductReviews from '../components/ProductReviews'
-import '../styles/productPage.css'
 import placeOrder from '@/lib/placeOrder'
+import '../styles/productPage.css'
 
 export default function ProductDetails() {
   

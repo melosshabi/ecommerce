@@ -30,6 +30,7 @@
     padding-right: 0;
     border-radius: 20px;
     margin-left: 10%;
+    /* background-color: light-dark(white, black); */
     transition: all 250ms;
 }
 .submit-search{

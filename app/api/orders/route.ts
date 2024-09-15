@@ -9,7 +9,6 @@ import Stripe from 'stripe'
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!)
 // The function below creates a new order document
 export async function POST(req:NextRequest){
-    const serverSession = await getServerSession(nextAuthOptions)
     // The products the user wants to order
     const cartProducts: CartProduct[] = await req.json()
     try{

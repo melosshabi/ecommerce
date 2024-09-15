@@ -1,6 +1,5 @@
 .product-page{
     width: 100dvw;
-    height: 100vh;
     padding-bottom: 50px;
     margin-top: 10dvh;
     background-color: var(--white);
@@ -31,7 +30,7 @@
     background-color: white;
     box-shadow: 0 0 5px black;
     width: 90%;
-    height: 90%;
+    height: 70dvh;
     border-radius: 8px;
     padding:20px;
     margin-top: 2%;
@@ -68,7 +67,6 @@
     justify-content: space-between;
 }
 .large-image-wrapper{
-    min-height: 100%;
     margin-left: 5dvw;
     background-color: var(--white);
     border-radius: 8px;
@@ -484,6 +482,7 @@
 /* iPad Pro 12.9 inch Portrait*/
 @media screen and (max-width:1024px) and (max-height:1366px){
     .product-details{
+        /* width: 50dvw; */
         flex-direction: column;
         justify-content: space-around;
         padding:0;
@@ -526,14 +525,19 @@
     }
 }
 /* iPad Mini Landscape */
-@media screen and (max-width:1024px){
+@media screen and (max-width:1024px) and (max-height:768px){
     .product-details{
-        height: 100dvh;
-        width: 100dvw;
-        margin:0;
+        height: 95dvh;
+        width: 90dvw;
+        margin-top: 2%;
+        padding-bottom: 50px;
     }
     .product-images-wrapper{
         margin-top: 60px;
+    }
+    .large-image{
+        width: 250px;
+        height: 250px;
     }
 }
 /* iPad Pro 11 inch */
@@ -566,10 +570,12 @@
 /* iPhone 14 Pro Max */
 @media screen and (max-width:430px) and (max-height:932px){
     .product-details{
-        padding:10px 0 50px 0;
+        height: 100dvh;
     }
     .product-images-wrapper{
+        width: 100%;
         flex-direction: column-reverse;
+        margin-top: 0;
     }
     .images-sidebar{
         flex-direction: row;
@@ -580,8 +586,8 @@
         margin:50px 0;
     }
     .large-image{
-        width: 250px;
-        height: 250px;
+        width: 200px;
+        height: 200px;
     }
     .current-product-btns-wrapper{
         min-width: 100dvw;
@@ -632,7 +638,6 @@
     }
     .product-images-wrapper{
         width: 100%;
-        margin-top: 20dvh;
     }
     .large-image-wrapper{
         margin-bottom: 10px;

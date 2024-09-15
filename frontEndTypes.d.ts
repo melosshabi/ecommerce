@@ -59,11 +59,6 @@ interface CartObject extends WishlistObject {
 interface UserProduct extends Product{
     datePosted:Date
 }
-// Order Details type
-type OrderDetails = {
-    order:orderData,
-    product:Product
-}
 type ProductLink = {
     productId:string
 }

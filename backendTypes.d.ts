@@ -19,3 +19,10 @@ type BackendCartProduct = {
 type FinishOrderData = {
     stripeSessionId:string
 }
+type OrderData = {
+    clientDocId:string | null,
+    productDocId:string,
+    desiredQuantity:number,
+    productPrice:number,
+    totalPrice:number
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Navbar from './components/Navbar'
-import './styles/app.css'
+// import './styles/app.css'
+// import './styles/output.css'
 import Provider from './components/Provider'
 
 export const metadata: Metadata = {
@@ -17,9 +18,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className='overflow-x-hidden'>
       <Provider>
-        <body>
+        <body className='font-work-sans overflow-x-hidden'>
           <Navbar/>
           {children}
         </body>

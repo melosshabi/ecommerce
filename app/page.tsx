@@ -1,7 +1,6 @@
 import getProducts from '@/lib/getProducts'
 import ImageSlider from './components/ImageSlider'
 import Product from './components/Product'
-import './styles/app.css'
 import React from 'react'
 
 export const revalidate = 10

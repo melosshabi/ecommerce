@@ -43,7 +43,9 @@ export default function Navbar() {
   },[session])
   function toggleNavMenu() {
     const navMenu = document.querySelector('.nav-menu') as HTMLDivElement
-    navMenu.classList.toggle("h-fit")
+    // navMenu.classList.toggle("h-auto")
+    navMenu.classList.toggle("max-h-0")
+    navMenu.classList.toggle("max-h-[25dvh]")
     // if(session.status === 'authenticated') navMenu.classList.toggle('active-nav-menu')
     // else if(session.status === "unauthenticated") navMenu.classList.toggle('active-unauth-nav-menu')
   }
@@ -72,11 +74,11 @@ export default function Navbar() {
     <nav className='fixed top-0 left-0 w-[100dvw] h-[10dvh] shadow-[0_0_5px_black] bg-white flex justify-between items-center z-[2]'>
         <abbr title="Home">
             <Link href="/">
-                <Image src={logo} alt="Logo" width={90} height={90} className='w-16 h-16'/>
+                <Image src={logo} alt="Logo" width={90} height={90} className='w-16 h-16 md:w-20 md:h-20'/>
             </Link>
         </abbr>
         {/* Searchbar */}
-        <div className="w-[50%] self-center flex items-center justify-between border-[1px] border-gray rounded-[20px] pl-4 transition-all duration-[250] focus-within:border-[1px] focus-within:border-orange">
+        <div className="w-[50%] self-center flex items-center justify-between border-[1px] border-gray rounded-[20px] pl-4 transition-all duration-[250] focus-within:border-[1px] focus-within:border-orange md:w-[40%] md:ml-11 xl:w-[30%] 2xl:ml-[10%]">
           <input 
           value={serachInputVal}
           onChange={e => setInputSearchVal(e.target.value)}
@@ -98,7 +100,7 @@ export default function Navbar() {
           <div className="relative">
             {session.status === "authenticated" && session.data?.user?.cart.length > 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{session.data?.user?.cart.length}</div>}
             {session.status === "unauthenticated" && (localCart && localCart.length) > 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{localCart.length}</div>}
-            <Link href="/userProfile/cart" className="h-fit rounded-none bg-none p-0 mt-10 no-underline transition-all duration-[250ms]">
+            <Link href="/userProfile/cart" className="h-fit rounded-none bg-none p-0 mt-10">
               <Image className='nav-images max-w-10 max-h-10 inline-block' src={navbarCart} width={50} height={50} alt="Cart icon"/>
             </Link>
           </div>
@@ -107,7 +109,7 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               </svg>
           </button>
-          <div className="nav-menu h-0 w-[15dvw] absolute left-[22%] top-[8dvh] bg-white shadow-[0_0_5px_black] rounded-lg overflow-hidden transition-all duration-300 lg:w-[11dvw] lg:left-[21%] xl:left-[29%] xl:w-[8dvw] 2xl:w-[7dvw] 2xl:left-[27%] widescreen:left-[24%] widescreen:w-[6dvw]">
+          <div className="nav-menu max-h-0 w-[15dvw] absolute left-[22%] top-[8dvh] bg-white shadow-[0_0_5px_black] rounded-lg overflow-hidden grid grid-rows-1 transition-all duration-300 lg:w-[11dvw] lg:left-[21%] xl:left-[29%] xl:w-[8dvw] 2xl:w-[7dvw] 2xl:left-[27%] widescreen:left-[24%] widescreen:w-[6dvw]">
             <ul>
               {session.status === "authenticated" && <li><Link onClick={toggleNavMenu} href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>}
               <li><Link onClick={toggleNavMenu} href="/userProfile/cart" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Cart</Link></li>

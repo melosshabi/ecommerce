@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import Navbar from './components/Navbar'
-// import './styles/app.css'
-// import './styles/output.css'
+import './styles/app.css'
 import Provider from './components/Provider'
 
 export const metadata: Metadata = {

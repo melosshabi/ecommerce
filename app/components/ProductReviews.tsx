@@ -183,7 +183,7 @@ export default function ProductReviews({productId}: {productId:string}) {
             }
             return (
                 <div className="review w-[95dvw] m-auto my-8 flex flex-col bg-white rounded-lg shadow-[0_0_5px_black] p-4 lg:w-[70%] 2xl:w-[50%]" key={index}>
-                    <div className=' flex flex-row-reverse justify-between'>
+                    <div className={`flex flex-row-reverse ${review.posterDocId !== session.data?.user.userDocId ? 'justify-end' : 'justify-between'}`}>
                     {review.posterDocId === session?.data?.user?.userDocId &&
                         <abbr title="Edit Review">
                             <svg onClick={() => handlePencilClick()} className='w-8 rounded-md cursor-pointer' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">

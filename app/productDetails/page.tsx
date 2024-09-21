@@ -10,7 +10,6 @@ import addToCart from '@/lib/addToCart'
 import checkmark from '../images/order-page-checkmark.png'
 import ProductReviews from '../components/ProductReviews'
 import placeOrder from '@/lib/placeOrder'
-// import '../styles/productPage.css'
 
 export default function ProductDetails() {
   
@@ -142,10 +141,10 @@ export default function ProductDetails() {
       </div>
 
       {/* Product Details */}
-      <div className="bg-white shadow-[0_0_5px_black] w-full h-fit mt-[10dvh] rounded-lg p-5 flex flex-col items-center xl:flex-row xl:w-[90dvw] xl:h-[80dvh] xl:mt-[12dvh] widescreen:justify-around">
+      <div className="bg-white shadow-[0_0_5px_black] w-full min-h-fit h-fit mt-[10dvh] rounded-lg p-5 flex flex-col items-center xl:flex-row xl:w-[90dvw] xl:mt-[12dvh] widescreen:justify-around">
         {/* Images */}
         {/* Wrapper */}
-          <div className="w-full flex-col-reverse flex items-center justify-between mb-6 lg:w-fit">
+          <div className="w-full h-fit flex-col-reverse flex items-center justify-between mb-6 lg:w-fit">
             {/* Sidebar */}
             <div className="w-fit h-fit flex flex-row rounded-lg lg:justify-center lg:w-[90%] lg:ml-12">
               {product && 

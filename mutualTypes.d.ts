@@ -23,8 +23,8 @@ type Review = {
     posterProfilePicture:string,
     rating:string,
     reviewText:string,
-    datePosted:string,
-    dateEdited:string,
+    createdAt:string,
+    updatedAt:string,
 }
 type OrderData = {
     _id:string,

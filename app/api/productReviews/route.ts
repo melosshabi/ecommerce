@@ -23,8 +23,8 @@ export async function GET(req:Request){
             posterProfilePicture:dbUserData.profilePictureUrl,
             rating:reviews[index].rating,
             reviewText:reviews[index].reviewText,
-            datePosted:reviews[index].datePosted,
-            dateEdited:reviews[index].dateEdited
+            createdAt:reviews[index].createdAt,
+            updatedAt:reviews[index].updatedAt
         }
     })
     await Promise.all(userPromises)
@@ -37,7 +37,7 @@ export async function POST(req:Request){
         return NextResponse.json({error:"You need to sign in before posting reviews", errorCode:"unauthenticated"}, {status:400})
     }
     const data = await req.json()
-    const review = await productReviewModel.findOne({posterDocId:new ObjectId(session?.user.userDocId)})
+    const review = await productReviewModel.findOne({posterDocId:new ObjectId(session?.user.userDocId), productId:new ObjectId(data.productId)})
     if(review) return NextResponse.json({errMsg:"You can only post 1 review", errCode:"reached-review-limit"})
     if(!parseInt(data.rating as string)){
         return NextResponse.json({errorMessage:"Rating should be a number", errorCode:"invalid-rating-data"}, {status:400})

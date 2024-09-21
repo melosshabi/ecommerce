@@ -45,7 +45,7 @@ export default function Navbar() {
     const navMenu = document.querySelector('.nav-menu') as HTMLDivElement
     // navMenu.classList.toggle("h-auto")
     navMenu.classList.toggle("max-h-0")
-    navMenu.classList.toggle("max-h-[25dvh]")
+    navMenu.classList.toggle("max-h-[27dvh]")
     // if(session.status === 'authenticated') navMenu.classList.toggle('active-nav-menu')
     // else if(session.status === "unauthenticated") navMenu.classList.toggle('active-unauth-nav-menu')
   }
@@ -111,7 +111,7 @@ export default function Navbar() {
           </button>
           <div className="nav-menu max-h-0 w-[15dvw] absolute left-[22%] top-[8dvh] bg-white shadow-[0_0_5px_black] rounded-lg overflow-hidden grid grid-rows-1 transition-all duration-300 lg:w-[11dvw] lg:left-[21%] xl:left-[29%] xl:w-[8dvw] 2xl:w-[7dvw] 2xl:left-[27%] widescreen:left-[24%] widescreen:w-[6dvw]">
             <ul>
-              {session.status === "authenticated" && <li><Link onClick={toggleNavMenu} href="/userProfile/account" className='nav-menu-links'>My Profile</Link></li>}
+              {session.status === "authenticated" && <li><Link onClick={toggleNavMenu} href="/userProfile/account" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>My Profile</Link></li>}
               <li><Link onClick={toggleNavMenu} href="/userProfile/cart" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Cart</Link></li>
               <li><Link onClick={toggleNavMenu} href="/userProfile/wishlist" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Wishlist</Link></li>
               {session.status === "authenticated" && <li><Link onClick={toggleNavMenu} href="/postProduct" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Sell</Link></li>}

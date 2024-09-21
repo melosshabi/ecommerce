@@ -165,7 +165,7 @@ export default function ProductReviews({productId}: {productId:string}) {
                 </svg>
 
                 <textarea className="m-auto mt-6 rounded-lg bg-white shadow-[0_0_5px_black] h-[20dvh] w-[90dvw] block p-2 transition-all duration-200 focus:outline-none focus:shadow-[0_0_10px] focus:shadow-orange sm:w-[90%]" maxLength={500} placeholder='Your review...' value={reviewText} onChange={e => handleReviewChange(e)}/>
-                <p className="mt-2 sm:ml-8">0/500</p>
+                <p className="letter-count mt-2 sm:ml-8">0/500</p>
                 <p className='pt-6'>{reviewRes}</p>
                 <button disabled={btnDisabled} className='submit-review-btn block cursor-pointer text-white bg-orange border-none rounded-md py-3 px-4 text-[1.1em] mt-4 m-auto hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 hover:disabled:bg-orange'>{!reviewInProgress ? "Post Review"  : <ButtonLoader/>}</button>
             </form>

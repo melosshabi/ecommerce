@@ -3,9 +3,6 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import ButtonLoader from '../components/ButtonLoader'
-import Image from 'next/image'
-import decorationImg from '../images/decoration.svg'
-import '../styles/signup.css'
 
 export default function SignUp() {
 
@@ -88,36 +85,29 @@ export default function SignUp() {
   }
 
   return (
-    <div className='sign-up-page'>    
-      <div className="form-wrapper">
-        <div className='sign-up-decoration-img-wrapper'>
-          <Image className="sign-up-decoration-img" src={decorationImg} width={1500} height={1500} alt="Decoration image"/>
-        </div>
-        <div className='sign-up-form-wrapper'>
-        <form className="sign-up-form" onSubmit={e => handleSubmit(e)}>
-        <h2>Welcome!</h2>
-         {/* Inputs container is the parent element of all the divs with the class of 'inputs-wrappers='  */}
-            <div className="inputs-container" style={{display:'flex', flexDirection:'column', height:'fit-content'}}>
-              <div className='inputs-wrappers'>
-                <label>Username</label>
-                <input name="username" required type="text" placeholder="Username" className="sign-up-inputs username-input" value={formData.username} onChange={e => handleChange(e.target.name, e.target.value)}/>
+    <div className='mt-[10dvh]'>
+        <form className="w-full flex flex-col items-center" onSubmit={e => handleSubmit(e)}>
+        <h2 className='text-center pt-8 mb-8 text-[2em] font-medium'>Welcome!</h2>
+         {/* Inputs container is the parent element of all the divs with the class of 'inputs-wrappers' */}
+            <div className="flex flex-col items-center w-[100%] sm:w-[70%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]">
+              <div className='w-[80%] flex flex-col justify-center my-4'>
+                <label className='ml-1 mb-2'>Username</label>
+                <input className='border-black border-solid border-[1px] p-3 rounded-lg transition-all duration-100 focus:outline-none focus:shadow-orange focus:shadow-[0_0_5px]' name="username" required type="text" placeholder="Username" value={formData.username} onChange={e => handleChange(e.target.name, e.target.value)}/>
               </div>
 
-              <div className='inputs-wrappers'>
-                <label>Email</label>
-                <input name="email" required type="email" placeholder="Email" className="sign-up-inputs email-input" value={formData.email} onChange={e => handleChange(e.target.name, e.target.value)}/>
+              <div className='w-[80%] flex flex-col justify-center my-4'>
+                <label className='ml-1 mb-2'>Email</label>
+                <input className='border-black border-solid border-[1px] p-3 rounded-lg transition-all duration-100 focus:outline-none focus:shadow-orange focus:shadow-[0_0_5px]' name="email" required type="email" placeholder="Email" value={formData.email} onChange={e => handleChange(e.target.name, e.target.value)}/>
               </div>
 
-              <div className='inputs-wrappers'>
-                <label>Password</label>
-                <input name="password" required type="password" placeholder="Password" className='sign-up-inputs username-input' value={formData.password} onChange={e => handleChange(e.target.name, e.target.value)}/>
+              <div className='w-[80%] flex flex-col justify-center my-4'>
+                <label className='ml-1 mb-2'>Password</label>
+                <input className='border-black border-solid border-[1px] p-3 rounded-lg transition-all duration-100 focus:outline-none focus:shadow-orange focus:shadow-[0_0_5px]' name="password" required type="password" placeholder="Password" value={formData.password} onChange={e => handleChange(e.target.name, e.target.value)}/>
               </div>
               {error?.errorCode && <p className='error'>{error.errorMessage}</p>}
             </div>            
-          <button className='submit-sign-up-form-btn' disabled={authInProgress}>{!authInProgress ? 'Sign Up' : <ButtonLoader/>}</button>
+          <button className='bg-orange text-white text-[1.3em] py-2 px-12 mt-8 rounded-lg transition-all duration-200 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70' disabled={authInProgress}>{!authInProgress ? 'Sign Up' : <ButtonLoader/>}</button>
         </form>
-        </div>
-      </div>
     </div>
   )
 }

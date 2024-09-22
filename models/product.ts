@@ -43,11 +43,6 @@ const productSchema = new Schema({
         required:false,
         default: () => []
     },
-    datePosted:{
-        type:Date,
-        required:false,
-        default:() => Date.now()
-    }
 }, {
     timestamps:true
 })

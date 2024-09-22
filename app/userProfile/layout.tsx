@@ -2,7 +2,6 @@
 import React from 'react'
 import ProfilePageSidebar from '../components/ProfilePageSidebar'
 import { usePathname } from 'next/navigation'
-import '../styles/userProfile.css'
 
 export default function UserProfileLayout({children}: {children: React.ReactNode}) {
   const path = usePathname()

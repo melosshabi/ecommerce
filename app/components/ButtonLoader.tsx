@@ -3,6 +3,6 @@ import '../styles/buttonLoader.css'
 
 export default function ButtonLoader() {
   return (
-    <div className='loader'></div>
+    <div className='button-loader'></div>
   )
 }

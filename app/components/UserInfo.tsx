@@ -1,9 +1,11 @@
 import React, { ChangeEvent, useState } from 'react'
 import Image from 'next/image'
 import userIcon from '../images/user.png'
+import { useRouter } from 'next/navigation'
 
 export default function UserInfo({username, email, profilePictureUrl}:UserInfo) {
 
+  const router = useRouter()
   const [newUsername, setNewUsername] = useState<string>(username)
   const [newEmail, setNewEmail] = useState<string>(email)
   const [pictureFile, setPictureFile] = useState<any>(undefined)
@@ -60,35 +62,37 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
     const response = await req.json()
     if(response.messageCode === "account-updated"){
       setUpdateInProgress(false)
-      const alert = document.querySelector('.account-updated-alert')
-      alert?.classList.add('active-updated-alert')
-      setTimeout(() => alert?.classList.remove('active-updated-alert'), 5000)
-      window.location.reload()
+      const alert = document.querySelector('.acc-updated-alert') as HTMLDivElement
+      alert.classList.add('bottom-4')
+      alert.classList.remove('bottom-[-10dvh]')
+      setTimeout(() => {
+        alert.classList.remove('bottom-4')
+        alert.classList.add('bottom-[-10dvh]')
+        setTimeout(() => router.push('/api/auth/signin'), 1000)
+      }, 3000)
     }
   }
 
   return (
-    <div className='user-info-wrapper'>
-
-      <div className="user-info-inputs-wrapper">
-
-        <div className='user-info-label-wrappers'>
-          <label>Username</label>
-          <input className='user-info-inputs' value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
+    <div className='mt-5'>
+      <div>
+        <div className='my-4 flex flex-col w-[90%] m-auto'>
+          <label className='my-2'>Username</label>
+          <input className='rounded-md p-2 border transition-all duration-100 focus:border-orange' style={{outline:'none'}} value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
         </div>
 
-        <div className='user-info-label-wrappers'>
-        <label>Email</label>
-          <input className='user-info-inputs' value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
+        <div className='my-4 flex flex-col w-[90%] m-auto'>
+        <label className='my-2'>Email</label>
+          <input className='rounded-md p-2 border transition-all duration-100 focus:border-orange' style={{outline:'none'}} value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
         </div>
       </div>
       {
-        !localPictureUrl ? <Image className="profilePicture" width={100} height={100} src={profilePictureUrl ? profilePictureUrl : userIcon} alt="Profile picture of the signed in user"/>
-        : <Image width={100} height={100} className="profilePicture" src={localPictureUrl} alt="Preview of the newly selected picture"/>
+        !localPictureUrl ? <Image className="m-auto my-6 block" width={100} height={100} src={profilePictureUrl ? profilePictureUrl : userIcon} alt="Profile picture of the signed in user"/>
+        : <Image width={100} height={100} className="m-auto my-6 block" src={localPictureUrl} alt="Preview of the newly selected picture"/>
       }
       <input onChange={e => handleFileChange(e)} id="file-input" type="file" style={{display:'none'}} accept="image/*"/>
-      <button className="select-new-picture-btn" onClick={openImagePicker}>Select a new picture</button>
-      <button className='update-info-btn' disabled={updateInProgress} onClick={handleSubmit}>{!updateInProgress ? "Update" : "Updating"}</button>
+      <button className="block m-auto my-4 bg-orange text-white rounded-lg text-[1.2em] py-2 px-4 transition-all duration-200 hover:bg-darkerOrange" onClick={openImagePicker}>Select a new picture</button>
+      <button className='block m-auto my-4 bg-orange text-white rounded-lg text-[1.2em] py-2 px-4 transition-all duration-200 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:bg-orange disabled:opacity-70' disabled={updateInProgress} onClick={handleSubmit}>{!updateInProgress ? "Save" : "Saving"}</button>
     </div>
   )
 }

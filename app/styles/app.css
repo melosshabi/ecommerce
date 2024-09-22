@@ -18,14 +18,14 @@
 }
 @layer components {
     /* Select previous siblings on hover */
-.stars:has(~ .stars:is(:hover, :focus-visible)){
-    /* fill:var(--lightOrange) */
-    fill:rgb(236, 154, 95)
-}
-.r-stars-active:has(~ .r-stars-active:is(:hover, :focus-visible)){
-    /* fill:var(--lightOrange) */
-    fill:rgb(236, 154, 95)
-}
+    .stars:has(~ .stars:is(:hover, :focus-visible)){
+        /* fill:var(--lightOrange) */
+        fill:rgb(236, 154, 95)
+    }
+    .r-stars-active:has(~ .r-stars-active:is(:hover, :focus-visible)){
+        /* fill:var(--lightOrange) */
+        fill:rgb(236, 154, 95)
+    }
 }
 *{
     padding:0;

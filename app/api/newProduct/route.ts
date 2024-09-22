@@ -14,7 +14,7 @@ cloudinary.v2.config({
 })
 
 export async function POST(req:Request){
-    const session = getServerSession(nextAuthOptions)
+    const session = await getServerSession(nextAuthOptions)
     if(!session){
         return NextResponse.json({errMessage:"You need to sign in before posting a product", errCode:"unauthenticated"}, {status:400})
     }
@@ -42,7 +42,7 @@ export async function POST(req:Request){
     // Uploading pictures to cloudinary
     for(let i = 0; i < pictures.length; i++){
         if(pictures[i].valueOf() !== 'undefined'){
-            const path = `/tmp/${pictures[i].name}`
+            const path = `${__dirname}/${pictures[i].name}`
             const bytes = await pictures[i].arrayBuffer()
             const buffer = Buffer.from(bytes)
             await writeFile(path, buffer)
@@ -57,7 +57,7 @@ export async function POST(req:Request){
        if(noBrand === 'true'){
          const productDoc = await productModel.create({
              posterDocId: userDocId,
-            //  posterUsername:se,
+             posterUsername:session.user.name,
              productName,
              noBrand,
              manufacturer,
@@ -72,6 +72,7 @@ export async function POST(req:Request){
        }else{
        const productDoc = await productModel.create({
             posterDocId: userDocId,
+            posterUsername:session.user.name,
             productName,
             brandName,
             noBrand,
@@ -87,6 +88,7 @@ export async function POST(req:Request){
     }
 
     }catch(err:any){
+        console.log(err)
         if(err._message === 'Product validation failed'){
             return NextResponse.json({
                 errorMessage:"Please fill out the form",

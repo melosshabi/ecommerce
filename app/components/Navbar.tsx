@@ -143,8 +143,8 @@ export default function Navbar() {
             {
               session.status === 'unauthenticated' &&
               <ul className="w-full flex justify-around mb-5">
-                <li><Link href="/api/auth/signin" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign In</Link></li>
-                <li><Link href="/signup" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign Up</Link></li>
+                <li><Link onClick={() => signOut()} href="/api/auth/signin" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign In</Link></li>
+                <li><Link onClick={() => signOut()} href="/signup" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign Up</Link></li>
               </ul>
             }
         </div>

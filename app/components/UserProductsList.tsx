@@ -91,7 +91,7 @@ export default function UserProductsList() {
       <Loader displayLoader={reqPending}/>
         {
           userProducts.map((product, index) => {
-            const datePosted = new Date(product.datePosted)
+            const datePosted = new Date(product.createdAt)
             const year = datePosted.getFullYear()
             const month = parseMonth(datePosted.getMonth())
             const day = datePosted.getDate()

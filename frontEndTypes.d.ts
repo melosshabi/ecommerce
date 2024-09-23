@@ -62,3 +62,4 @@ interface UserProduct extends Product{
 type ProductLink = {
     productId:string
 }
+type HTMLSVGElement = HTMLElement & SVGElement

@@ -8,8 +8,8 @@ export default function UserProfileLayout({children}: {children: React.ReactNode
   const splitPath = path.split('/')
 
   return (
-    <div className='profile-page'>
-        <div className="profile-page-sidebar-details-wrapper">
+    // <div className='md:mt-[10dvh]'>
+        <div className=" mt-[10dvh] h-[90dvh] lg:flex lg:justify-around lg:items-center">
           <ProfilePageSidebar activePage={splitPath[2] === 'account' ? 'account' : 
             splitPath[2] === 'cart' ? 'cart' : 
             splitPath[2] === 'wishlist' ? 'wishlist' : 
@@ -20,6 +20,6 @@ export default function UserProfileLayout({children}: {children: React.ReactNode
               children
             }
         </div>
-    </div>
+    // </div>
   )
 }

@@ -26,6 +26,18 @@
         /* fill:var(--lightOrange) */
         fill:rgb(236, 154, 95)
     }
+    /* The 2 rules below remove the arrow icons from inputs with the type of number */
+    /* For Firefox */
+    .quantity-input[type=number]{
+        -moz-appearance: textfield;
+    }
+    /* For Other Browsers */
+    .quantity-input::-webkit-outer-spin-button,
+    .quantity-input::-webkit-inner-spin-button{
+        appearance: none;
+        -webkit-appearance: none;
+        margin:0;
+    }
 }
 *{
     padding:0;

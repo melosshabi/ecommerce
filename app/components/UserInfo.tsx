@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from 'react'
 import Image from 'next/image'
 import userIcon from '../images/user.png'
+import checkmark from '../images/checkmark.svg'
 import { useRouter } from 'next/navigation'
 
 export default function UserInfo({username, email, profilePictureUrl}:UserInfo) {
@@ -74,8 +75,8 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
   }
 
   return (
-    <div className='mt-5'>
-      <div>
+    <div className='mt-5 overflow-hidden relative rounded-lg shadow-[0_0_5px_black] lg:w-[60dvw] lg:m-0'>
+      <div className='sm:w-[60dvw] sm:m-auto md:w-[50dvw] lg:w-[30dvw]'>
         <div className='my-4 flex flex-col w-[90%] m-auto'>
           <label className='my-2'>Username</label>
           <input className='rounded-md p-2 border transition-all duration-100 focus:border-orange' style={{outline:'none'}} value={newUsername} onChange={e => setNewUsername(e.target.value)}/>
@@ -93,6 +94,9 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
       <input onChange={e => handleFileChange(e)} id="file-input" type="file" style={{display:'none'}} accept="image/*"/>
       <button className="block m-auto my-4 bg-orange text-white rounded-lg text-[1.2em] py-2 px-4 transition-all duration-200 hover:bg-darkerOrange" onClick={openImagePicker}>Select a new picture</button>
       <button className='block m-auto my-4 bg-orange text-white rounded-lg text-[1.2em] py-2 px-4 transition-all duration-200 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:bg-orange disabled:opacity-70' disabled={updateInProgress} onClick={handleSubmit}>{!updateInProgress ? "Save" : "Saving"}</button>
+      <div className="acc-updated-alert w-[85dvw] flex justify-center items-center absolute left-[7.5dvw] bottom-[-10dvh] bg-white rounded-lg p-2 shadow-[0_0_5px_black] transition-all duration-300 sm:w-[60dvw] sm:left-[20dvw] md:w-[50dvw] md:left-[25dvw] lg:w-[30dvw] lg:left-[15dvw] 2xl:w-[20dvw] 2xl:left-[20dvw]">
+      <Image src={checkmark} className="w-8" alt="Green checkmark icon"/><p className='ml-2'>Account Updated Sucessfully</p>
+      </div>
     </div>
   )
 }

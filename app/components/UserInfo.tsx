@@ -77,6 +77,7 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
   return (
     <div className='mt-5 overflow-hidden relative rounded-lg shadow-[0_0_5px_black] lg:w-[60dvw] lg:m-0'>
       <div className='sm:w-[60dvw] sm:m-auto md:w-[50dvw] lg:w-[30dvw]'>
+        <h2 className="font-medium text-3xl my-4 text-center">Account Information</h2>
         <div className='my-4 flex flex-col w-[90%] m-auto'>
           <label className='my-2'>Username</label>
           <input className='rounded-md p-2 border transition-all duration-100 focus:border-orange' style={{outline:'none'}} value={newUsername} onChange={e => setNewUsername(e.target.value)}/>

@@ -6,6 +6,7 @@ import { unlink, writeFile } from "fs/promises"
 import userModel from "@/models/user"
 import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
+import path from "path"
 
 cloudinary.v2.config({
     cloud_name:process.env.CLOUD_NAME,
@@ -42,13 +43,13 @@ export async function POST(req:Request){
     // Uploading pictures to cloudinary
     for(let i = 0; i < pictures.length; i++){
         if(pictures[i].valueOf() !== 'undefined'){
-            const path = `${__dirname}/${pictures[i].name}`
+            const tempPath = path.join(process.cwd(), `${pictures[i].name}`)
             const bytes = await pictures[i].arrayBuffer()
             const buffer = Buffer.from(bytes)
-            await writeFile(path, buffer)
-            const cloudinaryRes = await cloudinary.v2.uploader.upload(path, {folder:'ecommerce/products', public_id: `Product${new Date()}`})
+            await writeFile(tempPath, buffer)
+            const cloudinaryRes = await cloudinary.v2.uploader.upload(tempPath, {folder:'ecommerce/products', public_id: `Product${new Date()}`})
             picturesUrls.push(cloudinaryRes.url)
-            await unlink(path)
+            await unlink(tempPath)
         }
     }
 

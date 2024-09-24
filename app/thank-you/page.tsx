@@ -2,14 +2,13 @@
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import '../styles/thankyou.css'
 
 export default function ThankYouPage(){
     const router = useRouter()
     const session = useSession()
     const [seconds, setSeconds] = useState(5)
     useEffect(() => {
-        // if(!localStorage.getItem('stripeSessionId')) router.push('/')
+        if(!localStorage.getItem('stripeSessionId')) router.push('/')
         localStorage.removeItem('localCart')
         // The finish order API route clears the cart on the database and creates a new document in the orders collection
         async function finishOrder(){
@@ -47,11 +46,11 @@ export default function ThankYouPage(){
         }, 5000)
         }, [])
     return (
-        <div className="thank-you-wrapper">
-            <h1>Thank you for your order!</h1>
+        <div className="h-[90dvh] mt-[10dvh] flex items-center justify-center flex-col text-center">
+            <h1 className="text-[1.8em]">Thank you for your order!</h1>
             <p>Your order has been placed and is being processed.</p> 
             <p>Returning to home page in: {seconds}</p>
-            <a className="home-link" href="/">Back to Homepage</a>
+            <a className="text-orange font-medium mt-2 text-lg transition-all duration-100 hover:underline hover:text-darkerOrange" href="/">Back to Homepage</a>
         </div>
     )
 }

@@ -43,7 +43,8 @@ export async function POST(req:Request){
     // Uploading pictures to cloudinary
     for(let i = 0; i < pictures.length; i++){
         if(pictures[i].valueOf() !== 'undefined'){
-            const tempPath = path.join(process.cwd(), `/tmp/${pictures[i].name}`)
+            const rootDir = process.cwd()
+            const tempPath = path.join(rootDir, '/',`${pictures[i].name}`)
             const bytes = await pictures[i].arrayBuffer()
             const buffer = Buffer.from(bytes)
             await writeFile(tempPath, buffer)

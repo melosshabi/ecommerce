@@ -65,21 +65,26 @@ export default function PostProduct() {
         formData.set('picture1', pictures[0])
         formData.set('picture2', pictures[1])
         formData.set('picture3', pictures[2])
-
-        const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/newProduct`, {
-            method:"POST",
-            body:formData
-        })
-        const res = await req.json()
-        if(res.errorCode === 'incomplete-form'){
-            setError(res.errorMessage)
+        try{
+            const req = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/newProduct`, {
+                method:"POST",
+                body:formData
+            })
+            const res = await req.json()
+            if(res.errorCode === 'incomplete-form'){
+                setError(res.errorMessage)
+                setUploadInProgress(false)
+            }
+            if(res.messageCode === 'product-created'){
+                document.querySelector('.product-created-alert')?.classList.remove('right-[-100%]')
+                document.querySelector('.product-created-alert')?.classList.add('right-[10%]')
+                setTimeout(() => router.push('/'), 3000)
+            }
+        }catch(err){
+            console.log(err)
             setUploadInProgress(false)
         }
-        if(res.messageCode === 'product-created'){
-            document.querySelector('.product-created-alert')?.classList.remove('right-[-100%]')
-            document.querySelector('.product-created-alert')?.classList.add('right-[10%]')
-            setTimeout(() => router.push('/'), 3000)
-        }
+        
     }
 return (
     <div className='mt-[10dvh] pt-4 px-2 pb-2 relative'>
@@ -115,7 +120,7 @@ return (
                 <div className="my-6 flex flex-col w-[95%] items-start sm:items-center">
                     <label>Pictures<span className='ml-1'>(1-3)</span><span className='text-red-600'>*</span></label>
                     <input required type="file" multiple className='pictures-input hidden' accept='image/*' onChange={e => handleFileInputChange(e)}/>
-                    <button className='bg-orange text-white py-1 px-4 my-5 rounded-lg transition-all duration-200 hover:bg-darkerOrange' onClick={openImagePicker}>Browse</button>
+                    <button className='bg-orange text-white py-1 px-4 my-5 rounded-lg transition-all duration-200 hover:bg-darkerOrange' type='button' onClick={openImagePicker}>Browse</button>
                     <span>{pictures?.length === undefined ? '0 Pictures Selected' : pictures.length === 1 ? '1 Picture Selected': `${pictures.length} Pictures Selected`}</span>
                 </div>
                 {error && <span className='text-red-600 text-[.9em]'>{error}</span>}

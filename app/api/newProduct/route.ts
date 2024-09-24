@@ -44,17 +44,18 @@ export async function POST(req:Request){
     // Uploading pictures to cloudinary
     for(let i = 0; i < pictures.length; i++){
         if(pictures[i].valueOf() !== 'undefined'){
-            if(!fs.existsSync('tmp')){
-                fs.mkdirSync('tmp')
-            }
-            const rootDir = process.cwd()
-            const tempPath = path.join(rootDir, '/tmp',`${pictures[i].name}`)
             const bytes = await pictures[i].arrayBuffer()
             const buffer = Buffer.from(bytes)
-            await writeFile(tempPath, buffer)
-            const cloudinaryRes = await cloudinary.v2.uploader.upload(tempPath, {folder:'ecommerce/products', public_id: `Product${new Date()}`})
+            const cloudinaryRes: any = await new Promise((resolve, reject) => {
+                cloudinary.v2.uploader.upload_stream({folder:'ecommerce/products', public_id:`Product${new Date()}`}, (err, res) => {
+                    if(err){
+                        console.log("ERR: ", err)
+                        reject(err)
+                    }
+                    return resolve(res)
+                }).end(buffer)
+            })
             picturesUrls.push(cloudinaryRes.url)
-            await unlink(tempPath)
         }
     }
 

@@ -3,6 +3,7 @@ import productModel from "@/models/product"
 import { NextResponse } from "next/server"
 import cloudinary from 'cloudinary'
 import { unlink, writeFile } from "fs/promises"
+import fs from 'fs'
 import userModel from "@/models/user"
 import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
@@ -43,8 +44,11 @@ export async function POST(req:Request){
     // Uploading pictures to cloudinary
     for(let i = 0; i < pictures.length; i++){
         if(pictures[i].valueOf() !== 'undefined'){
+            if(!fs.existsSync('tmp')){
+                fs.mkdirSync('tmp')
+            }
             const rootDir = process.cwd()
-            const tempPath = path.join(rootDir, '/',`${pictures[i].name}`)
+            const tempPath = path.join(rootDir, '/tmp',`${pictures[i].name}`)
             const bytes = await pictures[i].arrayBuffer()
             const buffer = Buffer.from(bytes)
             await writeFile(tempPath, buffer)

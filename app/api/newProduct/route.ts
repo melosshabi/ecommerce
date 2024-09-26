@@ -40,13 +40,13 @@ export async function POST(req:Request){
             errorCode:"incomplete-form"
         }, {status:400})
     }
-
+    const uploadPromises: Promise<cloudinary.UploadStream>[] = []
     // Uploading pictures to cloudinary
     for(let i = 0; i < pictures.length; i++){
         if(pictures[i].valueOf() !== 'undefined'){
             const bytes = await pictures[i].arrayBuffer()
             const buffer = Buffer.from(bytes)
-            const cloudinaryRes: any = await new Promise((resolve, reject) => {
+            const cloudinaryRes: any = new Promise((resolve, reject) => {
                 cloudinary.v2.uploader.upload_stream({folder:'ecommerce/products', public_id:`Product${new Date()}`}, (err, res) => {
                     if(err){
                         console.log("ERR: ", err)

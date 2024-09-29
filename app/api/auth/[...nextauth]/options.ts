@@ -23,7 +23,6 @@ export const nextAuthOptions:NextAuthOptions = {
             async authorize(credentials){
                 await connectToDb()
                 const user = await userModel.findOne({username: credentials?.username})
-
                 if(!user){
                     return {
                         errorMessage:'Username not found',

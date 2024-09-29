@@ -1,5 +1,6 @@
 import connectToDb from "@/lib/mongodb"
 import productModel from "@/models/product"
+import { ObjectId } from "mongodb"
 import { NextResponse } from "next/server"
 
 export async function GET(req:Request){
@@ -8,10 +9,15 @@ export async function GET(req:Request){
         if(!_id) {
             return NextResponse.json({errorMessage:"An ID is required", errorCode:'no-id'}, {status:400})
         }
-        await connectToDb()
-        const product = await productModel.findOne({_id})
-        if(product){    
-            return NextResponse.json(product)
+        try{
+            await connectToDb()
+            const product = await productModel.findOne({_id:new ObjectId(_id)})
+            if(product){    
+                return NextResponse.json(product)
+            }
+        }catch(err){
+            console.log(err)
         }
+        
         return NextResponse.json({errorMessage:"Couldn't fetch product data", errorCode:"couldnt-fetch"})
 }

@@ -1,5 +1,5 @@
+import connectToDb from "@/lib/mongodb"
 import productModel from "@/models/product"
-import { ObjectId } from "mongodb"
 import { NextResponse } from "next/server"
 
 export async function GET(req:Request){
@@ -8,6 +8,7 @@ export async function GET(req:Request){
         if(!_id) {
             return NextResponse.json({errorMessage:"An ID is required", errorCode:'no-id'}, {status:400})
         }
+        await connectToDb()
         const product = await productModel.findOne({_id})
         if(product){    
             return NextResponse.json(product)

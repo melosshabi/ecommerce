@@ -4,7 +4,9 @@ import { ObjectId } from "mongodb"
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
-import { BackendCartProduct } from "@/backendTypes"
+import { BackendCartProduct, CartItems, PromiseProduct } from "@/backendTypes"
+import connectToDb from "@/lib/mongodb"
+import { decrypt } from "@/lib/authLib"
 
 export async function PATCH(req:Request){
     const session = getServerSession(nextAuthOptions)
@@ -72,4 +74,30 @@ export async function DELETE(req:Request){
         message:"Removed from cart",
         messageCode:"removed-from-cart"
     })
+}
+
+export async function GET(req:Request){
+    const mobile = req.headers.get("mobile")
+    const authorization = req.headers.get("Authorization")
+    if(mobile && !authorization){
+        return NextResponse.json({error:"unauth"}, {status:400})
+    }
+    if(mobile && authorization){
+        const session = await decrypt(authorization)
+        const cartProductPromises:Promise<PromiseProduct>[] = []
+        let cartProducts: CartItems[] = []
+        await connectToDb()
+        const user = await userModel.findOne({_id:session._id})
+        user.cart.map(async (cartObj:any) => {
+            const promise = productModel.findOne({_id:cartObj.productDocId})
+            cartProductPromises.push(promise)
+        })
+        await Promise.all(cartProductPromises).then(res => {
+            res.forEach((product, index) => {
+                const {productName, manufacturer, productPrice, pictures} = product._doc
+                const finalProduct = {productName, manufacturer, productPrice, productImage:pictures[0], desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
+                cartProducts.push(finalProduct)
+        })})
+        return NextResponse.json({cartProducts})
+    }
 }

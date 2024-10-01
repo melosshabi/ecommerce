@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import { ObjectId } from "mongodb"
+import { BackendWishlistProduct } from "@/backendTypes"
 
 export async function PATCH(req:Request){
     
@@ -15,7 +16,7 @@ export async function PATCH(req:Request){
 
     try {
         const user = await userModel.findOne({_id: new ObjectId(session?.user.userDocId)})
-        if(user.wishlist.some((product:any) => product.productDocId == data.productDocId)){
+        if(user.wishlist.some((product:BackendWishlistProduct) => product.productDocId == data.productDocId)){
             return NextResponse.json({
                 message:"Product already in wishlist",
                 messageCode:"product-already-in-wishlist"

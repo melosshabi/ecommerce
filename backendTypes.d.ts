@@ -16,6 +16,10 @@ type BackendCartProduct = {
     desiredQuantity:number,
     dateAdded:Date
 }
+type BackendWishlistProduct = {
+    productDocId:string,
+    dateAdded:Date
+}
 type FinishOrderData = {
     stripeSessionId:string
 }

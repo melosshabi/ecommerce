@@ -1,5 +1,5 @@
-export default async function addToWishlist(userDocId:string | undefined, productDocId:string, clickedFromHomeScreen:boolean){
-  if(clickedFromHomeScreen && !userDocId){
+export default async function addToWishlist(authenticated:boolean, productDocId:string, clickedFromHomeScreen:boolean){
+  if(clickedFromHomeScreen && !authenticated){
     const localWishlist = JSON.parse(localStorage.getItem('localWishList') as string)
     if(localWishlist){
     let productExists = false
@@ -16,7 +16,7 @@ export default async function addToWishlist(userDocId:string | undefined, produc
       return
   }
 }
-    if(!userDocId) {
+    if(!authenticated) {
       const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
       if(localWishList){
         const wishlistItems = [...localWishList, {productDocId, dateAdded: new Date()}]
@@ -33,7 +33,6 @@ export default async function addToWishlist(userDocId:string | undefined, produc
     const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/editWishlist`,{
       method:"PATCH",
       body:JSON.stringify({
-        userDocId,
         productDocId
       })
     })

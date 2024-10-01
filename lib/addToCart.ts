@@ -1,6 +1,6 @@
 // clickedFromHomeScreen let's us know if the function is getting called from the button on the cards of the products on the homescreen
-export default async function addToCart(userDocId:string | undefined, productDocId:string, desiredQuantity:number, clickedFromHomeScreen:boolean){
-    if(clickedFromHomeScreen && !userDocId){
+export default async function addToCart(authenticated:boolean, productDocId:string, desiredQuantity:number, clickedFromHomeScreen:boolean){
+    if(clickedFromHomeScreen && !authenticated){
       const localCart = JSON.parse(localStorage.getItem('localCart') as string)
       if(localCart){
       let productExists = false
@@ -21,7 +21,7 @@ export default async function addToCart(userDocId:string | undefined, productDoc
       return
     }
   }
-    if(!userDocId) {
+    if(!authenticated) {
       const localCart = JSON.parse(localStorage.getItem('localCart') as string)
       if(localCart){
         const cartItems = [...localCart, {productDocId:productDocId, desiredQuantity, dateAdded: new Date()}]
@@ -38,7 +38,6 @@ export default async function addToCart(userDocId:string | undefined, productDoc
     const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/editCart`, {
       method:"PATCH",
       body:JSON.stringify({
-        userDocId,
         productDocId,
         desiredQuantity
       })

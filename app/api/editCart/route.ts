@@ -9,27 +9,70 @@ import connectToDb from "@/lib/mongodb"
 import { decrypt } from "@/lib/authLib"
 
 export async function PATCH(req:Request){
-    const session = getServerSession(nextAuthOptions)
-    if(!session){
-        return NextResponse.json({errMessage:"You need to sign in before editing your card", errCode:"unauthenticated"}, {status:400})
-    }
     const data = await req.json()
+    const mobile = req.headers.get('Mobile')
+    if(mobile){
+        const authorization = req.headers.get('Authorization') as string
+        const key = authorization.split(" ")[1]
+        const user = await decrypt(key)
+        try{
+            const product = await productModel.findOne({_id: new ObjectId(data.productDocId)})
+            if(data.quantity > product.quantity){
+                return NextResponse.json({
+                    errorMessage:"Can't add more stock than is available",
+                    errCode:"invalid-quantity"
+                }, {status:400})
+            }else if(data.quantity < 1){
+                return NextResponse.json({
+                    errorMessage:"Quantity can't be less than 1",
+                    errCode:"invalid-quantity"
+                }, {status:400})
+            }
+            const userDB = await userModel.findOne({_id:new ObjectId(user._id as string)})
+            let productUpdated = false
+            userDB.cart.map(async (product:BackendCartProduct) => {
+                if(product.productDocId.toString() === data.productDocId){
+                    productUpdated = true
+                    await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string), "cart.productDocId": new ObjectId(data.productDocId)}, {
+                        $set:{"cart.$.desiredQuantity":data.quantity}
+                    }, {new:true})
+                }
+            })
+            if(productUpdated)
+                return NextResponse.json({
+                    message:"Updated cart",
+                    messageCode:"updated-cart"
+            })
+        }catch(err){
+            return NextResponse.json({msg:err})
+        }
+        return NextResponse.json({err:"unkown-error"}, {status:500})
+    }
+    const session = await getServerSession(nextAuthOptions)
+    if(!session){
+        return NextResponse.json({errMessage:"You need to sign in before editing your cart", errCode:"unauthenticated"}, {status:400})
+    }
     try{
         const product = await productModel.findOne({_id: new ObjectId(data.productDocId)})
         if(data.quantity > product.quantity){
             return NextResponse.json({
                 errorMessage:"Can't add more items to your cart than there is available",
                 errorCode:"invalid-quantity"
-            })
+            }, {status:400})
+        }else if(data.quantity < 1){
+            return NextResponse.json({
+                errorMessage:"Quantity can't be less than 1",
+                errCode:"invalid-quantity"
+            }, {status:400})
         }
-        const user = await userModel.findOne({_id:new ObjectId(data.userDocId)})
+        const user = await userModel.findOne({_id:new ObjectId(session.user.userDocId)})
         let existingProductUpdated = false
         user.cart.map(async (product:BackendCartProduct) => {
             if(product.productDocId.toString() === data.productDocId){
                 existingProductUpdated = true
                 let newQuantity = product.desiredQuantity + data.desiredQuantity
-                await userModel.findOneAndUpdate({_id:new ObjectId(data.userDocId)}, {
-                    $set:{cart:{productDocId:new ObjectId(data.productDocId), desiredQuantity:newQuantity, dateAdded:product.dateAdded}}
+                await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId), "cart.productDocId":new ObjectId(data.productDocId)}, {
+                    $set:{"cart.$.desiredQuantity":data.quantity}
                 }, {new:true})
             }
         })
@@ -37,7 +80,7 @@ export async function PATCH(req:Request){
             message:"Updated cart",
             messageCode:"updated-cart"
         })
-        await userModel.findOneAndUpdate({_id:new ObjectId(data.userDocId)}, {
+        await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId)}, {
             $push:{cart:{productDocId:new ObjectId(data.productDocId), desiredQuantity:data.desiredQuantity, dateAdded:new Date()}}
         }, {new:true})
         return NextResponse.json({
@@ -77,17 +120,18 @@ export async function DELETE(req:Request){
 }
 
 export async function GET(req:Request){
-    const mobile = req.headers.get("mobile")
+    const mobile = req.headers.get("Mobile")
     const authorization = req.headers.get("Authorization")
     if(mobile && !authorization){
         return NextResponse.json({error:"unauth"}, {status:400})
     }
     if(mobile && authorization){
-        const session = await decrypt(authorization)
+        const token = authorization.split(" ")[1]
+        const session = await decrypt(token)
         const cartProductPromises:Promise<PromiseProduct>[] = []
         let cartProducts: CartItems[] = []
         await connectToDb()
-        const user = await userModel.findOne({_id:session._id})
+        const user = await userModel.findOne({_id:new ObjectId(session._id as string)})
         user.cart.map(async (cartObj:any) => {
             const promise = productModel.findOne({_id:cartObj.productDocId})
             cartProductPromises.push(promise)

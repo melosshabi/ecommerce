@@ -4,10 +4,12 @@ import removeFromWishlist from '@/lib/removeFromWishlist'
 import Image from 'next/image'
 import addToCart from '@/lib/addToCart'
 import Loader from './Loader'
+import { useSession } from 'next-auth/react'
 
 export default function Wishlist({productsArray, userDocId}:WishlistProps) {
     const [wishlistItems, setWishlistItems] = useState<Array<WishlistItem>>([])
     const [reqPending, setReqPending] = useState<boolean>(true)
+    const session = useSession()
     useEffect(() =>{
         if(productsArray.length === 0 ) {
           setReqPending(false)
@@ -62,7 +64,7 @@ export default function Wishlist({productsArray, userDocId}:WishlistProps) {
 
                 <div className="flex justify-center my-6">
                     <button className="p-2 rounded-md mx-4 transition-all duration-200 hover:bg-transparentBlack" title="Add to cart" onClick={async () => {
-                          await addToCart(userDocId, item._id, 1, false)
+                          await addToCart(session.status === 'authenticated', item._id, 1, false)
                           window.location.reload()
                       }}>
                         <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512">

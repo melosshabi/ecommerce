@@ -70,7 +70,6 @@ export async function PATCH(req:Request){
         user.cart.map(async (product:BackendCartProduct) => {
             if(product.productDocId.toString() === data.productDocId){
                 existingProductUpdated = true
-                let newQuantity = product.desiredQuantity + data.desiredQuantity
                 await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId), "cart.productDocId":new ObjectId(data.productDocId)}, {
                     $set:{"cart.$.desiredQuantity":data.quantity}
                 }, {new:true})
@@ -96,16 +95,38 @@ export async function PATCH(req:Request){
 }
 
 export async function DELETE(req:Request){
+    const data = await req.json()
+    const mobile = req.headers.get("Mobile")
+    if(mobile){
+        const session = req.headers.get("Authorization")
+        const token = session?.split(" ")[1]
+        if(token){
+            const user = await decrypt(token)
+            try{
+                const ids: ObjectId[] = []
+                data.itemsToRemove.forEach((id:string) => {
+                    ids.push(new ObjectId(id))
+                })
+                await connectToDb()
+                await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string)},{
+                    $pull:{cart:{productDocId:{$in: ids}}}
+                })
+                return NextResponse.json({msg:"products deleted"})
+            }catch(err){
+                return NextResponse.json({msg:"Failed"}, {status:500})
+            }
+            
+        }
+        return NextResponse.json({err:"unauthenticated"}, {status:400})
+    }
     const session = await getServerSession(nextAuthOptions)
     if(!session){
         return NextResponse.json({errMessage:"You need to sign in before editing your cart", errCode:"unauthenticated"}, {status:400})
     }
-    const data = await req.json()
-
+    
     try{
         await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId)}, {
             $pull:{cart:{productDocId:new ObjectId(data.productDocId)}}
-            // $pull:{cart:{productDocId:data.productDocId}}
         })
     }catch(err){
         return NextResponse.json({

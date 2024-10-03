@@ -8,46 +8,79 @@ import { BackendCartProduct, CartItems, PromiseProduct } from "@/backendTypes"
 import connectToDb from "@/lib/mongodb"
 import { decrypt } from "@/lib/authLib"
 
+enum CartActions {
+    add = "add-new",
+    update = "update-stock"
+}
 export async function PATCH(req:Request){
     const data = await req.json()
+    // App
     const mobile = req.headers.get('Mobile')
     if(mobile){
-        const authorization = req.headers.get('Authorization') as string
+        const authorization = req.headers.get('Authorization')
+        if(!authorization){
+            return NextResponse.json({errMsg:"unauthenticated"}, {status:401})
+        }
+        const action = req.headers.get("Action")
         const key = authorization.split(" ")[1]
         const user = await decrypt(key)
-        try{
-            const product = await productModel.findOne({_id: new ObjectId(data.productDocId)})
-            if(data.quantity > product.quantity){
-                return NextResponse.json({
-                    errorMessage:"Can't add more stock than is available",
-                    errCode:"invalid-quantity"
-                }, {status:400})
-            }else if(data.quantity < 1){
-                return NextResponse.json({
-                    errorMessage:"Quantity can't be less than 1",
-                    errCode:"invalid-quantity"
-                }, {status:400})
-            }
-            const userDB = await userModel.findOne({_id:new ObjectId(user._id as string)})
-            let productUpdated = false
-            userDB.cart.map(async (product:BackendCartProduct) => {
-                if(product.productDocId.toString() === data.productDocId){
-                    productUpdated = true
-                    await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string), "cart.productDocId": new ObjectId(data.productDocId)}, {
-                        $set:{"cart.$.desiredQuantity":data.quantity}
-                    }, {new:true})
+
+        if(action === CartActions.update){
+            try{
+                await connectToDb()
+                const product = await productModel.findOne({_id: new ObjectId(data.productDocId)})
+                if(data.quantity > product.quantity){
+                    return NextResponse.json({
+                        errorMessage:"Can't add more stock than is available",
+                        errCode:"invalid-quantity"
+                    }, {status:400})
+                }else if(data.quantity < 1){
+                    return NextResponse.json({
+                        errorMessage:"Quantity can't be less than 1",
+                        errCode:"invalid-quantity"
+                    }, {status:400})
                 }
-            })
-            if(productUpdated)
-                return NextResponse.json({
-                    message:"Updated cart",
-                    messageCode:"updated-cart"
-            })
-        }catch(err){
-            return NextResponse.json({msg:err})
+                const userDB = await userModel.findOne({_id:new ObjectId(user._id as string)})
+                let productUpdated = false
+                userDB.cart.map(async (product:BackendCartProduct) => {
+                    if(product.productDocId.toString() === data.productDocId){
+                        productUpdated = true
+                        await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string), "cart.productDocId": new ObjectId(data.productDocId)}, {
+                            $set:{"cart.$.desiredQuantity":data.quantity}
+                        }, {new:true})
+                    }
+                })
+                if(productUpdated)
+                    return NextResponse.json({
+                        message:"Updated cart",
+                        messageCode:"updated-cart"
+                })
+            }catch(err){
+                return NextResponse.json({msg:err})
+            }
+        }else if(action === CartActions.add){
+            try{
+                await connectToDb()
+                const userDb = await userModel.findOne({_id:new ObjectId(user._id as string)})
+                let itemExists = false
+                userDb.cart.forEach((item: BackendCartProduct) => {
+                    if(data.productDocId === item.productDocId.toString()){
+                        itemExists = true
+                    }
+                })
+                if(itemExists) return NextResponse.json({msg:"product-already-on-cart"})
+                await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string)}, {
+                    $push:{cart:{productDocId: new ObjectId(data.productDocId), desiredQuantity:data.desiredQuantity, dateAdded: new Date()}}
+                })
+                return NextResponse.json({msg:"added-to-cart"})
+            }catch(err){
+                return NextResponse.json({msg:err})
+            }
+            
         }
         return NextResponse.json({err:"unkown-error"}, {status:500})
     }
+    // Web
     const session = await getServerSession(nextAuthOptions)
     if(!session){
         return NextResponse.json({errMessage:"You need to sign in before editing your cart", errCode:"unauthenticated"}, {status:400})

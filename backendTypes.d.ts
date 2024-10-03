@@ -34,11 +34,19 @@ type OrderData = {
 type PromiseProduct = {
     _doc:Product
 }
-// This type is used when extract the necessary data for the cart page (route:editCart)
+// This type is used when extracting the necessary data for the cart page (route:editCart)
 type CartItems = {
     productName:string,
     manufacturer:string,
     productPrice:number,
     desiredQuantity:number,
     dateAddedToCart:Date
+}
+// This type is used when extracting the necessary data for the wishlist screen 
+type WishlistItem = {
+    productDocId:string,
+    productName:string,
+    manufacturer:string,
+    productPrice:number,
+    productImage:string
 }

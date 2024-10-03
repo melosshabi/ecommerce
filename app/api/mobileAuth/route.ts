@@ -25,13 +25,6 @@ export async function POST(req:NextRequest){
     }
     const {_id, username, email, profilePictureUrl} = user
     const session = await encrypt({_id, username, email, profilePictureUrl, cartItemsCount:user.cart.length})
-    const expires = new Date(Date.now() + 604800)
-    cookies().set('session', session, {
-        httpOnly:true,
-        secure:true,
-        expires,
-
-    })
     return NextResponse.json({session})
 }
 export async function GET(req:NextRequest){

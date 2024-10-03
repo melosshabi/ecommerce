@@ -30,7 +30,7 @@ export default async function addToWishlist(authenticated:boolean, productDocId:
       localStorage.setItem('localWishList', stringifiedWishlistItems)
       window.location.reload()
     }
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/editWishlist`,{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/wishlist`,{
       method:"PATCH",
       body:JSON.stringify({
         productDocId

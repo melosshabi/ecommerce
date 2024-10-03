@@ -3,7 +3,36 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import { ObjectId } from "mongodb"
-import { BackendWishlistProduct } from "@/backendTypes"
+import { BackendWishlistProduct, WishlistItem } from "@/backendTypes"
+import { decrypt } from "@/lib/authLib"
+import productModel from "@/models/product"
+
+export async function GET(req:Request){
+    const mobile = req.headers.get("Mobile")
+    if(mobile){
+        const session = req.headers.get("Authorization")
+        if(!session){
+            return NextResponse.json({errMsg:"unauthenticated"}, {status:401})
+        }
+        const token = session?.split(" ")[1]
+        const user = await decrypt(token)
+        const userDb = await userModel.findOne({_id:new ObjectId(user._id as string)})
+        console.log(userDb)
+        const productPromises: Promise<Product>[] = []
+        const wishlistItems:WishlistItem[] = []
+        userDb.wishlist.forEach((product:BackendWishlistProduct) => {
+            const promise = productModel.findOne({_id:product.productDocId})
+            productPromises.push(promise)
+        })
+        await Promise.all(productPromises).then(res => {
+            res.forEach((product:Product) => {
+                const {_id, productName, productPrice, manufacturer} = product
+                wishlistItems.push({productDocId:_id, productName, productPrice, manufacturer, productImage:product.pictures[0]})
+            })
+        })
+        return NextResponse.json({wishlistItems})
+    }
+}
 
 export async function PATCH(req:Request){
     
@@ -16,7 +45,7 @@ export async function PATCH(req:Request){
 
     try {
         const user = await userModel.findOne({_id: new ObjectId(session?.user.userDocId)})
-        if(user.wishlist.some((product:BackendWishlistProduct) => product.productDocId == data.productDocId)){
+        if(user.wishlist.some((product:BackendWishlistProduct) => product.productDocId.toString() == data.productDocId)){
             return NextResponse.json({
                 message:"Product already in wishlist",
                 messageCode:"product-already-in-wishlist"
@@ -24,7 +53,7 @@ export async function PATCH(req:Request){
         }
         await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
             $push:{wishlist:{
-                productDocId:data.productDocId,
+                productDocId:new ObjectId(data.productDocId),
                 dateAdded: new Date()
             }}
         }, {new:true})
@@ -52,7 +81,7 @@ export async function DELETE(req:Request){
     const data = await req.json()
     try {
         await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
-            $pull:{wishlist:{productDocId:data.productDocId}}
+            $pull:{wishlist:{productDocId:new ObjectId(data.productDocId)}}
         }, {new:true})
 
         return NextResponse.json({
@@ -66,3 +95,4 @@ export async function DELETE(req:Request){
         })
     }
 }
+

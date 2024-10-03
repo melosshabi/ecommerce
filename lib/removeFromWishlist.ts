@@ -8,7 +8,7 @@ export default async function removeFromWishlist(userDocId:string | undefined, p
     }
     return
   }
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/editWishlist`,{
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/wishlist`,{
       method:"DELETE",
       body:JSON.stringify({
         userDocId,

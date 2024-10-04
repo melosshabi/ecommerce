@@ -6,6 +6,7 @@ import { ObjectId } from "mongodb"
 import { BackendWishlistProduct, WishlistItem } from "@/backendTypes"
 import { decrypt } from "@/lib/authLib"
 import productModel from "@/models/product"
+import connectToDb from "@/lib/mongodb"
 
 export async function GET(req:Request){
     const mobile = req.headers.get("Mobile")
@@ -16,8 +17,8 @@ export async function GET(req:Request){
         }
         const token = session?.split(" ")[1]
         const user = await decrypt(token)
+        await connectToDb()
         const userDb = await userModel.findOne({_id:new ObjectId(user._id as string)})
-        console.log(userDb)
         const productPromises: Promise<Product>[] = []
         const wishlistItems:WishlistItem[] = []
         userDb.wishlist.forEach((product:BackendWishlistProduct) => {
@@ -73,12 +74,36 @@ export async function PATCH(req:Request){
         })
     }
 }
+
 export async function DELETE(req:Request){
+    const data = await req.json()
+    const mobile = req.headers.get("Mobile")
+    if(mobile){
+        const session = req.headers.get("Authorization")
+        const token = session?.split(" ")[1]
+        if(token){
+            const user = await decrypt(token)
+            try{
+                const ids: ObjectId[] = []
+                data.itemsToRemove.forEach((id:string) => {
+                    ids.push(new ObjectId(id))
+                })
+                await connectToDb()
+                await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string)},{
+                    $pull:{wishlist:{productDocId:{$in: ids}}}
+                })
+                return NextResponse.json({msg:"products deleted"})
+            }catch(err){
+                return NextResponse.json({msg:"Failed"}, {status:500})
+            }
+            
+        }
+        return NextResponse.json({err:"unauthenticated"}, {status:400})
+    }
     const session = await getServerSession(nextAuthOptions)
     if(!session){
         return NextResponse.json({errMessage:"You need to sign in before editing your wishlist", errCode:"unauthenticated"}, {status:400})
     }
-    const data = await req.json()
     try {
         await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
             $pull:{wishlist:{productDocId:new ObjectId(data.productDocId)}}

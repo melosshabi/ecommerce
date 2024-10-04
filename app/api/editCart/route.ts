@@ -8,6 +8,33 @@ import { BackendCartProduct, CartItems, PromiseProduct } from "@/backendTypes"
 import connectToDb from "@/lib/mongodb"
 import { decrypt } from "@/lib/authLib"
 
+export async function GET(req:Request){
+    const mobile = req.headers.get("Mobile")
+    const authorization = req.headers.get("Authorization")
+    if(mobile && !authorization){
+        return NextResponse.json({error:"unauth"}, {status:400})
+    }
+    if(mobile && authorization){
+        const token = authorization.split(" ")[1]
+        const session = await decrypt(token)
+        const cartProductPromises:Promise<PromiseProduct>[] = []
+        let cartProducts: CartItems[] = []
+        await connectToDb()
+        const user = await userModel.findOne({_id:new ObjectId(session._id as string)})
+        user.cart.map(async (cartObj:any) => {
+            const promise = productModel.findOne({_id:cartObj.productDocId})
+            cartProductPromises.push(promise)
+        })
+        await Promise.all(cartProductPromises).then(res => {
+            res.forEach((product, index) => {
+                const {_id, productName, manufacturer, productPrice, quantity,pictures} = product._doc
+                const finalProduct = {_id, productName, manufacturer, productPrice, productImage:pictures[0], availableQuantity:quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
+                cartProducts.push(finalProduct)
+        })})
+        return NextResponse.json({cartProducts})
+    }
+}
+
 enum CartActions {
     add = "add-new",
     update = "update-stock"
@@ -171,31 +198,4 @@ export async function DELETE(req:Request){
         message:"Removed from cart",
         messageCode:"removed-from-cart"
     })
-}
-
-export async function GET(req:Request){
-    const mobile = req.headers.get("Mobile")
-    const authorization = req.headers.get("Authorization")
-    if(mobile && !authorization){
-        return NextResponse.json({error:"unauth"}, {status:400})
-    }
-    if(mobile && authorization){
-        const token = authorization.split(" ")[1]
-        const session = await decrypt(token)
-        const cartProductPromises:Promise<PromiseProduct>[] = []
-        let cartProducts: CartItems[] = []
-        await connectToDb()
-        const user = await userModel.findOne({_id:new ObjectId(session._id as string)})
-        user.cart.map(async (cartObj:any) => {
-            const promise = productModel.findOne({_id:cartObj.productDocId})
-            cartProductPromises.push(promise)
-        })
-        await Promise.all(cartProductPromises).then(res => {
-            res.forEach((product, index) => {
-                const {_id, productName, manufacturer, productPrice, quantity,pictures} = product._doc
-                const finalProduct = {_id, productName, manufacturer, productPrice, productImage:pictures[0], availableQuantity:quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
-                cartProducts.push(finalProduct)
-        })})
-        return NextResponse.json({cartProducts})
-    }
 }

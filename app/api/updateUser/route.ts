@@ -14,7 +14,6 @@ cloudinary.v2.config({
     api_secret:process.env.CLOUDINARY_API_SECRET
 })
 
-
 export async function PATCH(req:Request){
     const mobile = req.headers.get("Mobile")    
     if(mobile){
@@ -30,7 +29,7 @@ export async function PATCH(req:Request){
             if(newProfilePicture){
                 const bytes = decode(newProfilePicture)
                 const buffer = Buffer.from(bytes)
-                new Promise((resolve, reject) => {
+                await new Promise((resolve, reject) => {
                     cloudinary.v2.uploader.upload_stream({folder:'ecommerce/profilePictures', public_id:`ProfilePictureOf${user._id}`}, (err, res) => {
                         if(err){
                             console.log("ERR: ", err)

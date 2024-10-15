@@ -1,4 +1,4 @@
-import jose, { jwtVerify, SignJWT } from "jose"
+import { jwtVerify, SignJWT, errors } from "jose"
 
 const secret = process.env.JWT_AUTH_SECRET
 const key = new TextEncoder().encode(secret)
@@ -22,7 +22,7 @@ export async function verifyToken(token:string){
         await jwtVerify(token, key);
         return {valid:true}
     } catch (error) {
-        if (error instanceof jose.errors.JWTExpired) {
+        if (error instanceof errors.JWTExpired) {
             return {valid:false, error:'expired'}
         }
         return {valid:false, error:'unkown'}

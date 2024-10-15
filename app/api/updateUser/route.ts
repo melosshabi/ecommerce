@@ -6,7 +6,6 @@ import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import { decrypt } from "@/lib/authLib"
 import { ObjectId } from "mongodb"
-import { blob } from "stream/consumers"
 import { decode } from "base64-arraybuffer"
 
 cloudinary.v2.config({

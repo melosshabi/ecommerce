@@ -27,7 +27,7 @@ export async function POST(req:Request){
     }
 
     const hashedPassword = await hashPassword(data.password)
-    const mobile = req.headers.get('mobile')
+    const mobile = req.headers.get('Mobile')
     try{
         const newUser = await userModel.create({...data, password:hashedPassword})
         if(mobile){

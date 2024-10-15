@@ -21,6 +21,7 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
 
   function handleFileChange(e: ChangeEvent<HTMLInputElement>){
     if(e.target.files){
+      console.log(e.target.files)
       setPictureFile(e.target.files[0])
       getSelectedImageUrl(e.target.files[0])
     }
@@ -37,10 +38,8 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
     const fileReader = new FileReader()
     switch(extension.toLowerCase()){
       case 'jpg':
-        fileReader.onload = e => setLocalPictureUrl(e.target?.result as string)
-        fileReader.readAsDataURL(file)
-        break;
       case 'jpeg':
+      case 'png':
         fileReader.onload = e => setLocalPictureUrl(e.target?.result as string)
         fileReader.readAsDataURL(file)
         break;

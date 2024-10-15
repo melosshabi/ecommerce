@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import { decrypt } from "@/lib/authLib"
 import { ObjectId } from "mongodb"
+import { blob } from "stream/consumers"
+import { decode } from "base64-arraybuffer"
 
 cloudinary.v2.config({
     cloud_name:process.env.CLOUD_NAME,
@@ -13,22 +15,44 @@ cloudinary.v2.config({
     api_secret:process.env.CLOUDINARY_API_SECRET
 })
 
+
 export async function PATCH(req:Request){
-    const mobile = req.headers.get("Mobile")
-    const data = mobile ? await req.json() : await req.formData()
+    const mobile = req.headers.get("Mobile")    
     if(mobile){
+        const data = await req.formData()
         const session = req.headers.get("Authorization")
         const token = session?.split(" ")[1]
         if(token){
             const user = await decrypt(token)
-            if(!data.username || !data.email){
+            if(!data.get('username') || !data.get('email')){
                 return NextResponse.json({errMsg:"fields-cannot-be-empty"}, {status:400})
+            }
+            const newProfilePicture = data.get("profilePicture") as string
+            if(newProfilePicture){
+                const bytes = decode(newProfilePicture)
+                const buffer = Buffer.from(bytes)
+                new Promise((resolve, reject) => {
+                    cloudinary.v2.uploader.upload_stream({folder:'ecommerce/profilePictures', public_id:`ProfilePictureOf${user._id}`}, (err, res) => {
+                        if(err){
+                            console.log("ERR: ", err)
+                            reject(err)
+                        }
+                        return resolve(res)
+                    }).end(buffer)
+                }).then(async (res:any) => {
+                    await connectToDb()
+                    await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string)}, {
+                        profilePictureUrl:res.url
+                    })
+                })
+                return NextResponse.json({msg:'profile-updated'})
             }
             await connectToDb()
             await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string)}, {
-                username:data.username,
-                email:data.email
+                username:data.get('username'),
+                email:data.get('email'),
             })
+            
             return NextResponse.json({msg:'profile-updated'})
         }
     }
@@ -36,27 +60,27 @@ export async function PATCH(req:Request){
     if(!session){
         return NextResponse.json({errMessage:"You need to sign in before making changes to your profile", errCode:"unauthenticated"}, {status:400})
     }
+    const data = await req.formData()
     if(data.get('profilePicture')?.valueOf() !== undefined){
         const newProfilePicture: File = data.get('profilePicture') as unknown as File
         const bytes = await newProfilePicture.arrayBuffer()
         const buffer = Buffer.from(bytes)
-
-        const cloudinaryRes: any = new Promise((resolve, reject) => {
-            cloudinary.v2.uploader.upload_stream({folder:'ecommerce/products', public_id:`Product${new Date()}`}, (err, res) => {
+        new Promise((resolve, reject) => {
+            cloudinary.v2.uploader.upload_stream({folder:'ecommerce/profilePictures', public_id:`ProfilePictureOf${session.user.userDocId}`}, (err, res) => {
                 if(err){
                     console.log("ERR: ", err)
                     reject(err)
                 }
                 return resolve(res)
             }).end(buffer)
+        }).then(async (res:any) => {
+            await connectToDb()
+            await userModel.findOneAndUpdate({userId:data.get('userId')}, {
+                username:data.get('newUsername'),
+                email:data.get('newEmail'),
+                profilePictureUrl:res.url
+            }, {new:true})
         })
-
-        await connectToDb()
-        await userModel.findOneAndUpdate({userId:data.get('userId')}, {
-            username:data.get('newUsername'),
-            email:data.get('newEmail'),
-            profilePictureUrl:cloudinaryRes.url
-        }, {new:true})
     }else {
         await connectToDb()
         await userModel.findOneAndUpdate({userId:data.get('userId')}, {

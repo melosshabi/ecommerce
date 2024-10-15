@@ -60,24 +60,24 @@ export async function POST(req:Request){
     }
 
     try{
-       await connectToDb()
-       if(noBrand === 'true'){
-         const productDoc = await productModel.create({
-             posterDocId: userDocId,
-             posterUsername:session.user.name,
-             productName,
-             noBrand,
-             manufacturer,
-             productPrice,
-             quantity,
-             pictures:picturesUrls,
-        })
+        await connectToDb()
+        if(noBrand === 'true'){
+            const productDoc = await productModel.create({
+                posterDocId: userDocId,
+                posterUsername:session.user.name,
+                productName,
+                noBrand,
+                manufacturer,
+                productPrice,
+                quantity,
+                pictures:picturesUrls,
+            })
 
-        await userModel.findOneAndUpdate({userId:data.get('userId')}, {
-         $push: {products: productDoc._id}
-        })
-       }else{
-       const productDoc = await productModel.create({
+            await userModel.findOneAndUpdate({userId:data.get('userId')}, {
+                $push: {products: productDoc._id}
+            })
+    }else{
+        const productDoc = await productModel.create({
             posterDocId: userDocId,
             posterUsername:session.user.name,
             productName,
@@ -87,11 +87,11 @@ export async function POST(req:Request){
             productPrice,
             quantity,
             pictures:picturesUrls,
-       })
+    })
 
-       await userModel.findOneAndUpdate({userId:data.get('userId')}, {
+    await userModel.findOneAndUpdate({userId:data.get('userId')}, {
         $push: {products: productDoc._id}
-       })
+    })
     }
 
     }catch(err:any){

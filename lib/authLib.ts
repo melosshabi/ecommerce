@@ -1,4 +1,4 @@
-import { jwtVerify, SignJWT } from "jose"
+import jose, { jwtVerify, SignJWT } from "jose"
 
 const secret = process.env.JWT_AUTH_SECRET
 const key = new TextEncoder().encode(secret)
@@ -16,4 +16,15 @@ export async function decrypt(input: string){
         algorithms:['HS256'],
     })
     return payload
+}
+export async function verifyToken(token:string){
+    try {
+        await jwtVerify(token, key);
+        return {valid:true}
+    } catch (error) {
+        if (error instanceof jose.errors.JWTExpired) {
+            return {valid:false, error:'expired'}
+        }
+        return {valid:false, error:'unkown'}
+    }
 }

@@ -36,15 +36,47 @@ export async function GET(req:Request){
 }
 
 export async function PATCH(req:Request){
+    const mobile = req.headers.get("Mobile")
+    const data = await req.json()
+    if(mobile){
+        const authorization = req.headers.get("Authorization")
+        const token = authorization?.split(" ")[1]
+        const user = await decrypt(token as string)
+        try {
+            await connectToDb()
+            const userDb = await userModel.findOne({_id: new ObjectId(user._id as string)})
+            if(userDb.wishlist.some((product:BackendWishlistProduct) => product.productDocId.toString() == data.productDocId)){
+                return NextResponse.json({
+                    message:"Product already in wishlist",
+                    messageCode:"product-already-in-wishlist"
+                }, {status:400})
+            }
+            await userModel.findOneAndUpdate({_id: new ObjectId(user._id as string)}, {
+                $push:{wishlist:{
+                    productDocId:new ObjectId(data.productDocId),
+                    dateAdded: new Date()
+                }}
+            }, {new:true})
+    
+            return NextResponse.json({
+                message:"Added to wishlist",
+                messageCode:"added-to-wishlist"
+            })
+        }catch (error) {
+            return NextResponse.json({
+                errorMessage:"Something went wrong",
+                messageCode:"unkown-error"
+            }, {status:400})
+        }
+    }
     
     const session = await getServerSession(nextAuthOptions)
     if(!session){
         return NextResponse.json({errMessage:"You need to sign in before editing your wishlist", errCode:"unauthenticated"}, {status:400})
     }
 
-    const data = await req.json()
-
     try {
+        await connectToDb()
         const user = await userModel.findOne({_id: new ObjectId(session?.user.userDocId)})
         if(user.wishlist.some((product:BackendWishlistProduct) => product.productDocId.toString() == data.productDocId)){
             return NextResponse.json({
@@ -68,10 +100,11 @@ export async function PATCH(req:Request){
             messageCode:"added-to-wishlist"
         })
     } catch (error) {
+        console.log(error)
         return NextResponse.json({
             errorMessage:"Something went wrong",
             messageCode:"unkown-error"
-        })
+        }, {status:400})
     }
 }
 
@@ -105,6 +138,7 @@ export async function DELETE(req:Request){
         return NextResponse.json({errMessage:"You need to sign in before editing your wishlist", errCode:"unauthenticated"}, {status:400})
     }
     try {
+        await connectToDb()
         await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
             $pull:{wishlist:{productDocId:new ObjectId(data.productDocId)}}
         }, {new:true})
@@ -120,4 +154,3 @@ export async function DELETE(req:Request){
         })
     }
 }
-

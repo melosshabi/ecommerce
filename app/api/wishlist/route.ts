@@ -125,7 +125,7 @@ export async function DELETE(req:Request){
                 await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string)},{
                     $pull:{wishlist:{productDocId:{$in: ids}}}
                 })
-                return NextResponse.json({msg:"products deleted"})
+                return NextResponse.json({msg:"products-deleted"})
             }catch(err){
                 return NextResponse.json({msg:"Failed"}, {status:500})
             }

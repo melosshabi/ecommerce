@@ -50,3 +50,11 @@ type WishlistItem = {
     productPrice:number,
     productImage:string
 }
+// This type resembles the object of the wishlisted product which is stored inside the wishlist array on the users' documents
+interface WishlistObject {
+    productDocId:string,
+    dateAdded:Date
+}
+interface CartObject extends WishlistObject {
+    desiredQuantity:number
+}

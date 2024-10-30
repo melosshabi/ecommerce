@@ -5,6 +5,8 @@ import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import productModel from "@/models/product"
 import { ObjectId } from "mongodb"
 import Stripe from 'stripe'
+import { decrypt } from "@/lib/authLib"
+import connectToDb from "@/lib/mongodb"
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!)
 // The function below creates a new order document
@@ -45,12 +47,29 @@ export async function POST(req:NextRequest){
 }
 
 // The function below returns the currently placed orders to the user
-export async function GET(){
+export async function GET(req:Request){
+    const mobile = req.headers.get("Mobile")
+    if(mobile){
+        const authorization = req.headers.get("Authorization")
+        const token = authorization?.split(" ")[1]
+        if(!authorization || !token) return NextResponse.json({msg:"unauthenticated"}, {status:403})
+        const user = await decrypt(token as string)
+        await connectToDb()
+        const userOrders: OrderData[] = await orderModel.find({clientDocId:new ObjectId(user._id as string)})
+        const productPromises: Promise<ProductData>[] = []
+        userOrders.map(async order => {
+            const productPromise = productModel.findOne({_id:new ObjectId(order.productDocId)})
+            productPromises.push(productPromise)
+        })
+        const products = await Promise.all(productPromises)
+        return NextResponse.json({userOrders, products})
+    }
     const session = await getServerSession(nextAuthOptions)
 
     // The code below fetches all orders and all products that will be displayed on the userOrders page
     if(session){
         // The orders that have been placed by the current authenticated user
+        await connectToDb()
         const userOrders: OrderData[] = await orderModel.find({clientDocId:new ObjectId(session?.user.userDocId)})
         const productPromises: Promise<ProductData>[] = []
         userOrders.map(async order => {

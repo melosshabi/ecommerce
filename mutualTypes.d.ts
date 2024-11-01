@@ -10,6 +10,7 @@ interface Product {
     quantity:number,
     pictures:string[],
     productReviews:Array,
+    createdAt:Date
 }
 type PublicUserInfo = {
     username:string,

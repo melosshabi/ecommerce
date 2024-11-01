@@ -55,10 +55,6 @@ type WishlistObject = {
 interface CartObject extends WishlistObject {
     desiredQuantity:number
 }
-// This type is used to fetch and display the products posted by the signed in user the in UserProductsList component
-interface UserProduct extends Product{
-    createdAt:Date
-}
 type ProductLink = {
     productId:string
 }

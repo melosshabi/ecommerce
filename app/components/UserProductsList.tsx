@@ -7,7 +7,7 @@ import Loader from './Loader'
 
 export default function UserProductsList() {
 
-  const [userProducts, setUserProducts] = useState<Array<UserProduct>>([])
+  const [userProducts, setUserProducts] = useState<Array<Product>>([])
   const [reqPending, setReqPending] = useState<boolean>(true)
 
   useEffect(() => {

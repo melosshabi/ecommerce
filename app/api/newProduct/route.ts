@@ -55,7 +55,8 @@ export async function POST(req:Request){
                     return resolve(res)
                 }).end(buffer)
             })
-            picturesUrls.push(cloudinaryRes.url)
+            const {url} = await cloudinaryRes
+            picturesUrls.push(url)
         }
     }
 

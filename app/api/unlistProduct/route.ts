@@ -3,16 +3,30 @@ import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import productModel from "@/models/product"
 import { NextResponse } from "next/server"
 import { ObjectId } from "mongodb"
+import { decrypt } from "@/lib/authLib"
 
 export async function DELETE(req:Request){
+    const mobile = req.headers.get("Mobile")
+    if(mobile){
+        const authorization = req.headers.get("Authorization")
+        if(!authorization) return NextResponse.json({msg:"unauthenticated"}, {status:403})
+        const token = authorization.split(" ")[1]
+        const user = await decrypt(token)
+        const data = await req.json()
+        const dbDeletionRes = await productModel.deleteOne({_id:new ObjectId(data.productDocId), posterDocId:new ObjectId(user._id as string)})
+        if(dbDeletionRes.deletedCount === 0){
+            return NextResponse.json({msg:"unlist-failed"}, {status:500})
+        }
+        return NextResponse.json({msg:"product-unlisted"})
+    }
     const session = await getServerSession(nextAuthOptions)
     if(!session){
-        return NextResponse.json({errMessage:"You need to sign in before removing a product", errCode:"unauthenticated"}, {status:400})
+        return NextResponse.json({errMsg:"You need to sign in before removing a product", errCode:"unauthenticated"}, {status:400})
     }
     const data = await req.json()
-    const product = await productModel.deleteOne({_id:new Object(data.productToDeleteId), posterDocId:new ObjectId(session?.user.userDocId)})
-    if(product.deletedCount === 0){
-        return NextResponse.json({message:"There was a problem deleting this product", msgCode:'failed-to-delete'})
+    const dbDeletionRes = await productModel.deleteOne({_id:new ObjectId(data.productToDeleteId), posterDocId:new ObjectId(session?.user.userDocId)})
+    if(dbDeletionRes.deletedCount === 0){
+        return NextResponse.json({msg:"unlist-failed"}, {status:500})
     }
-    return NextResponse.json({message:"Unlisted Successfully", msgCode:"product-unlisted"})
+    return NextResponse.json({msg:"product-unlisted"})
 }

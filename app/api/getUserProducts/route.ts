@@ -15,6 +15,7 @@ export async function GET(req:Request){
         }
         const token = authorization.split(" ")[1]
         const user = await decrypt(token)
+        await connectToDb()
         const products = await productModel.find({posterDocId:new ObjectId(user._id as string)})
         return NextResponse.json({products})
     }

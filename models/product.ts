@@ -8,7 +8,7 @@ const productSchema = new Schema({
     },
     posterUsername:{
         type:String,
-        required:true
+        required:false
     },
     productName:{
         type:String,
@@ -17,10 +17,6 @@ const productSchema = new Schema({
     brandName:{
         type:String,
         required:false
-    },
-    noBrand:{
-        type:Boolean,
-        required:true
     },
     manufacturer:{
         type:String,

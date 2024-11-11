@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import { decrypt } from "@/lib/authLib"
 import { ObjectId } from "mongodb"
-import { decode } from "base64-arraybuffer"
+import { decode as decodeBase64 } from "base64-arraybuffer"
 
 cloudinary.v2.config({
     cloud_name:process.env.CLOUD_NAME,
@@ -27,7 +27,7 @@ export async function PATCH(req:Request){
             }
             const newProfilePicture = data.get("profilePicture") as string
             if(newProfilePicture){
-                const bytes = decode(newProfilePicture)
+                const bytes = decodeBase64(newProfilePicture)
                 const buffer = Buffer.from(bytes)
                 await new Promise((resolve, reject) => {
                     cloudinary.v2.uploader.upload_stream({folder:'ecommerce/profilePictures', public_id:`ProfilePictureOf${user._id}`}, (err, res) => {

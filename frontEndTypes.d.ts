@@ -21,7 +21,6 @@ type ProfilePageSidebar = {
 type ProductData = {
     productName:string,
     brandName?:string,
-    noBrand:boolean,
     manufacturer:string,
     price:number,
     quantity:number,

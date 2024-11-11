@@ -9,11 +9,9 @@ export default function PostProduct() {
 
     const router = useRouter()
     const session = useSession()
-    const [noBrand, setNobrand] = useState<boolean>(false)
     const [productData, setProductData] = useState<ProductData>({
         productName:'',
         brandName:'',
-        noBrand,
         manufacturer:'',
         price:0,
         quantity:0
@@ -52,13 +50,8 @@ export default function PostProduct() {
         }
         setUploadInProgress(true)
         const formData = new FormData()
-        // @ts-ignore
-        formData.set('userDocId', session.data?.user?.userDocId)
-        // @ts-ignore
-        formData.set('userId', session.data?.user?.userId)
         formData.set('productName', productData.productName)
         formData.set('brandName', productData.brandName ? productData.brandName : '')
-        formData.set('noBrand', noBrand.toString())
         formData.set('manufacturer', productData.manufacturer)
         formData.set('price', productData.price.toString())
         formData.set('quantity', productData.quantity.toString())
@@ -81,7 +74,6 @@ export default function PostProduct() {
                 setTimeout(() => router.push('/'), 3000)
             }
         }catch(err){
-            console.log(err)
             setUploadInProgress(false)
         }
         
@@ -97,9 +89,9 @@ return (
                 </div>
 
                 <div className="my-6 flex flex-col w-[95%] sm:items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
-                    <label className={`${noBrand && 'opacity-50'}`}>Brand Name <span className='text-red-600'>*</span></label>
-                    <input className="border-b border-gray w-[80%] transition-all duration-100 focus:border-orange disabled:cursor-not-allowed disabled:opacity-50" style={{outline:'none'}} required={!noBrand} type="text" name="brandName" disabled={noBrand} value={productData.brandName} onChange={e => handleInputChange(e)}/>
-                    <div className='my-4'><input className='mr-1' type="checkbox" name="noBrand" onChange={e => setNobrand(e.target.checked)} /><span>This product does not have a brand name</span></div>
+                    <label>Brand Name</label>
+                    <input className="border-b border-gray w-[80%] transition-all duration-100 focus:border-orange disabled:cursor-not-allowed disabled:opacity-50" style={{outline:'none'}} required={false} type="text" name="brandName" value={productData.brandName} onChange={e => handleInputChange(e)}/>
+                    {/*<div className='my-4'><input className='mr-1' type="checkbox" name="noBrand" onChange={e => setNobrand(e.target.checked)} /><span>This product does not have a brand name</span></div>*/}
                 </div>
 
                 <div className="my-6 flex flex-col w-[95%] sm:items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">

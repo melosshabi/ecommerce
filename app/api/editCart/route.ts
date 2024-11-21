@@ -28,7 +28,7 @@ export async function GET(req:Request){
         await Promise.all(cartProductPromises).then(res => {
             res.forEach((product, index) => {
                 const {_id, productName, manufacturer, productPrice, quantity,pictures} = product._doc
-                const finalProduct = {_id, productName, manufacturer, productPrice, productImage:pictures[0], availableQuantity:quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
+                const finalProduct = {_id, productName, manufacturer, productPrice, productImage:pictures[0], quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
                 cartProducts.push(finalProduct)
         })})
         return NextResponse.json({cartProducts})

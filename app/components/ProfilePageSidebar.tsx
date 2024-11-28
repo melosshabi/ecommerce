@@ -8,13 +8,17 @@ export default function ProfilePageSidebar({activePage} : ProfilePageSidebar) {
     useEffect(() => {
         const sidebarDiv = document.querySelector(`.${activePage}-div`) as HTMLDivElement
         const sidebarSvg = document.querySelector(`.${activePage}-div svg`) as HTMLSVGElement
-        sidebarDiv.classList.add('bg-lightOrange')
-        sidebarDiv.classList.add('text-white')
-        sidebarSvg.classList.add('fill-white')
+        if(sidebarDiv && sidebarSvg){
+            sidebarDiv.classList.add('bg-lightOrange')
+            sidebarDiv.classList.add('text-white')
+            sidebarSvg.classList.add('fill-white')
+        }
         return () => {
-            sidebarDiv.classList.remove('bg-lightOrange')
-            sidebarDiv.classList.remove('text-white')
-            sidebarSvg.classList.remove('fill-white')
+            if(sidebarDiv && sidebarSvg){
+                sidebarDiv.classList.remove('bg-lightOrange')
+                sidebarDiv.classList.remove('text-white')
+                sidebarSvg.classList.remove('fill-white')
+            }
         }
     }, [activePage])
 

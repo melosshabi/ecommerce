@@ -13,8 +13,8 @@ export default function PostProduct() {
         productName:'',
         brandName:'',
         manufacturer:'',
-        price:0,
-        quantity:0
+        price:1,
+        quantity:1
     })
     
     const [pictures, setPictures] = useState<FileList | null>(null)
@@ -83,33 +83,33 @@ return (
         <div>
             <form className='flex flex-col items-center' onSubmit={submitProduct}>
                 <h2 className='text-medium text-4xl my-10'>Start Selling</h2>
-                <div className="my-6 flex flex-col w-[95%] sm:items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+                <div className="my-6 flex flex-col w-[95%] items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
                     <label>Product Name <span className='text-red-600'>*</span></label>
                     <input className="border-b border-gray w-[80%] transition-all duration-100 focus:border-orange" style={{outline:'none'}} required type="text" name="productName" value={productData.productName} onChange={e => handleInputChange(e)}/>
                 </div>
 
-                <div className="my-6 flex flex-col w-[95%] sm:items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+                <div className="my-6 flex flex-col w-[95%] items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
                     <label>Brand Name</label>
                     <input className="border-b border-gray w-[80%] transition-all duration-100 focus:border-orange disabled:cursor-not-allowed disabled:opacity-50" style={{outline:'none'}} required={false} type="text" name="brandName" value={productData.brandName} onChange={e => handleInputChange(e)}/>
                     {/*<div className='my-4'><input className='mr-1' type="checkbox" name="noBrand" onChange={e => setNobrand(e.target.checked)} /><span>This product does not have a brand name</span></div>*/}
                 </div>
 
-                <div className="my-6 flex flex-col w-[95%] sm:items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+                <div className="my-6 flex flex-col w-[95%] items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
                     <label>Manufacturer <span className='text-red-600'>*</span></label>
                     <input className="border-b border-gray w-[80%] transition-all duration-100 focus:border-orange" style={{outline:'none'}} required type="text" name="manufacturer" value={productData.manufacturer} onChange={e => handleInputChange(e)}/>
                 </div>
 
-                <div className="my-6 flex flex-col w-[95%] sm:items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+                <div className="my-6 flex flex-col w-[95%] items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
                     <label>Price €<span className='text-red-600'>*</span></label>
                     <input className="border-b border-gray w-[80%] transition-all duration-100 focus:border-orange" style={{outline:'none'}} required type="number" name="price" value={productData.price} onChange={e => handleInputChange(e)}/>
                 </div>
 
-                <div className="my-6 flex flex-col w-[95%] sm:items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+                <div className="my-6 flex flex-col w-[95%] items-center md:w-[80%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
                     <label>Quantity<span className='text-red-600'>*</span></label>
                     <input className="border-b border-gray w-[80%] transition-all duration-100 focus:border-orange" style={{outline:'none'}} required type="number" name="quantity" value={productData.quantity} onChange={e => handleInputChange(e)}/>
                 </div>
 
-                <div className="my-6 flex flex-col w-[95%] items-start sm:items-center">
+                <div className="my-6 flex flex-col w-[95%] items-center">
                     <label>Pictures<span className='ml-1'>(1-3)</span><span className='text-red-600'>*</span></label>
                     <input required type="file" multiple className='pictures-input hidden' accept='image/*' onChange={e => handleFileInputChange(e)}/>
                     <button className='bg-orange text-white py-1 px-4 my-5 rounded-lg transition-all duration-200 hover:bg-darkerOrange' type='button' onClick={openImagePicker}>Browse</button>
@@ -123,5 +123,4 @@ return (
         <Image src={checkmark} className="w-12 mr-2" alt="Green checkmark icon"/><p>Product was posted successfully</p>
         </div>
     </div>
-  )
-}
+)}

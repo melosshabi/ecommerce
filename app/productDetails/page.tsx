@@ -124,18 +124,18 @@ export default function ProductDetails() {
       <svg className="spinner w-[15dvw] h-[15dvh]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
       </div>
 
-      <div className="fullscreen-image absolute w-[100dvw] h-[90dvh] top-[10dvh] bg-white hidden items-center justify-between">
+      <div className="fullscreen-image absolute w-[100dvw] h-[90dvh] top-[10dvh] bg-white hidden items-center justify-between overflow-hidden">
         {/* X button */}
         <button className="bg-none border-none cursor-pointer p-3 rounded-md transition-all duration-300 hover:bg-gray absolute top-0 right-4" onClick={() => toggleFullscreenImage(fullscreenActions.close)}>
           <svg className='w-[50px] h-[50px]' xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/></svg>
         </button>
         {/* Prev img button */}
-        <button className="bg-none border-none cursor-pointer p-3 rounded-md transition-all duration-300 hover:bg-gray" onClick={() => changeFullscreenImage(actions.prev)}>
+        <button className="bg-none border-none cursor-pointer p-1 rounded-md transition-all duration-300 hover:bg-gray sm:p-3" onClick={() => changeFullscreenImage(actions.prev)}>
         <svg className="w-[50px] h-[50px] rotate-180" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
         </button>
-        <Image src={fullscreenImage as string} width={800} height={800} alt="Fullscreen image of the product"/>
+        <Image src={fullscreenImage as string} width={800} height={800} className='w-54' alt="Fullscreen image of the product"/>
         {/* Next img button */}
-        <button className="bg-none border-none cursor-pointer p-3 rounded-md transition-all duration-300 hover:bg-gray" onClick={() => changeFullscreenImage(actions.next)}>
+        <button className="bg-none border-none cursor-pointer p-1 rounded-md transition-all duration-300 hover:bg-gray sm:p-3" onClick={() => changeFullscreenImage(actions.next)}>
         <svg className='w-[50px] h-[50px]' xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
         </button>
       </div>
@@ -151,7 +151,7 @@ export default function ProductDetails() {
                 product.pictures.map((picture, index) => {
                   if(index === 0){
                     return(
-                    <button onClick={() => handleImageChange(index)} className='product-image-btns bg-none border-none border-b-[1px] rounded-lg p-1 cursor-pointer transition-all duration-300 hover:bg-gray active-product-image-btn' key={index}>
+                    <button onClick={() => handleImageChange(index)} className='product-image-btns bg-gray border-none border-b-[1px] rounded-lg p-1 cursor-pointer transition-all duration-300 hover:bg-gray active-product-image-btn' key={index}>
                       <Image className="rounded-lg" src={picture as string | ""} alt="Pictures of the product" width={100} height={100}/>
                     </button>
                     )

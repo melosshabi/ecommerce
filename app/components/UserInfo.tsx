@@ -87,10 +87,12 @@ export default function UserInfo({username, email, profilePictureUrl}:UserInfo) 
           <input className='rounded-md p-2 border transition-all duration-100 focus:border-orange' style={{outline:'none'}} value={newEmail} onChange={e => setNewEmail(e.target.value)}/>
         </div>
       </div>
-      {
-        !localPictureUrl ? <Image className="m-auto my-6 block" width={100} height={100} src={profilePictureUrl ? profilePictureUrl : userIcon} alt="Profile picture of the signed in user"/>
-        : <Image width={100} height={100} className="m-auto my-6 block" src={localPictureUrl} alt="Preview of the newly selected picture"/>
-      }
+      <div className='w-28 h-28 m-auto overflow-hidden rounded-full flex justify-center items-center'>
+        {
+          !localPictureUrl ? <Image className="w-full" width={100} height={100} src={profilePictureUrl ? profilePictureUrl : userIcon} alt="Profile picture of the signed in user"/>
+          : <Image width={100} height={100} className="" src={localPictureUrl} alt="Preview of the newly selected picture"/>
+        }
+      </div>
       <input onChange={e => handleFileChange(e)} id="file-input" type="file" style={{display:'none'}} accept="image/*"/>
       <button className="block m-auto my-4 bg-orange text-white rounded-lg text-[1.2em] py-2 px-4 transition-all duration-200 hover:bg-darkerOrange" onClick={openImagePicker}>Select a new picture</button>
       <button className='block m-auto my-4 bg-orange text-white rounded-lg text-[1.2em] py-2 px-4 transition-all duration-200 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:bg-orange disabled:opacity-70' disabled={updateInProgress} onClick={handleSubmit}>{!updateInProgress ? "Save" : "Saving"}</button>

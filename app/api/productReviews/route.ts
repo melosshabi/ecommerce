@@ -76,7 +76,6 @@ export async function PATCH(req:Request){
     const session = getServerSession(nextAuthOptions)
     if(!session) return NextResponse.json({errMessage:"You need to sign in", errCode:"unauthenticated"}, {status:400})
     const data = await req.json()
-    console.log(data)
     if(!data._id) return NextResponse.json({errMessage:"You need to provide an ID", errCode:"missing-id"}, {status:400})
     await productReviewModel.findOneAndUpdate({_id:new ObjectId(data._id)}, {reviewText:data.reviewText, rating:data.rating, dateEdited:Date.now()})
     return NextResponse.json({messageCode:"review-edited"})

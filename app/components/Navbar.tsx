@@ -43,11 +43,8 @@ export default function Navbar() {
   },[session])
   function toggleNavMenu() {
     const navMenu = document.querySelector('.nav-menu') as HTMLDivElement
-    // navMenu.classList.toggle("h-auto")
     navMenu.classList.toggle("max-h-0")
     navMenu.classList.toggle("max-h-[30dvh]")
-    // if(session.status === 'authenticated') navMenu.classList.toggle('active-nav-menu')
-    // else if(session.status === "unauthenticated") navMenu.classList.toggle('active-unauth-nav-menu')
   }
 
   const router = useRouter()

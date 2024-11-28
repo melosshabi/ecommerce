@@ -151,13 +151,13 @@ export default function ProductDetails() {
                 product.pictures.map((picture, index) => {
                   if(index === 0){
                     return(
-                    <button onClick={() => handleImageChange(index)} className='product-image-btns bg-gray border-none border-b-[1px] rounded-lg p-1 cursor-pointer transition-all duration-300 hover:bg-gray active-product-image-btn' key={index}>
+                    <button onClick={() => handleImageChange(index)} className='product-image-btns bg-gray border-none border-b-[1px] rounded-lg p-1 cursor-pointer transition-all duration-300 hover:bg-gray' key={index}>
                       <Image className="rounded-lg" src={picture as string | ""} alt="Pictures of the product" width={100} height={100}/>
                     </button>
                     )
                   }
                     return (
-                      <button onClick={() => handleImageChange(index)} className='product-image-btns bg-none border-none border-b-[1px] rounded-lg p-1 cursor-pointer transition-all duration-300 hover:bg-gray active-product-image-btn' key={index}>
+                      <button onClick={() => handleImageChange(index)} className='product-image-btns bg-none border-none border-b-[1px] rounded-lg p-1 cursor-pointer transition-all duration-300 hover:bg-gray' key={index}>
                       <Image className="rounded-lg" src={picture as string | ""} alt="Pictures of the product" width={100} height={100}/>
                     </button>
                     )

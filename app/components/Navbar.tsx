@@ -115,7 +115,7 @@ export default function Navbar() {
               <li><Link onClick={toggleNavMenu} href="/userProfile/cart" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Cart</Link></li>
               <li><Link onClick={toggleNavMenu} href="/userProfile/wishlist" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Wishlist</Link></li>
               {session.status === "authenticated" && <li><Link onClick={toggleNavMenu} href="/postProduct" className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Sell</Link></li>}
-              {session.status === "authenticated" && <li><button onClick={() => signOut()} className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Sign out</button></li>}
+              {session.status === "authenticated" && <li><button onClick={() => signOut({callbackUrl:process.env.NEXT_PUBLIC_URL})} className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray'>Sign out</button></li>}
               {session.status === "unauthenticated" && <li><Link className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray' onClick={toggleNavMenu} href="/api/auth/signin">Sign in</Link></li>}
               {session.status === "unauthenticated" && <li><Link className='block w-full text-base font-normal no-underline text-center cursor-pointer bg-none border-none py-3 shadow-[0_0_1px_black] transition-all duration-[250ms] hover:bg-lighterGray' onClick={toggleNavMenu} href="/signup">Sign up</Link></li>}
             </ul>
@@ -138,13 +138,13 @@ export default function Navbar() {
               <li><Link onClick={() => toggleSidebar()} href="/userProfile/cart" className='nav-menu-links block w-full text-[1em] font-normal no-underline text-center cursor-pointer bg-none py-[10px] border-t shadow[0_0_1px_black] transition-all duration[250ms] hover:bg-lighterGray'>Cart</Link></li>
               <li><Link onClick={() => toggleSidebar()} href="/userProfile/wishlist" className='nav-menu-links block w-full text-[1em] font-normal no-underline text-center cursor-pointer bg-none border-y border-black py-[10px] shadow[0_0_1px_black] transition-all duration[250ms] hover:bg-lighterGray'>Wishlist</Link></li>
               {session.status === 'authenticated' && <li><Link onClick={() => toggleSidebar()} href="/postProduct" className='nav-menu-links block w-full text-[1em] font-normal no-underline text-center cursor-pointer bg-none py-[10px] shadow[0_0_1px_black] transition-all duration[250ms] hover:bg-lighterGray'>Sell</Link></li>}
-              {session.status === 'authenticated' && <li><button onClick={() => signOut()} className='nav-menu-links block w-full text-[1em] font-normal no-underline text-center cursor-pointer bg-none border-y border-black py-[10px] shadow[0_0_1px_black] transition-all duration[250ms] hover:bg-lighterGray'>Sign out</button></li>}
+              {session.status === 'authenticated' && <li><button onClick={() => signOut({callbackUrl:process.env.NEXT_PUBLIC_URL})} className='nav-menu-links block w-full text-[1em] font-normal no-underline text-center cursor-pointer bg-none border-y border-black py-[10px] shadow[0_0_1px_black] transition-all duration[250ms] hover:bg-lighterGray'>Sign out</button></li>}
             </ul>
             {
               session.status === 'unauthenticated' &&
               <ul className="w-full flex justify-around mb-5">
-                <li><Link onClick={() => signOut()} href="/api/auth/signin" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign In</Link></li>
-                <li><Link onClick={() => signOut()} href="/signup" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign Up</Link></li>
+                <li><Link onClick={() => toggleSidebar()} href="/api/auth/signin" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign In</Link></li>
+                <li><Link onClick={() => toggleSidebar()} href="/signup" className='py-2 px-4 rounded-[20px] text-[1.1rem] cursor-pointer bg-orange text-white no-underline transition-all duration[250ms] hover:bg-white hover:text-black'>Sign Up</Link></li>
               </ul>
             }
         </div>

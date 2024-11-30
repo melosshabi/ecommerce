@@ -6,40 +6,40 @@ import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import navbarCart from '../images/navbar-cart.png'
-import updateCartListOrWishlist from '@/lib/updateUserCartOrWishlist'
+// import updateCartListOrWishlist from '@/lib/updateUserCartOrWishlist'
 
-enum listToUpdateEnum {
-  cartList,
-  wishlist
-}
+// enum listToUpdateEnum {
+//   cartList,
+//   wishlist
+// }
 export default function Navbar() {
   const session = useSession()
   console.log(session)
   const path = usePathname()
   useEffect(() => {
     if(path !== "/thank-you") localStorage.removeItem('stripeSessionId')
-    const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
-    const localCart = JSON.parse(localStorage.getItem('localCart') as string)
-    if(session.status === 'authenticated' && localWishList){
-      const mergedWishlists = [...session.data.user.wishlist, ...localWishList]
-      let filteredMergedWishlists = mergedWishlists.filter(function(this:Set<string>, {productDocId}) {
-        return !this.has(productDocId) && this.add(productDocId)
-      }, new Set<string>())
-      session.data.user.wishlist = filteredMergedWishlists
-      localStorage.removeItem('localWishList')
-      // The function below is used to update the wishlist on the database to include the wishlist stored on localStorage
-      if(filteredMergedWishlists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedWishlists, listToUpdateEnum.wishlist)
-    }
-    if(session.status === 'authenticated' && localCart){
-      const mergedCarLists = [...session.data.user.cart, ...localCart]
-      let filteredMergedCartLists = mergedCarLists.filter(function(this:Set<string>, {productDocId}) {
-        return !this.has(productDocId) && this.add(productDocId)
-      }, new Set<string>())
-      session.data.user.cart = filteredMergedCartLists
-      localStorage.removeItem('localCart')
-      // The function below is used to update the cart list on the database to include the cart list stored on localStorage
-      if(filteredMergedCartLists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedCartLists, listToUpdateEnum.cartList)
-    }
+    // const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
+    // const localCart = JSON.parse(localStorage.getItem('localCart') as string)
+    // if(session.status === 'authenticated' && localWishList){
+    //   const mergedWishlists = [...session.data.user.wishlist, ...localWishList]
+    //   let filteredMergedWishlists = mergedWishlists.filter(function(this:Set<string>, {productDocId}) {
+    //     return !this.has(productDocId) && this.add(productDocId)
+    //   }, new Set<string>())
+    //   session.data.user.wishlist = filteredMergedWishlists
+    //   localStorage.removeItem('localWishList')
+    //   // The function below is used to update the wishlist on the database to include the wishlist stored on localStorage
+    //   if(filteredMergedWishlists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedWishlists, listToUpdateEnum.wishlist)
+    // }
+    // if(session.status === 'authenticated' && localCart){
+    //   const mergedCarLists = [...session.data.user.cart, ...localCart]
+    //   let filteredMergedCartLists = mergedCarLists.filter(function(this:Set<string>, {productDocId}) {
+    //     return !this.has(productDocId) && this.add(productDocId)
+    //   }, new Set<string>())
+    //   session.data.user.cart = filteredMergedCartLists
+    //   localStorage.removeItem('localCart')
+    //   // The function below is used to update the cart list on the database to include the cart list stored on localStorage
+    //   if(filteredMergedCartLists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedCartLists, listToUpdateEnum.cartList)
+    // }
   },[session])
   function toggleNavMenu() {
     const navMenu = document.querySelector('.nav-menu') as HTMLDivElement
@@ -95,7 +95,7 @@ export default function Navbar() {
         
         <div className="w-fit relative hidden md:flex items-center md:mr-1 2xl:mr-5">
           <div className="relative">
-            {session.status === "authenticated" && session.data?.user?.cart.length > 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{session.data?.user?.cart.length}</div>}
+            {session.status === "authenticated" && session.data?.user?.cartCount> 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{session.data?.user?.cartCount}</div>}
             {session.status === "unauthenticated" && (localCart && localCart.length) > 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{localCart.length}</div>}
             <Link href="/userProfile/cart" className="h-fit rounded-none bg-none p-0 mt-10">
               <Image className='nav-images max-w-10 max-h-10 inline-block' src={navbarCart} width={50} height={50} alt="Cart icon"/>

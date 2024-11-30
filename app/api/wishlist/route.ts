@@ -3,10 +3,28 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
 import { ObjectId } from "mongodb"
-import { BackendWishlistProduct, WishlistItem } from "@/backendTypes"
+import { BackendWishlistProduct, PromiseProduct, WishlistItem } from "@/backendTypes"
 import { decrypt } from "@/lib/authLib"
 import productModel from "@/models/product"
 import connectToDb from "@/lib/mongodb"
+
+async function getWishlistItems(userId:string){
+    await connectToDb()
+    const user = await userModel.findOne({_id:new ObjectId(userId as string)})
+    const wishlistProductPromises:Promise<PromiseProduct>[] = []
+    let wishlistProducts: WishlistItem[] = []
+    user.cart.map(async (cartObj:BackendWishlistProduct) => {
+        const promise = productModel.findOne({_id:cartObj.productDocId})
+        wishlistProductPromises.push(promise)
+    })
+    await Promise.all(wishlistProductPromises).then(res => {
+        res.forEach((product, index) => {
+            const {_id, productName, manufacturer, brandName, productPrice , pictures} = product._doc
+            const finalProduct = {_id, productName, manufacturer, brandName, productPrice, productImage:pictures[0], dateAdded:user.wishlist[index].dateAdded}
+            wishlistProducts.push(finalProduct)
+    })})
+    return wishlistProducts
+}
 
 export async function GET(req:Request){
     const mobile = req.headers.get("Mobile")
@@ -17,20 +35,12 @@ export async function GET(req:Request){
         }
         const token = session?.split(" ")[1]
         const user = await decrypt(token)
-        await connectToDb()
-        const userDb = await userModel.findOne({_id:new ObjectId(user._id as string)})
-        const productPromises: Promise<Product>[] = []
-        const wishlistItems:WishlistItem[] = []
-        userDb.wishlist.forEach((product:BackendWishlistProduct) => {
-            const promise = productModel.findOne({_id:product.productDocId})
-            productPromises.push(promise)
-        })
-        await Promise.all(productPromises).then(res => {
-            res.forEach((product:Product) => {
-                const {_id, productName, productPrice, manufacturer} = product
-                wishlistItems.push({productDocId:_id, productName, productPrice, manufacturer, productImage:product.pictures[0]})
-            })
-        })
+        const wishlistItems = await getWishlistItems(user._id as string)
+        return NextResponse.json({wishlistItems})
+    }
+    const session = await getServerSession(nextAuthOptions)
+    if(session){
+        const wishlistItems = await getWishlistItems(session.user.userDocId)
         return NextResponse.json({wishlistItems})
     }
 }

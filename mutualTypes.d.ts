@@ -33,5 +33,6 @@ type OrderData = {
     productDocId:string,
     desiredQuantity:number,
     productPrice:number,
-    totalPrice:number
+    totalPrice:number,
+    createdAt:Date
 }

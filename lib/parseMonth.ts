@@ -1,7 +1,7 @@
 export default function parseMonth(monthIndex:number){
     switch(monthIndex){
         case 0:
-         return  "Jan";
+          return  "Jan";
           
         case 1:
           return  "Feb";

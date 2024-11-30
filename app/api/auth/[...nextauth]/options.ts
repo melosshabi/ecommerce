@@ -48,21 +48,21 @@ export const nextAuthOptions:NextAuthOptions = {
         async signIn({ user, credentials }) {
 
             // @ts-ignore
-           if(user.errorCode === 'username-not-found'){
-            throw new Error("username-not-found")
-             // @ts-ignore
-           }else if(user.errorCode === 'incorrect-password'){
-            throw new Error("incorrect-password")
-           }
-           user.name = credentials?.username as string
-           return true
+            if(user.errorCode === 'username-not-found'){
+                throw new Error("username-not-found")
+              // @ts-ignore
+            }else if(user.errorCode === 'incorrect-password'){
+                throw new Error("incorrect-password")
+            }
+            user.name = credentials?.username as string
+            return true
         },
         async session({session, token}){
             await connectToDb()
             const user = await userModel.findOne({username:token.name})
             session.user.image = user._doc.profilePictureUrl
             session.user.userDocId = user._doc._id
-            session.user.cart = user._doc.cart
+            session.user.cartCount = user.cart.length
             session.user.wishlist = user._doc.wishlist
             return session
         }

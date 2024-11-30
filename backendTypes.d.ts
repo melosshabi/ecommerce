@@ -35,20 +35,24 @@ type PromiseProduct = {
     _doc:Product
 }
 // This type is used when extracting the necessary data for the cart page (route:editCart)
-type CartItems = {
+interface CartItem {
     productName:string,
+    brandName:string | undefined,
     manufacturer:string,
     productPrice:number,
     desiredQuantity:number,
-    dateAddedToCart:Date
+    dateAddedToCart:Date,
+    productImage:string
 }
 // This type is used when extracting the necessary data for the wishlist screen 
-type WishlistItem = {
-    productDocId:string,
+interface WishlistItem {
+    _id:string,
     productName:string,
     manufacturer:string,
+    brandName:string | undefined,
     productPrice:number,
-    productImage:string
+    productImage:string,
+    dateAdded:Date
 }
 // This type resembles the object of the wishlisted product which is stored inside the wishlist array on the users' documents
 interface WishlistObject {

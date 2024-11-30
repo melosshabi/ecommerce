@@ -4,9 +4,27 @@ import { ObjectId } from "mongodb"
 import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 import { nextAuthOptions } from "../auth/[...nextauth]/options"
-import { BackendCartProduct, CartItems, PromiseProduct } from "@/backendTypes"
+import { BackendCartProduct, CartItem, PromiseProduct } from "@/backendTypes"
 import connectToDb from "@/lib/mongodb"
 import { decrypt } from "@/lib/authLib"
+
+async function getCartItems(userId:string){
+    await connectToDb()
+        const user = await userModel.findOne({_id:new ObjectId(userId as string)})
+        const cartProductPromises:Promise<PromiseProduct>[] = []
+        let cartProducts: CartItem[] = []
+        user.cart.map(async (cartObj:BackendCartProduct) => {
+            const promise = productModel.findOne({_id:cartObj.productDocId})
+            cartProductPromises.push(promise)
+        })
+        await Promise.all(cartProductPromises).then(res => {
+            res.forEach((product, index) => {
+                const {_id, productName, manufacturer, brandName, productPrice, quantity,pictures} = product._doc
+                const finalProduct = {_id, productName, manufacturer, brandName, productPrice, productImage:pictures[0], quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
+                cartProducts.push(finalProduct)
+        })})
+        return cartProducts
+}
 
 export async function GET(req:Request){
     const mobile = req.headers.get("Mobile")
@@ -17,20 +35,12 @@ export async function GET(req:Request){
     if(mobile && authorization){
         const token = authorization.split(" ")[1]
         const session = await decrypt(token)
-        const cartProductPromises:Promise<PromiseProduct>[] = []
-        let cartProducts: CartItems[] = []
-        await connectToDb()
-        const user = await userModel.findOne({_id:new ObjectId(session._id as string)})
-        user.cart.map(async (cartObj:any) => {
-            const promise = productModel.findOne({_id:cartObj.productDocId})
-            cartProductPromises.push(promise)
-        })
-        await Promise.all(cartProductPromises).then(res => {
-            res.forEach((product, index) => {
-                const {_id, productName, manufacturer, productPrice, quantity,pictures} = product._doc
-                const finalProduct = {_id, productName, manufacturer, productPrice, productImage:pictures[0], quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
-                cartProducts.push(finalProduct)
-        })})
+        const cartProducts = getCartItems(session._id as string)
+        return NextResponse.json({cartProducts})
+    }
+    const session = await getServerSession(nextAuthOptions)
+    if(session){
+        const cartProducts = await getCartItems(session.user.userDocId as string)
         return NextResponse.json({cartProducts})
     }
 }

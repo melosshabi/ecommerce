@@ -19,6 +19,6 @@ export async function GET(req:Request){
             }
         }catch(err){
             console.log(err)
+            return NextResponse.json({errorMessage:"Couldn't fetch product data", errorCode:"couldnt-fetch"}, {status:500})
         }
-        return NextResponse.json({errorMessage:"Couldn't fetch product data", errorCode:"couldnt-fetch"})
 }

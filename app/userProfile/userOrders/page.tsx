@@ -5,6 +5,7 @@ import Loader from '@/app/components/Loader'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import getProductById from '@/lib/getProductById'
+import parseMonth from '@/lib/parseMonth'
 
 export default function UserOrders() {
 
@@ -53,38 +54,46 @@ export default function UserOrders() {
       {!reqPending && ordersList.length > 0 && <h2 className='mb-4 text-center font-medium text-[1.5em] border-b border-black'>Orders</h2>}
       <Loader displayLoader={reqPending}/>
       {
-        !reqPending && !ordersList.length && <h2 className='text-[1.5em] font-medium'>You have not placed any orders yet</h2>
+        !reqPending && ordersList.length === 0 && productsData.length === 0 && <h2 className='text-3xl'>You haven't placed any orders yet</h2>
       }
-
       {
         // Authenticated Users
         session.status === "authenticated" ?
         ordersList?.map((order, index) => {
+          const date = new Date(order.createdAt)
+          const year = date.getFullYear()
+          const month = parseMonth(date.getMonth())
+          const day = date.getDate()
           return (
             <div className="flex flex-col items-center border-b border-black p-4 xl:flex-row" key={index}>
-                <div className="order-product-image-wrapper">
-                  <Image className="order-product-image" src={productsData[index].pictures[0] as string} alt="Product Image" width={100} height={100}/>
+                <div>
+                  <Image src={productsData[index].pictures[0] as string} alt="Product Image" width={100} height={100}/>
                 </div>
                 <div className="text-center my-4 xl:text-start xl:ml-6">
-                  {/* <p className='order-id-link' style={{fontWeight:"bold", marginBottom:5}}>Order ID: #{order._id}</p> */}
                   <p>{productsData[index].productName}</p>
                   <p>Quantity: {order.desiredQuantity}</p>
                   <p>Total Price: {order.totalPrice}€</p>
+                  <p>Date: {`${month}-${day}-${year}`}</p>
                 </div>
             </div>
           )
       }):
       // Unauthenticated users
       productsData.map((product, index) => {
+          const date = new Date(ordersList[index].createdAt)
+          const year = date.getFullYear()
+          const month = parseMonth(date.getMonth())
+          const day = date.getDate()
         return (
-          <div className="order-summary" key={index}>
-              <div className="order-product-image-wrapper">
-                <Image className="order-product-image" src={product.pictures[0] as string} alt="Product Image" width={100} height={100}/>
+          <div className="flex flex-col items-center border-b border-black p-4 xl:flex-row" key={index}>
+              <div>
+                <Image src={product.pictures[0] as string} alt="Product Image" width={100} height={100}/>
               </div>
-              <div className="order-details">
+              <div className="text-center my-4 xl:text-start xl:ml-6">
                 <p>{productsData[index].productName}</p>
                 <p>Quantity: {ordersList[index].desiredQuantity}</p>
                 <p>Total Price: {ordersList[index].totalPrice}€</p>
+                <p>Date: {`${month}-${day}-${year}`}</p>
               </div>
           </div>
         )

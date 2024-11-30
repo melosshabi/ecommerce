@@ -4,7 +4,7 @@ declare module "next-auth"{
     interface Session{
         user:{
             userDocId:string,
-            cart:CartObject[],
+            cartCount:number
             wishlist:WishlistObject[]
         } & DefaultSession['user']
     }

@@ -13,8 +13,8 @@ async function getWishlistItems(userId:string){
     const user = await userModel.findOne({_id:new ObjectId(userId as string)})
     const wishlistProductPromises:Promise<PromiseProduct>[] = []
     let wishlistProducts: WishlistItem[] = []
-    user.cart.map(async (cartObj:BackendWishlistProduct) => {
-        const promise = productModel.findOne({_id:cartObj.productDocId})
+    user.wishlist.map(async (wishlistObj:BackendWishlistProduct) => {
+        const promise = productModel.findOne({_id:wishlistObj.productDocId})
         wishlistProductPromises.push(promise)
     })
     await Promise.all(wishlistProductPromises).then(res => {
@@ -45,38 +45,46 @@ export async function GET(req:Request){
     }
 }
 
+async function addToDatabaseWishlist(userId:string, productId:string){
+    try {
+        await connectToDb()
+        const userDb = await userModel.findOne({_id: new ObjectId(userId)})
+        if(userDb.wishlist.some((product:BackendWishlistProduct) => product.productDocId.toString() === productId)){
+            return NextResponse.json({
+                message:"Product already in wishlist",
+                messageCode:"product-already-in-wishlist"
+            }, {status:400})
+        }
+        await userModel.updateOne({_id: new ObjectId(userId)}, {
+            $push:{wishlist:{
+                productDocId:new ObjectId(productId),
+                dateAdded: new Date()
+            }}
+        })
+        return true
+        
+    }catch (error) {
+        return false
+    }
+}
 export async function PATCH(req:Request){
     const mobile = req.headers.get("Mobile")
     const data = await req.json()
+
     if(mobile){
         const authorization = req.headers.get("Authorization")
         const token = authorization?.split(" ")[1]
         const user = await decrypt(token as string)
-        try {
-            await connectToDb()
-            const userDb = await userModel.findOne({_id: new ObjectId(user._id as string)})
-            if(userDb.wishlist.some((product:BackendWishlistProduct) => product.productDocId.toString() == data.productDocId)){
+        if(await addToDatabaseWishlist(user._id as string, data.productDocId)){
                 return NextResponse.json({
-                    message:"Product already in wishlist",
-                    messageCode:"product-already-in-wishlist"
-                }, {status:400})
-            }
-            await userModel.findOneAndUpdate({_id: new ObjectId(user._id as string)}, {
-                $push:{wishlist:{
-                    productDocId:new ObjectId(data.productDocId),
-                    dateAdded: new Date()
-                }}
-            }, {new:true})
-    
-            return NextResponse.json({
                 message:"Added to wishlist",
                 messageCode:"added-to-wishlist"
             })
-        }catch (error) {
+        }else{
             return NextResponse.json({
                 errorMessage:"Something went wrong",
                 messageCode:"unkown-error"
-            }, {status:400})
+            }, {status:500})
         }
     }
     
@@ -86,35 +94,23 @@ export async function PATCH(req:Request){
     }
 
     try {
-        await connectToDb()
-        const user = await userModel.findOne({_id: new ObjectId(session?.user.userDocId)})
-        if(user.wishlist.some((product:BackendWishlistProduct) => product.productDocId.toString() == data.productDocId)){
+        if(await addToDatabaseWishlist(session.user.userDocId, data.productDocId)){
             return NextResponse.json({
-                message:"Product already in wishlist",
-                messageCode:"product-already-in-wishlist"
-            }, {status:400})
-        }
-        await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
-            $push:{wishlist:{
-                productDocId:new ObjectId(data.productDocId),
-                dateAdded: new Date()
-            }}
-        }, {new:true})
-        session.user.wishlist.push({
-            productDocId:data.productDocId,
-            dateAdded: new Date().toISOString()
-        })
-
-        return NextResponse.json({
             message:"Added to wishlist",
             messageCode:"added-to-wishlist"
         })
+        }else{
+            return NextResponse.json({
+                errorMessage:"Something went wrong",
+                messageCode:"unkown-error"
+            }, {status:500})
+        }
     } catch (error) {
         console.log(error)
         return NextResponse.json({
             errorMessage:"Something went wrong",
             messageCode:"unkown-error"
-        }, {status:400})
+        }, {status:500})
     }
 }
 
@@ -149,9 +145,9 @@ export async function DELETE(req:Request){
     }
     try {
         await connectToDb()
-        await userModel.findOneAndUpdate({_id: new ObjectId(session?.user.userDocId)}, {
+        await userModel.updateOne({_id: new ObjectId(session?.user.userDocId)}, {
             $pull:{wishlist:{productDocId:new ObjectId(data.productDocId)}}
-        }, {new:true})
+        })
 
         return NextResponse.json({
             messageCode:'removed-from-wishlist',

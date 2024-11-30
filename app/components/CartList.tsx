@@ -20,12 +20,10 @@ export default function CartList() {
   useEffect(() =>{
     const controller = new AbortController()
     async function getCartItems(){
-      if(session.status === 'authenticated'){
         const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/editCart`, {signal:controller.signal})
         const data = await res.json()
         setCartItems([...data.cartProducts])
         setReqPending(false)
-      }
     }
     getCartItems()
 

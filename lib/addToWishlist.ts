@@ -38,7 +38,9 @@ export default async function addToWishlist(authenticated:boolean, productDocId:
     })
 
     const parsedRes = await res.json()
+    console.log(parsedRes)
     if(parsedRes.messageCode === 'added-to-wishlist'){
-      window.location.reload()
+      // window.location.reload()
+      
     }
   }

@@ -134,11 +134,13 @@ export default function Cart() {
         const day = dateAddedToCart.getDate()
         const hours = dateAddedToCart.getHours()
         const minutes = dateAddedToCart.getMinutes()
-
+          
         return (
           <div className="flex flex-col my-2 border-b border-black py-2 xl:flex-row xl:justify-around" key={index}>
             <div className="flex justify-center items-start h-fit">
-              <Image className="w-[170px]" src={session.status === 'authenticated' ? item.productImage as string : item.pictures[0]} width={200} height={200} alt="Cart item image"/>
+              {/* <Image className="w-[170px]" src={session.status !== "loading" && session.status === 'authenticated' ? item.productImage as string : item.pictures[0].toString()} width={200} height={200} alt="Cart item image"/> */}
+              {session.status === 'authenticated' && <Image className="w-[170px]" src={item.productImage as string} width={200} height={200} alt="Cart item image"/>}
+              {session.status === 'unauthenticated' && <Image className="w-[170px]" src={item.pictures[0]} width={200} height={200} alt="Cart item image"/>}
             </div>
 
             <div className='text-center'>

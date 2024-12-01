@@ -1,8 +1,9 @@
+"use client"
 import React, { useEffect, useState } from 'react'
 import {parseMonth} from '@/lib/lib'
 import Image from 'next/image'
-import plus from '../images/plus.svg'
-import minus from '../images/minus.svg'
+import plus from '../../images/plus.svg'
+import minus from '../../images/minus.svg'
 import Loader from '../../components/Loader'
 
 export default function UserProductsList() {

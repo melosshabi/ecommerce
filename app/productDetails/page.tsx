@@ -12,17 +12,24 @@ export default function ProductDetails() {
   const searchParams = useSearchParams()
   const productDocId = searchParams.get("_id")
   const router = useRouter()
+  const session = useSession()
   const [product, setProduct] = useState<CartProduct | undefined>(undefined)
-  let localStorageCart = []
-  let localStorageWishlist = []
-  if (typeof window !== 'undefined'){
-    localStorageCart = JSON.parse(localStorage.getItem('localCart') as string)
-    localStorageWishlist = JSON.parse(localStorage.getItem('localWishList') as string)
-  }
+  const [localStorageCart, setLocalStorageCart] = useState<LocalCartObject[]>([])
+  const [localStorageWishlist, setLocalStorageWishlist] = useState<LocalWishlistObject[]>([])
   // This variable holds the url of the large image that is displayed on the right side of the image sidebar
   const [activeImage, setActiveImage] = useState<string>("")
+  // This state is used to determine whether authenticated users have this product on their wishlist or cart
+  const [isProductInLists, setIsProductInLists] = useState({
+    cart:false,
+    wishlist:false
+  })
   const [error, setError] = useState<string>("")
-
+  const [showSpinner, setShowSpinner] = useState(true)
+  async function checkUserLists(){
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/checkUserLists?_id=${productDocId}`)
+    const data = await res.json()
+    setIsProductInLists({...data.productExists})
+  }
   useEffect(() => {
     const controller = new AbortController();
     async function fetchProduct(){
@@ -37,13 +44,19 @@ export default function ProductDetails() {
       }
       setProduct(productData)
       setActiveImage(productData.pictures[0])
-      const spinner = document.querySelector('.spinner-wrapper') as HTMLDivElement
-      spinner.classList.add("hidden")
-      spinner.classList.remove('flex')
+      setShowSpinner(false)
     }
+    
     fetchProduct()
+    checkUserLists()
     return () => controller.abort()
   },[])
+  useEffect(() => {
+    if (session.status === 'unauthenticated'){
+      setLocalStorageCart(JSON.parse(localStorage.getItem('localCart') as string))
+      setLocalStorageWishlist(JSON.parse(localStorage.getItem('localWishList') as string))
+    }
+  }, [session])
   
   function handleImageChange(index:number){
     const buttons = document.querySelectorAll('.product-image-btns')
@@ -111,14 +124,12 @@ export default function ProductDetails() {
     }
   } 
 
-  const session = useSession()
-
   return (
     <div className='product-page bg-white flex justify-center items-center flex-col w-[100dvw] min-h-[100dvh] max-h-fit'>
       {/* Loading spinner */}
-      <div className="spinner-wrapper w-[100dvw] h-[100dvh] fixed z-[2] bg-[#000000f2] top-0 flex items-center justify-center">
-      <svg className="spinner w-[15dvw] h-[15dvh]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
-      </div>
+      { showSpinner && <div className="spinner-wrapper w-[100dvw] h-[100dvh] fixed z-[2] bg-[#000000f2] top-0 flex items-center justify-center">
+        <svg className="spinner w-[15dvw] h-[15dvh]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
+      </div>}
 
       <div className="fullscreen-image absolute w-[100dvw] h-[90dvh] top-[10dvh] bg-white hidden items-center justify-between overflow-hidden">
         {/* X button */}
@@ -184,12 +195,22 @@ export default function ProductDetails() {
                   {/* Add to cart and remove from cart code for unauthenticated users */}
                   {
                     session.status === "unauthenticated" && !(localStorageCart && localStorageCart.some((localStorageProduct:any) => localStorageProduct.productDocId === productDocId)) ?
-                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" disabled={error ? true : false} onClick={() => addToCart(false, productDocId as string, userQuantity, false)}>Add to cart
+                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" disabled={error ? true : false} onClick={async () => {
+                        const res = await addToCart(false, productDocId as string, userQuantity, false)
+                        if(res){
+                          setLocalStorageCart(JSON.parse(localStorage.getItem('localCart') as string))
+                        }
+                      }}>Add to cart
                     <svg className='w-5 h-5 fill-white mx-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                     <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
                   </button> 
                     : session.status === 'unauthenticated' && localStorageCart.some((localStorageProduct:any) => localStorageProduct.productDocId === productDocId) ?
-                  <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={() => removeFromCart(undefined, productDocId as string)}>Remove from cart
+                  <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={async () => {
+                      const res = await removeFromCart(undefined, productDocId as string)
+                      if(res){
+                          setLocalStorageCart(JSON.parse(localStorage.getItem('localCart') as string))
+                      }
+                    }}>Remove from cart
                     <svg className='w-5 h-5 fill-white mx-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                     <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
                   </button>
@@ -198,25 +219,52 @@ export default function ProductDetails() {
                   }
 
                   {/* Add to cart and remove from cart code for authenticated users */}
-                  {/* {session.status === "authenticated" && !session.data?.user.cart.some((product:any) => product.productDocId === productDocId) ?
-                  <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" disabled={error ? true : false} onClick={() => addToCart(true, productDocId as string, userQuantity, false)}>Add to cart
+                  {session.status !== "unauthenticated" && !isProductInLists.cart ?
+                  <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" disabled={error ? true : false} onClick={async () => {
+                      const res = await addToCart(true, productDocId as string, userQuantity, false)
+                      if(res){
+                          setShowSpinner(true)
+                          session.update()
+                          await checkUserLists()
+                          setTimeout(() => setShowSpinner(false), 100)
+                      } 
+                    }}>Add to cart
                     <svg className='w-5 h-5 fill-white mx-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                     <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
                   </button> : session.status === "authenticated" &&
                   
-                  <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={() => removeFromCart(session?.data?.user.userDocId, productDocId as string)}>Remove from cart
+                  <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={async () => {
+                      const res = await removeFromCart(session?.data?.user.userDocId, productDocId as string)
+                      if(res){
+                        setShowSpinner(true)
+                          session.update()
+                          await checkUserLists()
+                          setTimeout(() => setShowSpinner(false), 100)
+                      } 
+                      
+                    }}>Remove from cart
                     <svg className='w-5 h-5 fill-white mx-2' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                     <path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
                   </button>
-                  } */}
+                  }
 
                   {/* Add to  and remove from wishlist code for unauthenticated users */}
                   {session.status === "unauthenticated" && !(localStorageWishlist && localStorageWishlist.some((product:any) => product.productDocId === productDocId)) ?
-                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={() => addToWishlist(false, productDocId as string, false)}>Add to wishlist
+                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={async () => {
+                        const res = await addToWishlist(false, productDocId as string, false)
+                        if(res){
+                          setLocalStorageWishlist(JSON.parse(localStorage.getItem('localWishList') as string))
+                        }
+                      }}>Add to wishlist
                       <svg className="w-5 h-5 fill-white mx-2" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/></svg>
                     </button>
                     : session.status === "unauthenticated" && localStorageWishlist && localStorageWishlist.some((product:any) => product.productDocId === productDocId) ? 
-                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={() => removeFromWishlist(undefined, productDocId as string)}>Remove from wishlist
+                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={async () => {
+                        const res = await removeFromWishlist(undefined, productDocId as string)
+                        if(res){
+                          setLocalStorageWishlist(JSON.parse(localStorage.getItem('localWishList') as string))
+                        }
+                      }}>Remove from wishlist
                       <svg className="w-5 h-5 fill-white mx-2" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/></svg>
                     </button>
                     :
@@ -224,12 +272,28 @@ export default function ProductDetails() {
                     }
 
                   {/* Add to  and remove from wishlist code for authenticated users */}
-                  {session.status === "authenticated" && !session.data?.user.wishlist.some((product:any) => product.productDocId === productDocId) ?
-                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={() => addToWishlist(true, productDocId as string, false)}>Add to wishlist
+                  {session.status !== "unauthenticated" && !isProductInLists.wishlist ?
+                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex items-center justify-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={async () => {
+                        const res = await addToWishlist(true, productDocId as string, false)
+                        if(res){
+                          setShowSpinner(true)
+                          session.update()
+                          await checkUserLists()
+                          setTimeout(() => setShowSpinner(false), 100)
+                        }
+                      }}>Add to wishlist
                       <svg className="w-5 h-5 fill-white mx-2" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/></svg>
                     </button>
-                    : session.status === "authenticated" &&
-                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex justify-center items-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={() => removeFromWishlist(session?.data?.user.userDocId as string, productDocId as string)}>Remove from wishlist
+                    : session.status !== "unauthenticated" &&
+                    <button className="text-[1em] mx-1 text-center cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex justify-center items-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]" onClick={async () => {
+                        const res = await removeFromWishlist(session?.data?.user.userDocId as string, productDocId as string)
+                        if(res){
+                          setShowSpinner(true)
+                          session.update()
+                          await checkUserLists()
+                          setTimeout(() => setShowSpinner(false), 100)
+                        }
+                      }}>Remove from wishlist
                       <svg className="w-5 h-5 fill-white mx-2" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M225.8 468.2l-2.5-2.3L48.1 303.2C17.4 274.7 0 234.7 0 192.8v-3.3c0-70.4 50-130.8 119.2-144C158.6 37.9 198.9 47 231 69.6c9 6.4 17.4 13.8 25 22.3c4.2-4.8 8.7-9.2 13.5-13.3c3.7-3.2 7.5-6.2 11.5-9c0 0 0 0 0 0C313.1 47 353.4 37.9 392.8 45.4C462 58.6 512 119.1 512 189.5v3.3c0 41.9-17.4 81.9-48.1 110.4L288.7 465.9l-2.5 2.3c-8.2 7.6-19 11.9-30.2 11.9s-22-4.2-30.2-11.9zM239.1 145c-.4-.3-.7-.7-1-1.1l-17.8-20c0 0-.1-.1-.1-.1c0 0 0 0 0 0c-23.1-25.9-58-37.7-92-31.2C81.6 101.5 48 142.1 48 189.5v3.3c0 28.5 11.9 55.8 32.8 75.2L256 430.7 431.2 268c20.9-19.4 32.8-46.7 32.8-75.2v-3.3c0-47.3-33.6-88-80.1-96.9c-34-6.5-69 5.4-92 31.2c0 0 0 0-.1 .1s0 0-.1 .1l-17.8 20c-.3 .4-.7 .7-1 1.1c-4.5 4.5-10.6 7-16.9 7s-12.4-2.5-16.9-7z"/></svg>
                     </button>
                     }

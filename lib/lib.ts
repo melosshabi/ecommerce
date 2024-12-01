@@ -87,7 +87,7 @@ export async function addToWishlist(authenticated:boolean, productDocId:string, 
             const wishListItems = [...localWishlist, {productDocId, dateAdded:new Date()}]
             const stringifiedWishlistItems = JSON.stringify(wishListItems)
             localStorage.setItem('localWishList', stringifiedWishlistItems)
-            return
+            return true
         }
     }
     if(!authenticated) {
@@ -112,7 +112,6 @@ export async function addToWishlist(authenticated:boolean, productDocId:string, 
     const parsedRes = await res.json()
     if(parsedRes.messageCode === 'added-to-wishlist'){
         return true
-        
     }
 }
 

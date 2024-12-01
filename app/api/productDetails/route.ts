@@ -7,6 +7,7 @@ export async function GET(req:Request){
         const {searchParams} = new URL(req.url)
         const _id = searchParams.get('_id')
         const desiredQuantity = searchParams.get("desiredQuantity")
+        const dateAdded = searchParams.get("dateAdded")
         if(!_id) {
             return NextResponse.json({errorMessage:"An ID is required", errorCode:'no-id'}, {status:400})
         }
@@ -14,7 +15,10 @@ export async function GET(req:Request){
             await connectToDb()
             const product = await productModel.findOne({_id:new ObjectId(_id)})
             if(product){
+                if(desiredQuantity && dateAdded) return NextResponse.json({...product._doc,  desiredQuantity:parseInt(desiredQuantity), dateAdded})
                 if(desiredQuantity) return NextResponse.json({...product._doc,  desiredQuantity:parseInt(desiredQuantity)})
+                if(dateAdded) return NextResponse.json({...product._doc,  dateAdded})
+                
                 return NextResponse.json(product)
             }
         }catch(err){

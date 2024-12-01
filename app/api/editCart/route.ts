@@ -20,7 +20,7 @@ async function getCartItems(userId:string){
         await Promise.all(cartProductPromises).then(res => {
             res.forEach((product, index) => {
                 const {_id, productName, manufacturer, brandName, productPrice, quantity,pictures} = product._doc
-                const finalProduct = {_id, productName, manufacturer, brandName, productPrice, productImage:pictures[0], quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAddedToCart:user.cart[index].dateAdded}
+                const finalProduct = {_id, productName, manufacturer, brandName, productPrice, productImage:pictures[0], quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAdded:user.cart[index].dateAdded}
                 cartProducts.push(finalProduct)
         })})
         return cartProducts
@@ -82,9 +82,9 @@ export async function PATCH(req:Request){
                 userDB.cart.map(async (product:BackendCartProduct) => {
                     if(product.productDocId.toString() === data.productDocId){
                         productUpdated = true
-                        await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string), "cart.productDocId": new ObjectId(data.productDocId)}, {
+                        await userModel.updateOne({_id:new ObjectId(user._id as string), "cart.productDocId": new ObjectId(data.productDocId)}, {
                             $set:{"cart.$.desiredQuantity":data.quantity}
-                        }, {new:true})
+                        })
                     }
                 })
                 if(productUpdated)
@@ -106,7 +106,7 @@ export async function PATCH(req:Request){
                     }
                 })
                 if(itemExists) return NextResponse.json({msg:"product-already-on-cart"})
-                await userModel.findOneAndUpdate({_id:new ObjectId(user._id as string)}, {
+                await userModel.updateOne({_id:new ObjectId(user._id as string)}, {
                     $push:{cart:{productDocId: new ObjectId(data.productDocId), desiredQuantity:data.desiredQuantity, dateAdded: new Date()}}
                 })
                 return NextResponse.json({msg:"added-to-cart"})
@@ -149,9 +149,9 @@ export async function PATCH(req:Request){
             message:"Updated cart",
             messageCode:"updated-cart"
         })
-        await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId)}, {
+        await userModel.updateOne({_id:new ObjectId(session.user.userDocId)}, {
             $push:{cart:{productDocId:new ObjectId(data.productDocId), desiredQuantity:data.desiredQuantity, dateAdded:new Date()}}
-        }, {new:true})
+        })
         return NextResponse.json({
             message:"Added to cart",
             messageCode:"added-to-cart"
@@ -195,10 +195,13 @@ export async function DELETE(req:Request){
     }
     
     try{
-        await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId)}, {
+        await connectToDb()
+        const user = await userModel.findOneAndUpdate({_id:new ObjectId(session.user.userDocId)}, {
             $pull:{cart:{productDocId:new ObjectId(data.productDocId)}}
-        })
+        }, {new:true})
+
     }catch(err){
+        console.log(err)
         return NextResponse.json({
             errorMessage:"There was a problem",
             errorCode:'unkown-error'

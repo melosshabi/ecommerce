@@ -1,4 +1,4 @@
-import getProducts from '@/lib/getProducts'
+import {getProducts} from '@/lib/getProducts'
 import ImageSlider from './components/ImageSlider'
 import Product from './components/Product'
 import React from 'react'

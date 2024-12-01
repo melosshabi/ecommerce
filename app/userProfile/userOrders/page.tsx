@@ -4,8 +4,8 @@ import Image from 'next/image'
 import Loader from '@/app/components/Loader'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import getProductById from '@/lib/getProductById'
-import parseMonth from '@/lib/parseMonth'
+import {getProductById} from '@/lib/lib'
+import {parseMonth} from '@/lib/lib'
 
 export default function UserOrders() {
 
@@ -31,7 +31,7 @@ export default function UserOrders() {
           setReqPending(false)
       }
       fetchOrders()
-    }else{
+    }else if(session.status === "unauthenticated"){
       let localOrders: OrderData[] = []
       if (typeof window !== 'undefined') localOrders = JSON.parse(localStorage.getItem("localOrders") as string)
       if(localOrders){ 
@@ -42,9 +42,9 @@ export default function UserOrders() {
         (async function() {
           const orderPromisesData: Product[] = await Promise.all(orderPromises)
           setProducstData([...orderPromisesData])
-          setReqPending(false)
         })();
-    }    
+    }
+    setReqPending(false)    
   }
   return () => controller.abort()
 },[])

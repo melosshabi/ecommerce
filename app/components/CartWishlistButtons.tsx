@@ -1,7 +1,6 @@
 "use client"
 import React from 'react'
-import addToCart from '@/lib/addToCart'
-import addToWishlist from '@/lib/addToWishlist'
+import {addToCart, addToWishlist} from '@/lib/lib'
 import { useSession } from 'next-auth/react'
 
 export default function ProductLink({productId}:ProductLink) {

@@ -71,7 +71,6 @@ export async function POST(req:NextRequest){
     const session = await stripe.checkout.sessions.retrieve(data.stripeSessionId)
     const userEmail = session.customer_details?.email
     const userFullName = session.customer_details?.name
-    console.log(session.currency)
     const stripeSessionLineItems = await stripe.checkout.sessions.listLineItems(data.stripeSessionId, {
         expand: ['data.price.product']
     })

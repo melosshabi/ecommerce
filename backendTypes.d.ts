@@ -41,7 +41,7 @@ interface CartItem {
     manufacturer:string,
     productPrice:number,
     desiredQuantity:number,
-    dateAddedToCart:Date,
+    dateAdded:Date,
     productImage:string
 }
 // This type is used when extracting the necessary data for the wishlist screen 

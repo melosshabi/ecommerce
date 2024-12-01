@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react'
 import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react'
 import ButtonLoader from './ButtonLoader'
-import parseMonth from '@/lib/parseMonth'
+import {parseMonth} from '@/lib/lib'
 import Image from 'next/image'
 import userIcon from '../images/user.png'
 

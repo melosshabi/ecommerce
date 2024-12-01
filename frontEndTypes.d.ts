@@ -31,9 +31,11 @@ interface CartProduct {
     manufacturer:string,
     brandName:string,
     productPrice:number,
-    productImage:string,
+    productImage?:string,
+    // For unauthenticated users
+    pictures:string[],
     quantity:number,
-    dateAddedToCart:Date
+    dateAdded?:Date
     desiredQuantity:number
 }
 // This type is used for the productsArray prop on the Wishlist components which holds objects with 2 keys productDocId and dateAdded
@@ -44,13 +46,13 @@ type SessionWishlist = {
 interface WishlistItem extends CartProduct {
     dateAdded:Date,
 }
-// This type is used for the wishlist arrays on local storage and on session.data.user.wishlist which hold objects with 2 keys productDocId and dateAdded
-type WishlistObject = {
+// This type is used for the wishlist array saved on local storage
+type LocalWishlistObject = {
     productDocId:string,
     dateAdded:string
 }
-// This type is used for the cart arrays on local storage and on session.data.user.cart which hold objects with 2 keys productDocId and dateAdded
-interface CartObject extends WishlistObject {
+// This type is used for the cart array saved on local storage
+interface LocalCartObject extends LocalWishlistObject {
     desiredQuantity:number
 }
 type ProductLink = {

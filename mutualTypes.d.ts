@@ -36,3 +36,6 @@ type OrderData = {
     totalPrice:number,
     createdAt:Date
 }
+interface ProductForOrder extends CartProduct{
+    desiredQuantity:number
+}

@@ -23,6 +23,7 @@ export default function ThankYouPage(){
                         stripeSessionId:stripeSessionId
                     })
                 })
+                localStorage.removeItem('stripeSessionId')
             }else if(session.status === 'unauthenticated'){
                 const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/finishOrder`, {
                     method:"POST",
@@ -30,6 +31,7 @@ export default function ThankYouPage(){
                         stripeSessionId:localStorage.getItem('stripeSessionId')
                     })
                 })
+                localStorage.removeItem('stripeSessionId')
                 const data = await res.json()
                 let localOrders = JSON.parse(localStorage.getItem("localOrders") as string)
                 if(!localOrders){
@@ -46,7 +48,7 @@ export default function ThankYouPage(){
             const secondsInterval = setInterval(() => setSeconds(prev => prev -= 1), 1000)
             const timeout = setTimeout(() => {
                 clearInterval(secondsInterval)
-                router.push('/?fromThankYou=true')
+                router.push('/')
             }, 5000)
             return () => clearTimeout(timeout)
         }, [])

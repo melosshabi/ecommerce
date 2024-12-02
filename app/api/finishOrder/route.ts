@@ -100,7 +100,6 @@ export async function POST(req:NextRequest){
                 await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {$push:{orders:order._id}})
             }
             await productModel.updateOne({_id:new ObjectId(order.productDocId)}, {$inc:{quantity:-order.desiredQuantity}})
-            
         }))
     }else{
         try {

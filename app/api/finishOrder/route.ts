@@ -7,6 +7,7 @@ import orderModel from "@/models/order";
 import { FinishOrderData } from "@/backendTypes";
 import Stripe from 'stripe'
 import { transporter } from "@/lib/nodemailer";
+import productModel from "@/models/product";
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!)
 type HTMLData = {
@@ -88,9 +89,8 @@ export async function POST(req:NextRequest){
             // @ts-ignore
             productsListForEmail.push({productName:item.price?.product.name, price:item.price?.unit_amount / 100, quantity:item.quantity })
 })
-
-    if(serverSession){
-        const newOrders = await Promise.all(newOrderEntriesPromises)
+    const newOrders = await Promise.all(newOrderEntriesPromises)
+    if(serverSession){        
         const {searchParams} = new URL(req.url)
         const calledFromCart = searchParams.get('calledFromCart') === 'true'
         await Promise.all(newOrders.map(async order => {
@@ -99,10 +99,10 @@ export async function POST(req:NextRequest){
             }else{
                 await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {$push:{orders:order._id}})
             }
+            await productModel.updateOne({_id:new ObjectId(order.productDocId)}, {$inc:{quantity:-order.desiredQuantity}})
             
         }))
     }else{
-        const orders = await Promise.all(newOrderEntriesPromises)
         try {
             await transporter.sendMail({
                 from:process.env.EMAIL,
@@ -115,8 +115,9 @@ export async function POST(req:NextRequest){
             console.log(err)
             return NextResponse.json({msg:"unkown-error"}, {status:500})
         }
-        return NextResponse.json({msg:"Order placed", orders})
+        return NextResponse.json({msg:"Order placed", newOrders})
     }
+    
     try {
         await transporter.sendMail({
             from:process.env.EMAIL,

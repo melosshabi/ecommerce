@@ -4,42 +4,15 @@ import Image from 'next/image'
 import logo from '../images/logo.png'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import navbarCart from '../images/navbar-cart.png'
-// import updateCartListOrWishlist from '@/lib/updateUserCartOrWishlist'
 
-// enum listToUpdateEnum {
-//   cartList,
-//   wishlist
-// }
 export default function Navbar() {
   const session = useSession()
-  console.log(session)
   const path = usePathname()
+  const params = useSearchParams()
   useEffect(() => {
     if(path !== "/thank-you") localStorage.removeItem('stripeSessionId')
-    // const localWishList = JSON.parse(localStorage.getItem('localWishList') as string)
-    // const localCart = JSON.parse(localStorage.getItem('localCart') as string)
-    // if(session.status === 'authenticated' && localWishList){
-    //   const mergedWishlists = [...session.data.user.wishlist, ...localWishList]
-    //   let filteredMergedWishlists = mergedWishlists.filter(function(this:Set<string>, {productDocId}) {
-    //     return !this.has(productDocId) && this.add(productDocId)
-    //   }, new Set<string>())
-    //   session.data.user.wishlist = filteredMergedWishlists
-    //   localStorage.removeItem('localWishList')
-    //   // The function below is used to update the wishlist on the database to include the wishlist stored on localStorage
-    //   if(filteredMergedWishlists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedWishlists, listToUpdateEnum.wishlist)
-    // }
-    // if(session.status === 'authenticated' && localCart){
-    //   const mergedCarLists = [...session.data.user.cart, ...localCart]
-    //   let filteredMergedCartLists = mergedCarLists.filter(function(this:Set<string>, {productDocId}) {
-    //     return !this.has(productDocId) && this.add(productDocId)
-    //   }, new Set<string>())
-    //   session.data.user.cart = filteredMergedCartLists
-    //   localStorage.removeItem('localCart')
-    //   // The function below is used to update the cart list on the database to include the cart list stored on localStorage
-    //   if(filteredMergedCartLists) updateCartListOrWishlist(session.data.user.userDocId, filteredMergedCartLists, listToUpdateEnum.cartList)
-    // }
   },[session])
   function toggleNavMenu() {
     const navMenu = document.querySelector('.nav-menu') as HTMLDivElement

@@ -23,7 +23,6 @@ export default function ThankYouPage(){
                         stripeSessionId:stripeSessionId
                     })
                 })
-                await session.update()
             }else if(session.status === 'unauthenticated'){
                 const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/finishOrder`, {
                     method:"POST",
@@ -45,17 +44,18 @@ export default function ThankYouPage(){
         }, [session])
         useEffect(() => {
             const secondsInterval = setInterval(() => setSeconds(prev => prev -= 1), 1000)
-            setTimeout(() => {
+            const timeout = setTimeout(() => {
                 clearInterval(secondsInterval)
-                router.push('/')
+                router.push('/?fromThankYou=true')
             }, 5000)
+            return () => clearTimeout(timeout)
         }, [])
     return (
         <div className="h-[90dvh] mt-[10dvh] flex items-center justify-center flex-col text-center">
             <h1 className="text-[1.8em]">Thank you for your order!</h1>
             <p>Your order has been placed and is being processed.</p> 
             <p>Returning to home page in: {seconds}</p>
-            <Link className="text-orange font-medium mt-2 text-lg transition-all duration-100 hover:underline hover:text-darkerOrange" href="/">Back to Homepage</Link>
+            <Link className="text-orange font-medium mt-2 text-lg transition-all duration-100 hover:underline hover:text-darkerOrange" href="/?fromThankYou=true">Back to Homepage</Link>
         </div>
     )
 }

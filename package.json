@@ -21,7 +21,6 @@
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.40.0",
     "eslint": "8.47.0",
-    "eslint-config-next": "^13.4.19",
     "jose": "^5.9.3",
     "mongodb": "^5.8.0",
     "mongoose": "^7.4.4",
@@ -39,6 +38,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/multer": "^1.4.7",
     "autoprefixer": "^10.4.20",
+    "eslint-config-next": "^15.0.3",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.12"
   }

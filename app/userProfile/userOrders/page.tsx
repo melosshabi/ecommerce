@@ -54,7 +54,7 @@ export default function UserOrders() {
       {!reqPending && ordersList.length > 0 && <h2 className='mb-4 text-center font-medium text-[1.5em] border-b border-black'>Orders</h2>}
       <Loader displayLoader={reqPending}/>
       {
-        !reqPending && ordersList.length === 0 && productsData.length === 0 && <h2 className='text-3xl'>You haven't placed any orders yet</h2>
+        !reqPending && ordersList.length === 0 && productsData.length === 0 && <h2 className='text-3xl'>You have not placed any orders yet</h2>
       }
       {
         // Authenticated Users

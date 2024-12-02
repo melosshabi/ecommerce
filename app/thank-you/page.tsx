@@ -1,5 +1,6 @@
 "use client"
 import { useSession } from "next-auth/react"
+import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -54,7 +55,7 @@ export default function ThankYouPage(){
             <h1 className="text-[1.8em]">Thank you for your order!</h1>
             <p>Your order has been placed and is being processed.</p> 
             <p>Returning to home page in: {seconds}</p>
-            <a className="text-orange font-medium mt-2 text-lg transition-all duration-100 hover:underline hover:text-darkerOrange" href="/">Back to Homepage</a>
+            <Link className="text-orange font-medium mt-2 text-lg transition-all duration-100 hover:underline hover:text-darkerOrange" href="/">Back to Homepage</Link>
         </div>
     )
 }

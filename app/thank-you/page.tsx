@@ -1,33 +1,35 @@
 "use client"
 import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 
 export default function ThankYouPage(){
     const router = useRouter()
     const session = useSession()
     const [seconds, setSeconds] = useState(5)
+    const params = useSearchParams()
+    const calledFromCart = params.get('calledFromCart')
     useEffect(() => {
         if(!localStorage.getItem('stripeSessionId')) router.push('/')
-        localStorage.removeItem('localCart')
+        if(calledFromCart) localStorage.removeItem('localCart')
         // The finish order API route clears the cart on the database and creates a new document in the orders collection
         async function finishOrder(){
             if(session.status === 'authenticated'){
-                fetch(`${process.env.NEXT_PUBLIC_URL}/api/finishOrder`, {
+                const stripeSessionId = localStorage.getItem('stripeSessionId')
+                await fetch(`${process.env.NEXT_PUBLIC_URL}/api/finishOrder?calledFromCart=${calledFromCart}`, {
                     method:"POST",
                     body:JSON.stringify({
-                        stripeSessionId:localStorage.getItem('stripeSessionId')
+                        stripeSessionId:stripeSessionId
                     })
                 })
-                localStorage.removeItem('stripeSessionId')
-            }else{
+                await session.update()
+            }else if(session.status === 'unauthenticated'){
                 const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/finishOrder`, {
                     method:"POST",
                     body:JSON.stringify({
                         stripeSessionId:localStorage.getItem('stripeSessionId')
                     })
                 })
-                localStorage.removeItem('stripeSessionId')
                 const data = await res.json()
                 let localOrders = JSON.parse(localStorage.getItem("localOrders") as string)
                 if(!localOrders){
@@ -39,11 +41,13 @@ export default function ThankYouPage(){
             }
         }
         finishOrder()
-        const secondsInterval = setInterval(() => setSeconds(prev => prev -= 1), 1000)
-        setTimeout(() => {
-            clearInterval(secondsInterval)
-            router.push('/')
-        }, 5000)
+        }, [session])
+        useEffect(() => {
+            const secondsInterval = setInterval(() => setSeconds(prev => prev -= 1), 1000)
+            setTimeout(() => {
+                clearInterval(secondsInterval)
+                router.push('/')
+            }, 5000)
         }, [])
     return (
         <div className="h-[90dvh] mt-[10dvh] flex items-center justify-center flex-col text-center">

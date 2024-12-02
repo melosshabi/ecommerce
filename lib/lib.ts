@@ -195,14 +195,28 @@ export function parseMonth(monthIndex:number){
     }
 }
 
-export async function placeOrder(cartItems:ProductForOrder[]):Promise<string>{    
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {
-        method:"POST",
-        body:JSON.stringify([...cartItems])
-    })
-    const data: {url:string, stripeSessionId:string} = await res.json()
-    localStorage.setItem('stripeSessionId', data.stripeSessionId)
-    return data.url
+export async function placeOrder(items:ProductForOrder[], fromCart:boolean):Promise<string>{    
+    if(fromCart){
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {
+            method:"POST",
+            headers:{
+                "CalledOrderFromCart":fromCart.toString()
+            },
+            body:JSON.stringify([...items])
+        })
+        const data: {url:string, stripeSessionId:string} = await res.json()
+        localStorage.setItem('stripeSessionId', data.stripeSessionId)
+        return data.url
+    }else{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/orders`, {
+            method:"POST",
+            body:JSON.stringify([...items])
+        })
+        const data: {url:string, stripeSessionId:string} = await res.json()
+        localStorage.setItem('stripeSessionId', data.stripeSessionId)
+        return data.url
+    }
+    
 }
 
 export async function getProductById(id:string){

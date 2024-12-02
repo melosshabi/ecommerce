@@ -65,7 +65,7 @@ export default function Navbar() {
     document.querySelector('.mobile-sidebar')?.classList.toggle('-right-[70dvw]')
     document.querySelector('.black-div')?.classList.toggle('hidden')
   }
-  let localCart: CartObject[] = []
+  let localCart: LocalCartObject[] = []
   if (typeof window !== 'undefined') localCart = JSON.parse(localStorage.getItem('localCart') as string)
   return (
     <nav className='fixed top-0 left-0 w-[100dvw] h-[10dvh] shadow-[0_0_5px_black] bg-white flex justify-between items-center z-[2]'>

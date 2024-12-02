@@ -67,7 +67,6 @@ function generateHTML(data:HTMLData){
 export async function POST(req:NextRequest){
     const serverSession = await getServerSession(nextAuthOptions)
     const data: FinishOrderData = await req.json()
-    // const stripeSession = await stripe.financialConnections.sessions.retrieve(data.stripeSessionId)
     const session = await stripe.checkout.sessions.retrieve(data.stripeSessionId)
     const userEmail = session.customer_details?.email
     const userFullName = session.customer_details?.name
@@ -92,8 +91,15 @@ export async function POST(req:NextRequest){
 
     if(serverSession){
         const newOrders = await Promise.all(newOrderEntriesPromises)
+        const {searchParams} = new URL(req.url)
+        const calledFromCart = searchParams.get('calledFromCart') === 'true'
         await Promise.all(newOrders.map(async order => {
-            await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {cart:[], $push:{orders:order._id}})
+            if(calledFromCart){
+                await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {cart:[], $push:{orders:order._id}})
+            }else{
+                await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {$push:{orders:order._id}})
+            }
+            
         }))
     }else{
         const orders = await Promise.all(newOrderEntriesPromises)
@@ -107,6 +113,7 @@ export async function POST(req:NextRequest){
             })
         } catch (err) {
             console.log(err)
+            return NextResponse.json({msg:"unkown-error"}, {status:500})
         }
         return NextResponse.json({msg:"Order placed", orders})
     }

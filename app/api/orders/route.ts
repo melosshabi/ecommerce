@@ -11,6 +11,7 @@ import connectToDb from "@/lib/mongodb"
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!)
 // The function below creates a new order document
 export async function POST(req:NextRequest){
+    const calledFromCart = req.headers.get('CalledOrderFromCart') === 'true'
     // The products the user wants to order
     const cartProducts: CartProduct[] = await req.json()
     try{
@@ -33,7 +34,7 @@ export async function POST(req:NextRequest){
                 }
             }),
             mode:'payment',
-            success_url:`${process.env.NEXT_PUBLIC_URL}/thank-you`,
+            success_url:`${process.env.NEXT_PUBLIC_URL}/thank-you?calledFromCart=${calledFromCart}`,
             cancel_url:`${process.env.NEXT_PUBLIC_URL}/userProfile/cart`,
         })
         

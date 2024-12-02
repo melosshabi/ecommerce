@@ -44,7 +44,7 @@ export default function ProductDetails() {
       }
       setProduct(productData)
       setActiveImage(productData.pictures[0])
-      setShowSpinner(false)
+      setTimeout(() => setShowSpinner(false), 80)
     }
     
     fetchProduct()
@@ -127,7 +127,7 @@ export default function ProductDetails() {
   return (
     <div className='product-page bg-white flex justify-center items-center flex-col w-[100dvw] min-h-[100dvh] max-h-fit'>
       {/* Loading spinner */}
-      { showSpinner && <div className="spinner-wrapper w-[100dvw] h-[100dvh] fixed z-[2] bg-[#000000f2] top-0 flex items-center justify-center">
+      { showSpinner && <div className="spinner-wrapper w-[100dvw] h-[100dvh] fixed z-[2] bg-[#000000] top-0 flex items-center justify-center">
         <svg className="spinner w-[15dvw] h-[15dvh]" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" d="M10.72,19.9a8,8,0,0,1-6.5-9.79A7.77,7.77,0,0,1,10.4,4.16a8,8,0,0,1,9.49,6.52A1.54,1.54,0,0,0,21.38,12h.13a1.37,1.37,0,0,0,1.38-1.54,11,11,0,1,0-12.7,12.39A1.54,1.54,0,0,0,12,21.34h0A1.47,1.47,0,0,0,10.72,19.9Z"><animateTransform attributeName="transform" dur="0.75s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
       </div>}
 
@@ -148,7 +148,7 @@ export default function ProductDetails() {
       </div>
 
       {/* Product Details */}
-      <div className="bg-white shadow-[0_0_5px_black] w-full min-h-fit h-fit mt-[10dvh] rounded-lg p-5 flex flex-col items-center xl:flex-row xl:w-[90dvw] xl:mt-[12dvh] widescreen:justify-around">
+      <div className="bg-white shadow-[0_0_5px_black] w-full min-h-fit h-fit mt-[10dvh] rounded-lg p-5 flex flex-col items-center xl:flex-row xl:w-[97dvw] xl:h-[70dvh] xl:mt-[12dvh] widescreen:justify-around">
         {/* Images */}
         {/* Wrapper */}
           <div className="w-full h-fit flex-col-reverse flex items-center justify-between mb-6 lg:w-fit">
@@ -224,7 +224,7 @@ export default function ProductDetails() {
                       const res = await addToCart(true, productDocId as string, userQuantity, false)
                       if(res){
                           setShowSpinner(true)
-                          session.update()
+                          await session.update()
                           await checkUserLists()
                           setTimeout(() => setShowSpinner(false), 100)
                       } 
@@ -237,7 +237,7 @@ export default function ProductDetails() {
                       const res = await removeFromCart(session?.data?.user.userDocId, productDocId as string)
                       if(res){
                         setShowSpinner(true)
-                          session.update()
+                          await session.update()
                           await checkUserLists()
                           setTimeout(() => setShowSpinner(false), 100)
                       } 
@@ -277,7 +277,7 @@ export default function ProductDetails() {
                         const res = await addToWishlist(true, productDocId as string, false)
                         if(res){
                           setShowSpinner(true)
-                          session.update()
+                          await session.update()
                           await checkUserLists()
                           setTimeout(() => setShowSpinner(false), 100)
                         }
@@ -289,7 +289,7 @@ export default function ProductDetails() {
                         const res = await removeFromWishlist(session?.data?.user.userDocId as string, productDocId as string)
                         if(res){
                           setShowSpinner(true)
-                          session.update()
+                          await session.update()
                           await checkUserLists()
                           setTimeout(() => setShowSpinner(false), 100)
                         }
@@ -300,7 +300,7 @@ export default function ProductDetails() {
                     <button className="text-[1em] mx-1 cursor-pointer bg-orange text-white border-none rounded-lg p-3 my-1 flex justify-center items-center transition-all duration-300 hover:bg-darkerOrange disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:bg-orange 2xl:text-[1.25em]"
                       onClick={async () => {
                         if(product){
-                          const stripePaymentUrl = await placeOrder([{...product, desiredQuantity:userQuantity}])
+                          const stripePaymentUrl = await placeOrder([{...product, desiredQuantity:userQuantity}], false)
                           router.push(stripePaymentUrl)
                         }
                       }}

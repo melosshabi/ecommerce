@@ -175,7 +175,7 @@ export default function Cart() {
       }
       {cartItems.length > 0 && !reqPending && 
         <button onClick={async () => {
-          const stripePaymentUrl = await placeOrder([...cartItems])
+          const stripePaymentUrl = await placeOrder([...cartItems], true)
           router.push(stripePaymentUrl)
         }} className="block text-[1.2em] bg-orange rounded-lg text-white m-auto py-2 px-4 transition-all duration-200 hover:bg-darkerOrange">Place Order</button>
       }

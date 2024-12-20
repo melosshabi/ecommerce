@@ -1,6 +1,5 @@
 "use client"
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { useSession } from 'next-auth/react'
 import checkmark from '../images/checkmark.svg'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -8,7 +7,6 @@ import { useRouter } from 'next/navigation'
 export default function PostProduct() {
 
     const router = useRouter()
-    const session = useSession()
     const [productData, setProductData] = useState<ProductData>({
         productName:'',
         brandName:'',

@@ -23,7 +23,7 @@ export default function Navbar() {
     if(e && e.key === "Enter"){
       router.push(`/search?query=${serachInputVal}`) 
     }
-    // This line gets executed on the submit event which happends on mobile devices
+    // This line gets executed on the submit event which happens on mobile devices
     if(!e){
       router.push(`/search?query=${serachInputVal}`)
     }
@@ -64,7 +64,7 @@ export default function Navbar() {
         <div className="w-fit relative hidden md:flex items-center md:mr-1 2xl:mr-5">
           <div className="relative">
             {session.status === "authenticated" && session.data?.user?.cartCount> 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{session.data?.user?.cartCount}</div>}
-            {session.status === "unauthenticated" && (localCart && localCart.length) > 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{localCart.length}</div>}
+            {session.status === "unauthenticated" && localCart && localCart.length > 0 && <div className="w-6 h-6 bg-orange rounded-[50px] absolute -top-2 -right-3 z-[1] text-white flex justify-center items-center">{localCart.length}</div>}
             <Link href="/userProfile/cart" className="h-fit rounded-none bg-none p-0 mt-10">
               <Image className='nav-images max-w-10 max-h-10 inline-block' src={navbarCart} width={50} height={50} alt="Cart icon"/>
             </Link>

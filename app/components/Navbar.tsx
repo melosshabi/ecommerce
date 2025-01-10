@@ -4,11 +4,17 @@ import Image from 'next/image'
 import logo from '../images/logo.png'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import navbarCart from '../images/navbar-cart.png'
 
 export default function Navbar() {
   const session = useSession()
+  const path = usePathname()
+  useEffect(() => {
+    if(path !== 'thank-you'){
+      localStorage.removeItem('stripeSessionId')
+    }
+  } ,[path])
   function toggleNavMenu() {
     const navMenu = document.querySelector('.nav-menu') as HTMLDivElement
     navMenu.classList.toggle("max-h-0")

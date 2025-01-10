@@ -9,41 +9,77 @@ import { decrypt } from "@/lib/authLib"
 import connectToDb from "@/lib/mongodb"
 
 const stripe = new Stripe(process.env.STRIPE_PRIVATE_KEY!)
-// The function below creates a new order document
+// The function below creates stripe sessions
 export async function POST(req:NextRequest){
-    const calledFromCart = req.headers.get('CalledOrderFromCart') === 'true'
-    // The products the user wants to order
-    const cartProducts: CartProduct[] = await req.json()
-    try{
-        // @ts-ignore
-        const stripeSession = await stripe.checkout.sessions.create({
-            payment_method_types:['card'],
-            line_items:cartProducts.map(product => {
-                return {
-                    price_data:{
-                        currency:'eur',
-                        product_data:{
-                            name:product.productName,
-                            metadata:{
-                                databaseProductId:product._id
-                            }
+    const mobile = req.headers.get("Mobile") === 'true'
+    if(mobile){
+        try{
+            const body = await req.json()
+            if(!body.products){
+                return NextResponse.json({responseMessage:"missing-products"}, {status:400})
+            }
+            let amount = 0
+            body.products.forEach((product:ProductData) => amount += product.price)
+            const customer = await stripe.customers.create()
+            const ephemeralKey = await stripe.ephemeralKeys.create(
+                {customer:customer.id},
+                {apiVersion:'2024-12-18.acacia'}
+            )
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount:amount * 100,
+                currency:'eur',
+                customer:customer.id as string,
+                
+            })
+            
+            return NextResponse.json({
+                paymentIntent:paymentIntent.client_secret,
+                ephemeralKey:ephemeralKey.secret,
+                customer:customer.id,
+            })
+        }catch(err){
+            console.log(err)
+
+            if(err instanceof Error && err.name === "JWTExpired"){
+                return NextResponse.json({responseMessage:"jwt-expired"}, {})
+            }
+        }
+    }else{
+        const calledFromCart = req.headers.get('CalledOrderFromCart') === 'true'
+        // The products the user wants to order
+        const cartProducts: CartProduct[] = await req.json()
+        try{
+            // @ts-ignore
+            const stripeSession = await stripe.checkout.sessions.create({
+                payment_method_types:['card'],
+                line_items:cartProducts.map(product => {
+                    return {
+                        price_data:{
+                            currency:'eur',
+                            product_data:{
+                                name:product.productName,
+                                metadata:{
+                                    databaseProductId:product._id
+                                }
+                            },
+                            unit_amount:product.productPrice * 100,
                         },
-                        unit_amount:product.productPrice * 100,
-                    },
-                    quantity:product.desiredQuantity
-                }
-            }),
-            mode:'payment',
-            success_url:`${process.env.NEXT_PUBLIC_URL}/thank-you?calledFromCart=${calledFromCart}`,
-            cancel_url:`${process.env.NEXT_PUBLIC_URL}/userProfile/cart`,
-        })
-        
-        return NextResponse.json({url:stripeSession.url, stripeSessionId:stripeSession.id})
-    }catch(err){
-        console.log(err)
-        // @ts-ignore
-        return NextResponse.json({err:err.message}, {status:500})
+                        quantity:product.desiredQuantity
+                    }
+                }),
+                mode:'payment',
+                success_url:`${process.env.NEXT_PUBLIC_URL}/thank-you?calledFromCart=${calledFromCart}`,
+                cancel_url:`${process.env.NEXT_PUBLIC_URL}/userProfile/cart`,
+            })
+
+            return NextResponse.json({url:stripeSession.url, stripeSessionId:stripeSession.id})
+        }catch(err){
+            console.log(err)
+            // @ts-ignore
+            return NextResponse.json({err:err.message}, {status:500})
+        }
     }
+    
     
 }
 

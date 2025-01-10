@@ -66,42 +66,61 @@ function generateHTML(data:HTMLData){
 </html>`
 }
 export async function POST(req:NextRequest){
-    const serverSession = await getServerSession(nextAuthOptions)
-    const data: FinishOrderData = await req.json()
-    const session = await stripe.checkout.sessions.retrieve(data.stripeSessionId)
-    const userEmail = session.customer_details?.email
-    const userFullName = session.customer_details?.name
-    const stripeSessionLineItems = await stripe.checkout.sessions.listLineItems(data.stripeSessionId, {
-        expand: ['data.price.product']
-    })
-    const newOrderEntriesPromises: Promise<OrderData>[] = []
-    const productsListForEmail: ProductDataForEmail[] = []
-    stripeSessionLineItems.data.forEach(item => {
-            const newOrderPromise: Promise<OrderData> = orderModel.create({
-                clientDocId:serverSession ? serverSession.user.userDocId : null,
+    const mobile = req.headers.get("Mobile") === 'true'
+    if(mobile){
+        
+    }else {
+        const serverSession = await getServerSession(nextAuthOptions)
+        const data: FinishOrderData = await req.json()
+        const session = await stripe.checkout.sessions.retrieve(data.stripeSessionId)
+        const userEmail = session.customer_details?.email
+        const userFullName = session.customer_details?.name
+        const stripeSessionLineItems = await stripe.checkout.sessions.listLineItems(data.stripeSessionId, {
+            expand: ['data.price.product']
+        })
+        const newOrderEntriesPromises: Promise<OrderData>[] = []
+        const productsListForEmail: ProductDataForEmail[] = []
+        stripeSessionLineItems.data.forEach(item => {
+                const newOrderPromise: Promise<OrderData> = orderModel.create({
+                    clientDocId:serverSession ? serverSession.user.userDocId : null,
+                    // @ts-ignore
+                    productDocId:item.price?.product.metadata.databaseProductId,
+                    desiredQuantity:item.quantity,
+                    productPrice:item.price?.unit_amount! / 100,
+                    totalPrice:(item?.price?.unit_amount! / 100) * item.quantity!
+                })
+                newOrderEntriesPromises.push(newOrderPromise)
                 // @ts-ignore
-                productDocId:item.price?.product.metadata.databaseProductId,
-                desiredQuantity:item.quantity,
-                productPrice:item.price?.unit_amount! / 100,
-                totalPrice:(item?.price?.unit_amount! / 100) * item.quantity!
-            })
-            newOrderEntriesPromises.push(newOrderPromise)
-            // @ts-ignore
-            productsListForEmail.push({productName:item.price?.product.name, price:item.price?.unit_amount / 100, quantity:item.quantity })
-})
-    const newOrders = await Promise.all(newOrderEntriesPromises)
-    if(serverSession){        
-        const {searchParams} = new URL(req.url)
-        const calledFromCart = searchParams.get('calledFromCart') === 'true'
-        await Promise.all(newOrders.map(async order => {
-            if(calledFromCart){
-                await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {cart:[], $push:{orders:order._id}})
-            }else{
-                await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {$push:{orders:order._id}})
+                productsListForEmail.push({productName:item.price?.product.name, price:item.price?.unit_amount / 100, quantity:item.quantity })
+        })
+        const newOrders = await Promise.all(newOrderEntriesPromises)
+        if(serverSession){        
+            const {searchParams} = new URL(req.url)
+            const calledFromCart = searchParams.get('calledFromCart') === 'true'
+            await Promise.all(newOrders.map(async order => {
+                if(calledFromCart){
+                    await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {cart:[], $push:{orders:order._id}})
+                }else{
+                    await userModel.updateOne({_id:new ObjectId(serverSession.user.userDocId)}, {$push:{orders:order._id}})
+                }
+                await productModel.updateOne({_id:new ObjectId(order.productDocId)}, {$inc:{quantity:-order.desiredQuantity}})
+            }))
+        }else{
+            try {
+                await transporter.sendMail({
+                    from:process.env.EMAIL,
+                    to:userEmail as string,
+                    subject: `Thank you for your order ${userFullName}`,
+                    text:`Thank you for your order ${userFullName}}`,
+                    html:generateHTML({name:userFullName as string, products: productsListForEmail, subtotal:session.amount_subtotal! / 100, total:session.amount_total! / 100})
+                })
+            } catch (err) {
+                console.log(err)
+                return NextResponse.json({msg:"unkown-error"}, {status:500})
             }
-            await productModel.updateOne({_id:new ObjectId(order.productDocId)}, {$inc:{quantity:-order.desiredQuantity}})
-        }))
-    }else{
+            return NextResponse.json({msg:"Order placed", newOrders})
+        }
+
         try {
             await transporter.sendMail({
                 from:process.env.EMAIL,
@@ -112,21 +131,7 @@ export async function POST(req:NextRequest){
             })
         } catch (err) {
             console.log(err)
-            return NextResponse.json({msg:"unkown-error"}, {status:500})
         }
-        return NextResponse.json({msg:"Order placed", newOrders})
+        return NextResponse.json({msg:"Order placed", code:'order-placed'})
     }
-    
-    try {
-        await transporter.sendMail({
-            from:process.env.EMAIL,
-            to:userEmail as string,
-            subject: `Thank you for your order ${userFullName}`,
-            text:`Thank you for your order ${userFullName}}`,
-            html:generateHTML({name:userFullName as string, products: productsListForEmail, subtotal:session.amount_subtotal! / 100, total:session.amount_total! / 100})
-        })
-    } catch (err) {
-        console.log(err)
-    }
-    return NextResponse.json({msg:"Order placed", code:'order-placed'})
 }

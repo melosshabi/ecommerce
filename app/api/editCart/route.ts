@@ -9,18 +9,18 @@ import connectToDb from "@/lib/mongodb"
 import { decrypt } from "@/lib/authLib"
 
 async function getCartItems(userId:string){
-    await connectToDb()
-        const user = await userModel.findOne({_id:new ObjectId(userId as string)})
+        await connectToDb()
+        const user = await userModel.findOne({_id:new ObjectId(userId)})
         const cartProductPromises:Promise<PromiseProduct>[] = []
         let cartProducts: CartItem[] = []
-        user.cart.map(async (cartObj:BackendCartProduct) => {
+        user.cart.map((cartObj:BackendCartProduct) => {
             const promise = productModel.findOne({_id:cartObj.productDocId})
             cartProductPromises.push(promise)
         })
         await Promise.all(cartProductPromises).then(res => {
             res.forEach((product, index) => {
                 const {_id, productName, manufacturer, brandName, productPrice, quantity,pictures} = product._doc
-                const finalProduct = {_id, productName, manufacturer, brandName, productPrice, productImage:pictures[0], quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAdded:user.cart[index].dateAdded}
+                const finalProduct = {_id:_id.toString(), productName, manufacturer, brandName, productPrice, productImage:pictures[0], quantity, desiredQuantity:user.cart[index].desiredQuantity, dateAdded:user.cart[index].dateAdded}
                 cartProducts.push(finalProduct)
         })})
         return cartProducts
@@ -30,17 +30,17 @@ export async function GET(req:Request){
     const mobile = req.headers.get("Mobile")
     const authorization = req.headers.get("Authorization")
     if(mobile && !authorization){
-        return NextResponse.json({error:"unauth"}, {status:400})
+        return NextResponse.json({error:"unauth"}, {status:401})
     }
     if(mobile && authorization){
         const token = authorization.split(" ")[1]
         const session = await decrypt(token)
-        const cartProducts = getCartItems(session._id as string)
+        const cartProducts = await getCartItems(session._id as string)
         return NextResponse.json({cartProducts})
     }
     const session = await getServerSession(nextAuthOptions)
     if(session){
-        const cartProducts = await getCartItems(session.user.userDocId as string)
+        const cartProducts = await getCartItems(session.user.userDocId)
         return NextResponse.json({cartProducts})
     }
 }

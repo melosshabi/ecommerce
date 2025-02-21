@@ -28,7 +28,7 @@ async function getWishlistItems(userId:string){
 
 export async function GET(req:Request){
     const mobile = req.headers.get("Mobile")
-    if(mobile){
+    if(mobile === "True" || mobile === "true"){
         const session = req.headers.get("Authorization")
         if(!session){
             return NextResponse.json({errMsg:"unauthenticated"}, {status:401})

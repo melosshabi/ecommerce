@@ -4,6 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(){
     await connectToDb()
-    const products = await productModel.find({})
+    const products = await productModel.find()
     return NextResponse.json({products})
 }

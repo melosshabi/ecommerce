@@ -33,11 +33,7 @@ export const nextAuthOptions:NextAuthOptions = {
                 const matched = await comparePasswords(credentials?.password as string, user.password)
 
                 if(matched){
-                    const passwordLessUser = {
-                        ...user._doc
-                    }
-                    delete passwordLessUser.password
-                    return passwordLessUser
+                    return user
                 }
 
                 return null
